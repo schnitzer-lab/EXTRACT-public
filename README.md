@@ -69,7 +69,7 @@ The output is a struct with four fields: `spatial_weights`, `temporal_weights`, 
 Having described how to run the algorithm and interpret the output, we know provide a basic code that can get a first time user started quickly. 
 ```Matlab
 %First, load the movie.
-loadmat('example.mat');
+load('example.mat');
 
 % By considering the maximum projections, pick an estimate cell radius
 figure, imshow(max(M,[],3),[]);
