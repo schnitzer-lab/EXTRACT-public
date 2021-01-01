@@ -242,7 +242,7 @@ Extract has been used by many members of Schnitzerlab in the last few years for 
 - `avg_cell_radius` is too low or too high.
 - The input movie is low SNR and `cellfind_min_snr` is set too high.
 
-We tend to visually inspect the motion corrected movies for any artifacts that might exist in the raw movie or happen during the motion correction step. 
+We tend to visually inspect the motion corrected movies for any artifacts that might exist in the raw movie or happen during the motion correction step. Whatever the error may be, it usually originates from sources outside of Extract.
 
 ### I believe there are more cells in the movie then Extract finds. Why is this the case?
 
