@@ -233,6 +233,17 @@ Extract is regularly maintained by the current members of the Schnitzerlab. Unle
 
 Extract can be used for cell extraction from both one-photon and two-photon calcium imaging movies.
 
+### I am receiving an error when running the Extract algorithm or the algorithm finds no cells. What are the most common reasons?
+
+Extract has been used by many members of Schnitzerlab in the last few years for various types of movies. If an error occurs, it is usually due to one of the following reasons:
+
+- The raw movie is not properly motion corrected.
+- The raw movie includes artifacts and/or inf values. Large artifacts existing in even few frames can cause the pre-processing step to fail or result in zero found cells. While Extract performs well in low SNR movies, large movie artifacts tend to throw off both motion correction and cell extraction algorithms.
+- `avg_cell_radius` is too low or too high.
+- The input movie is low SNR and `cellfind_min_snr` is set too high.
+
+We tend to visually inspect the motion corrected movies for any artifacts that might exist in the raw movie or happen during the motion correction step. 
+
 ### I believe there are more cells in the movie then Extract finds. Why is this the case?
 
 Extract uses a set of thresholds decreasing the time that the user needs to spend on cell sorting. If for a particular movie, the false-negative count is high, one can decrease the value of `cellfind_min_snr`.
