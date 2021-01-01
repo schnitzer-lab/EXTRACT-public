@@ -244,7 +244,7 @@ Extract has been used by many members of Schnitzerlab in the last few years for 
 
 We tend to visually inspect the motion corrected movies for any artifacts that might exist in the raw movie or happen during the motion correction step. Whatever the error may be, it usually originates from sources outside of Extract.
 
-### I believe there are more cells in the movie then Extract finds. Why is this the case?
+### I believe there are more cells in the movie than Extract finds. Why is this the case?
 
 Extract uses a set of thresholds decreasing the time that the user needs to spend on cell sorting. If for a particular movie, the false-negative count is high, one can decrease the value of `cellfind_min_snr`.
 
