@@ -14,8 +14,7 @@ Its main features and the mathematical foundations behind Extract can be found i
   year={2017}
 }
 ```
-
-![extract](https://user-images.githubusercontent.com/56279691/103445994-9e9a2780-4c8b-11eb-9693-6684cca73743.png)
+<img src="https://user-images.githubusercontent.com/56279691/103445994-9e9a2780-4c8b-11eb-9693-6684cca73743.png" width="42%" align="right" alt="Extract_pipeline">
 
 ## Content
 
