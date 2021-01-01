@@ -162,7 +162,7 @@ Extract requires, at least, the following toolboxes. With future releases, there
 
 ## Questions and comments
 
-Extract is mainly written by Hakan Inan in collaboration with many researchers in Schnitzerlab. The database is maintained by the current members of Schnitzerlab. If you have any questions or comments, after checking already existing issues and the [Frequently asked questions](#frequently-asked-questions) section, please open an issue or contact via email `extract@gmail.com`.
+Extract is mainly written by Hakan Inan in collaboration with many researchers in Schnitzerlab. The database is maintained by the current members of Schnitzerlab. If you have any questions or comments, after checking already existing issues and the [Frequently asked questions](#frequently-asked-questions) section, please open an issue or contact via email `extractneurons@gmail.com`.
 
 
 ## License
