@@ -48,7 +48,7 @@ In this quick start, we first describe the inputs, specifically the most importa
 
 ### Inputs:
 `M`: either an existing 3-D movie matrix in the workspace, or a string that specifies an HDF5 path to a 3-D movie matrix.
-If M is a string, it must be in the following format: `filepath:dataset` (for example: `'example.h5:/images'`).
+If M is a string, it must be in the following format: `filepath:dataset` (for example: `'example.h5:/1'`).
 
 `config:` a struct whose fields define the various parameters used for signal extraction (See [Configurations](#configurations) for details on `config`). For a beginner, the most relevant fields are:
 
