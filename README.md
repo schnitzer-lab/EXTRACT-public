@@ -163,7 +163,7 @@ Extract has an internally built-in cell-check algorithm, which employs semi-supe
 3. The algorithm performs some computations in the background to assist the user, where the user can decide on some acceptance and rejection thresholds.
 4. Once a small portion of cell candidates are sorted, the algorithm provides a guess for all the cell candidates. Thus, one does not need to sort all the cells.
 
-The figure below explains the process in 4 steps. In this example, the user had sorted only 5 cell candidates and Extract identified 18 cells and 6 non-cells. We note that this feature is still experimental and we are constantly working on to improve it. 
+The figure below explains the process in 4 steps. In this example, the user had sorted only 5 cell candidates and Extract identified 18 cells and 6 non-cells. We note that this feature is still experimental and we are constantly working on to improve it. We are also providing the connection to an external sorter in case cell_check fails for certain datasets.
 
 ![extract2](https://user-images.githubusercontent.com/56279691/103446410-50d3ee00-4c90-11eb-9543-536b7dd4684c.png)
 
