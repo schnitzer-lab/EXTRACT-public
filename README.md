@@ -1,13 +1,13 @@
-# Extract version 1.0
+# EXTRACT version 1.0
 
-Extract is a  <ins>t</ins>ractable and <ins>r</ins>obust  <ins>a</ins>utomated <ins>c</ins>ell extraction  <ins>t</ins>ool for calcium imaging, which *extracts* the activities of cells as time series from both one-photon and two-photon Ca<sup>2+</sup> imaging movies. Extract makes minimal assumptions about the data, which is the main reason behind its high robustness and superior performance. 
+EXTRACT is a  <ins>t</ins>ractable and <ins>r</ins>obust  <ins>a</ins>utomated <ins>c</ins>ell extraction  <ins>t</ins>ool for calcium imaging, which *extracts* the activities of cells as time series from both one-photon and two-photon Ca<sup>2+</sup> imaging movies. EXTRACT makes minimal assumptions about the data, which is the main reason behind its high robustness and superior performance. 
 
-<img src="https://user-images.githubusercontent.com/56279691/103445994-9e9a2780-4c8b-11eb-9693-6684cca73743.png" width="50%" align="right" alt="Extract_pipeline">
+<img src="https://user-images.githubusercontent.com/56279691/103445994-9e9a2780-4c8b-11eb-9693-6684cca73743.png" width="50%" align="right" alt="EXTRACT_pipeline">
 
 
-Extract can be thought of as being part of a signal extraction pipeline, as illustrated by the figure on the right. The pipeline takes a raw 1p/2p Ca<sup>2+</sup> imaging movie as an input. Then, one performs motion correction and various pre-processing steps. Later, the processed movie is used by the Extract algorithm to perform tractable and robust cell extraction, which puts out the temporal traces and spatial maps for future data analysis. Extract code in this repository provides most of the pipeline (colored as green in the figure). We also provide some links to the external repositories whenever needed (colored as orange in the figure).
+EXTRACT can be thought of as being part of a signal extraction pipeline, as illustrated by the figure on the right. The pipeline takes a raw 1p/2p Ca<sup>2+</sup> imaging movie as an input. Then, one performs motion correction and various pre-processing steps. Later, the processed movie is used by the EXTRACT algorithm to perform tractable and robust cell extraction, which puts out the temporal traces and spatial maps for future data analysis. EXTRACT code in this repository provides most of the pipeline (colored as green in the figure). We also provide some links to the external repositories whenever needed (colored as orange in the figure).
 
-Its main features and the mathematical foundations behind Extract can be found in Inan et al. (2017), and a comparison with state-of-the-art methods in an upcoming pre-print. If you use Extract for your own research, please cite the Hakan et al (2017) for now. We will provide the citation details for the upcoming pre-print soon.
+Its main features and the mathematical foundations behind EXTRACT can be found in Inan et al. (2017), and a comparison with state-of-the-art methods in an upcoming pre-print. If you use EXTRACT for your own research, please cite the Hakan et al (2017) for now. We will provide the citation details for the upcoming pre-print soon.
 
 
 
@@ -36,11 +36,11 @@ Its main features and the mathematical foundations behind Extract can be found i
 
 ## Installation
 
-It is fairly straightforward to install Extract. Simply download all the files from the repository and include them in the MATLAB path. Installation is complete. Extract makes use of various packages and toolboxes, check out the [Dependencies](#dependencies) section. An example case of running Extract after installation is provided in [Example movie extraction](#example-movie-extraction).
+It is fairly straightforward to install EXTRACT. Simply download all the files from the repository and include them in the MATLAB path. Installation is complete. EXTRACT makes use of various packages and toolboxes, check out the [Dependencies](#dependencies) section. An example case of running EXTRACT after installation is provided in [Example movie extraction](#example-movie-extraction).
 
 ## A quick start for beginners
 
-Extract algorithm has two inputs, movie and configurations (a struct), and a single output, a struct that contains the information on the extracted cell signals. In its essence, the whole extract code can be run by a single line:
+EXTRACT algorithm has two inputs, movie and configurations (a struct), and a single output, a struct that contains the information on the extracted cell signals. In its essence, the whole extract code can be run by a single line:
 
 `output = extractor(M,config)` 
 
@@ -53,12 +53,12 @@ If M is a string, it must be in the following format: `filepath:dataset` (for ex
 `config:` a struct whose fields define the various parameters used for signal extraction (See [Configurations](#configurations) for details on `config`). For a beginner, the most relevant fields are:
 
 - `avg_cell_radius`: Radius estimate for an average cell in the movie. It does not have to be precise; however, setting it to a significantly larger or lower value will impair performance. It needs to be set at the start for any movie. A recommended way to set this is to consider the maximum projections of the video across time and pick the radius there (see [Example movie extraction](#example-movie-extraction)).
-- `num_partitions_x/num_partitions_y`: User specified number of movie partitions in x and y dimensions. Running Extract on the whole movie at once could be computationally too expensive or simply impossible. In this case, we divide the input movie into smaller parts. Heuristics suggest that the size of the smaller FOV should not be smaller than 128 pixels in any of the x/y dimensions.
+- `num_partitions_x/num_partitions_y`: User specified number of movie partitions in x and y dimensions. Running EXTRACT on the whole movie at once could be computationally too expensive or simply impossible. In this case, we divide the input movie into smaller parts. Heuristics suggest that the size of the smaller FOV should not be smaller than 128 pixels in any of the x/y dimensions.
 - `cellfind_min_snr`: Minimum peak SNR (defined as peak value/noise std) value for an object to be considered as a cell. Increase this if you want to decrease the ratio of false-positives at the expense of losing some low SNR cells in the process.
-- `use_gpu`: This needs to be 1 to run Extract on GPU, 0 to run Extract on CPU. It is preferably, time-wise, to run Extract on GPU.
+- `use_gpu`: This needs to be 1 to run EXTRACT on GPU, 0 to run EXTRACT on CPU. It is preferably, time-wise, to run EXTRACT on GPU.
 
 
-Extract has a helper function that initializes the config struct to the most common configurations:
+EXTRACT has a helper function that initializes the config struct to the most common configurations:
 ```Matlab
     config=[];
     config = get_defaults(config);
@@ -71,7 +71,7 @@ The output is a struct with four fields: `spatial_weights`, `temporal_weights`, 
 
 - `spatial_weights`: has the shape [movie_height x movie_width x number_of_cells_found] and is an array of inferred spatial images of the cells found. Spatial weights are particularly important for cell checking (See [Cell checking](#cell-checking)), a process where the user individually inspects the cell candidates and determines whether they are actual cells by looking at the activity in the raw movie.
 
-- `temporal_weights`: has the shape [number_of_movie_frames x number_of_cells_found] and is an array of inferred calcium traces belonging to each cell. Usually, after some pre-processing that includes cell checking, this is the actual output of Extract that gets used for the remaining of the data analysis pipeline.
+- `temporal_weights`: has the shape [number_of_movie_frames x number_of_cells_found] and is an array of inferred calcium traces belonging to each cell. Usually, after some pre-processing that includes cell checking, this is the actual output of EXTRACT that gets used for the remaining of the data analysis pipeline.
 
 ### Example movie extraction
 
@@ -100,15 +100,15 @@ output=extractor(M,config);
 %Perform post-processing such as cell checking and further data analysis
 ```
 
-We have included the file `example.mat` in this repository to help the reader get started with the basics of Extract.
+We have included the file `example.mat` in this repository to help the reader get started with the basics of EXTRACT.
 
 ## Advanced aspects
-Here, we discuss some of the more advanced aspects of Extract. We suggest that the user first becomes familiar with the example extraction process before moving forward to the more advanced settings.
+Here, we discuss some of the more advanced aspects of EXTRACT. We suggest that the user first becomes familiar with the example extraction process before moving forward to the more advanced settings.
 
 
 ### Pre-processing
 
-In this repository, we are introducing an important part of the cell extraction pipeline for Ca<sup>2+</sup> imaging movies. The pipeline includes a motion correction step, for which one can use already existing motion correction algorithms (See for example: [NoRMCorre](https://github.com/flatironinstitute/NoRMCorre)). On the other hand, Extract has a configuration to perform the usual pre-processing steps including taking dF/F, highpass filtering for suppressing excessive background, and circular masking for endoscopic movies (See [Configurations](#configurations)).
+In this repository, we are introducing an important part of the cell extraction pipeline for Ca<sup>2+</sup> imaging movies. The pipeline includes a motion correction step, for which one can use already existing motion correction algorithms (See for example: [NoRMCorre](https://github.com/flatironinstitute/NoRMCorre)). On the other hand, EXTRACT has a configuration to perform the usual pre-processing steps including taking dF/F, highpass filtering for suppressing excessive background, and circular masking for endoscopic movies (See [Configurations](#configurations)).
 
 
 ### Configurations
@@ -156,23 +156,23 @@ Here is a list of more advanced configurations:
 
 #### Internal cell checker with semi-supervised assistance
 
-Extract has an internally built-in cell-check algorithm, which employs semi-supervised machine learning methods to aid the user with the cell checking process. The corresponding file is `cell_check.m`, which takes in two inputs: `M` and `output`. `M` is the movie, whereas `output` is the output generated by Extract that contains cell maps and temporal traces. It has the following properties:
+EXTRACT has an internally built-in cell-check algorithm, which employs semi-supervised machine learning methods to aid the user with the cell checking process. The corresponding file is `cell_check.m`, which takes in two inputs: `M` and `output`. `M` is the movie, whereas `output` is the output generated by EXTRACT that contains cell maps and temporal traces. It has the following properties:
 
 1. The user can observe the cell maps during spiking times or click on the temporal trace map to watch the raw movie during that time window.
 2. The user can decide whether a candidate is indeed a cell or not.
 3. The algorithm performs some computations in the background to assist the user, where the user can decide on some acceptance and rejection thresholds.
 4. Once a small portion of cell candidates are checked, the algorithm provides a guess for all the cell candidates. Thus, one does not need to check all the cells.
 
-The figure below explains the process in 4 steps. In this example, the user had checked only 5 cell candidates and Extract identified 18 cells and 6 non-cells. We note that this feature is still experimental and we are constantly working on to improve it. We are also providing an external cell checker in case cell_check fails when the number of EXTRACT partitions is larger than 1.
+The figure below explains the process in 4 steps. In this example, the user had checked only 5 cell candidates and EXTRACT identified 18 cells and 6 non-cells. We note that this feature is still experimental and we are constantly working on to improve it. We are also providing an external cell checker in case cell_check fails when the number of EXTRACT partitions is larger than 1.
 
 ![extract2](https://user-images.githubusercontent.com/56279691/103446410-50d3ee00-4c90-11eb-9543-536b7dd4684c.png)
 
 #### External cell checker
 
-There is also an external cell checker, which is part of the [CIAtah](https://github.com/bahanonu/calciumImagingAnalysis) pipeline. After downloading and including the pipeline in the MATLAB path, one can use the following code to run the Extract output on the cell checker of CIAtah pipeline:
+There is also an external cell checker, which is part of the [CIAtah](https://github.com/bahanonu/calciumImagingAnalysis) pipeline. After downloading and including the pipeline in the MATLAB path, one can use the following code to run the EXTRACT output on the cell checker of CIAtah pipeline:
 
 ```Matlab
-% Extract output is stored in a structure called "output"
+% EXTRACT output is stored in a structure called "output"
 
 % Some configurations for the external cell checker
 iopts.inputMovie = M; % movie associated with traces
@@ -191,7 +191,7 @@ iopts.backgroundNeutral = repmat(230,[1 3])/255;
 
 ### Dependencies
 
-Extract requires, at least, the following toolboxes. With future releases, there may be need for further toolboxes.
+EXTRACT requires, at least, the following toolboxes. With future releases, there may be need for further toolboxes.
 
 
 - Bioinformatics Toolbox
@@ -205,7 +205,7 @@ Extract requires, at least, the following toolboxes. With future releases, there
 
 ## Questions and comments
 
-Extract is mainly written by Hakan Inan in collaboration with many researchers in Schnitzerlab. The database is maintained by the current members of Schnitzerlab. If you have any questions or comments, after checking already existing issues and the [Frequently asked questions](#frequently-asked-questions) section, please open an issue or contact via email `extractneurons@gmail.com`.
+EXTRACT is mainly written by Hakan Inan in collaboration with many researchers in Schnitzerlab. The database is maintained by the current members of Schnitzerlab. If you have any questions or comments, after checking already existing issues and the [Frequently asked questions](#frequently-asked-questions) section, please open an issue or contact via email `extractneurons@gmail.com`.
 
 
 ## License
@@ -220,35 +220,35 @@ You should have received a copy of the GNU General Public License along with thi
 
 ## Planned future releases
 
-This version of Extract is written in Matlab and will be improved over the years in terms of both speed and memory consumption. Furthermore, we plan to release a Python version in the near future. 
+This version of EXTRACT is written in Matlab and will be improved over the years in terms of both speed and memory consumption. Furthermore, we plan to release a Python version in the near future. 
 
 ## Frequently asked questions
 
 
 
-### Is Extract maintained?
-Extract is regularly maintained by the current members of the Schnitzerlab. Unless this answer changes, this will be the case.
+### Is EXTRACT maintained?
+EXTRACT is regularly maintained by the current members of the Schnitzerlab. Unless this answer changes, this will be the case.
 
-### What types of movies does Extract support?
+### What types of movies does EXTRACT support?
 
-Extract can be used for cell extraction from both one-photon and two-photon calcium imaging movies.
+EXTRACT can be used for cell extraction from both one-photon and two-photon calcium imaging movies.
 
-### I am receiving an error when running the Extract algorithm or the algorithm finds no cells. What are the most common reasons?
+### I am receiving an error when running the EXTRACT algorithm or the algorithm finds no cells. What are the most common reasons?
 
-Extract has been used by many members of Schnitzerlab in the last few years for various types of movies. If an error occurs, it is usually due to one of the following reasons:
+EXTRACT has been used by many members of Schnitzerlab in the last few years for various types of movies. If an error occurs, it is usually due to one of the following reasons:
 
 - The raw movie is not properly motion corrected.
-- The raw movie includes artifacts and/or inf values. Large artifacts existing in even few frames can cause the pre-processing step to fail or result in zero found cells. While Extract performs well in low SNR movies, large movie artifacts tend to throw off both motion correction and cell extraction algorithms.
+- The raw movie includes artifacts and/or inf values. Large artifacts existing in even few frames can cause the pre-processing step to fail or result in zero found cells. While EXTRACT performs well in low SNR movies, large movie artifacts tend to throw off both motion correction and cell extraction algorithms.
 - `avg_cell_radius` is too low or too high.
 - The input movie is low SNR and `cellfind_min_snr` is set too high.
 
-We tend to visually inspect the motion corrected movies for any artifacts that might exist in the raw movie or happen during the motion correction step. Whatever the error may be, it usually originates from sources outside of Extract.
+We tend to visually inspect the motion corrected movies for any artifacts that might exist in the raw movie or happen during the motion correction step. Whatever the error may be, it usually originates from sources outside of EXTRACT.
 
-### I believe there are more cells in the movie than Extract finds. Why is this the case?
+### I believe there are more cells in the movie than EXTRACT finds. Why is this the case?
 
-Extract uses a set of thresholds decreasing the time that the user needs to spend on cell checking. If for a particular movie, the false-negative count is high, one can decrease the value of `cellfind_min_snr`.
+EXTRACT uses a set of thresholds decreasing the time that the user needs to spend on cell checking. If for a particular movie, the false-negative count is high, one can decrease the value of `cellfind_min_snr`.
 
-### Extract is finding too many false-positives, what can I do to decrease it?
+### EXTRACT is finding too many false-positives, what can I do to decrease it?
 
 Following the logic of the previous question, if for a particular movie, the false-positive count is high, one can increase the value of `cellfind_min_snr`.
 
