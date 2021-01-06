@@ -252,7 +252,9 @@ EXTRACT uses a set of thresholds decreasing the time that the user needs to spen
 
 Following the logic of the previous question, if for a particular movie, the false-positive count is high, one can increase the value of `cellfind_min_snr`.
 
+### Any particular tips and tricks for observing how the algorithm performs while it is running? 
 
+In some cases, it may be beneficial to monitor the algorithm while it is running. In such cases, we suggest keeping `config.verbose=2`, which provides more detailed information of how many cells are found initially and how many are discarded during cell refinement processes. This way, one can monitor whether the thresholds are set too high or too low.
 
 
 
