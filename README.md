@@ -163,7 +163,7 @@ EXTRACT has an internally built-in cell-check algorithm, which employs semi-supe
 3. The algorithm performs some computations in the background to assist the user, where the user can decide on some acceptance and rejection thresholds.
 4. Once a small portion of cell candidates are checked, the algorithm provides a guess for all the cell candidates. Thus, one does not need to check all the cells.
 
-The figure below explains the process in 4 steps. In this example, the user had checked only 5 cell candidates and EXTRACT identified 18 cells and 6 non-cells. We note that this feature is still experimental and we are constantly working on to improve it. We are also providing an external cell checker in case cell_check fails when the number of EXTRACT partitions is larger than 1.
+The figure below explains the process in 4 steps. In this example, the user had checked only 5 cell candidates and EXTRACT identified 18 cells and 6 non-cells. We note that this feature is still experimental and we are constantly working to improve it. We are also providing an external cell checker in case cell_check fails, which usually happens when the number of EXTRACT partitions is larger than 1.
 
 ![extract2](https://user-images.githubusercontent.com/56279691/103446410-50d3ee00-4c90-11eb-9543-536b7dd4684c.png)
 
