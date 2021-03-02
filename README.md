@@ -98,7 +98,7 @@ config.cellfind_min_snr=1; % 1 is the default SNR
 
 %Perform the extraction
 output=extractor(M,config); 
-% output=extractor('example.h5:/data',config); % If movie is large, do not pre-load. Use this instead
+% output=extractor('example.h5:/data',config); % If movie is large, do not pre-load. Use this!
 
 % Perform post-processing such as cell checking and further data analysis.
 
