@@ -15,7 +15,7 @@ config.avg_cell_radius=7; %Average cell radius is 7.
 %but still a good idea to keep these in sight!
 config.num_partitions_x=1;
 config.num_partitions_y=1; 
-config.cellfind_filter_type='none'; % The movie is simple enough, no need for filtering
+config.cellfind_filter_type='none'; % The movie is clean enough, no need for filtering
 config.verbose=2; %Keeping verbose=2 gives insight into the EXTRACTion process, always advised to keep 2
 
 
