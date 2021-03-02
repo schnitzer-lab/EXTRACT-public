@@ -6,7 +6,7 @@ config=[];
 config = get_defaults(config); %calls the defaults
 
 % Essentials, without these EXTRACT will give an error:
-config.trace_output_option='nonneg'; % Choose 'nonneg' for non-negative Ca2+ traces, 'raw' for raw ones!
+config.trace_output_option='raw'; % Choose 'nonneg' for non-negative Ca2+ traces, 'raw' for raw ones!
 config.avg_cell_radius=7; %Average cell radius is 7.
 
 
@@ -23,9 +23,9 @@ config.verbose=2; %Keeping verbose=2 gives insight into the EXTRACTion process, 
 config.use_gpu=0; % This is a small dataset, will be fast on cpu anyways.
 config.preprocess=0; %The movie is already preprocessed.
 config.max_iter = 10; % 10 is a good number for this dataset
-config.adaptive_kappa = 2;% Adaptive kappa is on for this movie. For an actual movie, keeping it off
+config.adaptive_kappa = 1;% Adaptive kappa is on for this movie. For an actual movie, keeping it off
 % may be beneficial depending on the noise levels.
-config.cellfind_min_snr=1;% Default snr is 1, but still beneficial to keep this in sight!
+config.cellfind_min_snr=0.5;% Default snr is 1, lower this (never less than 0) to increase cell count at the expense of more spurious cells!
 
 
 % Perform EXTRACTion:
