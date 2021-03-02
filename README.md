@@ -89,18 +89,21 @@ config = get_defaults(config);
 
 %Set some important settings
 config.use_gpu=1;
-config.avg_cell_radius=6;
+config.avg_cell_radius=7;
 config.num_partitions_x=1;
 config.num_partitions_y=1;
-config.cellfind_min_snr=5; % 5 is the default SNR
+config.cellfind_min_snr=1; % 1 is the default SNR
 
 %Perform the extraction
 output=extractor(M,config); 
+% output=extractor('example.h5:/1',config); % If movie is large, do not pre-load. Use this instead
 
-%Perform post-processing such as cell checking and further data analysis
+% Perform post-processing such as cell checking and further data analysis.
+
+% Check example_tutorial.m for more in depth tutorial!
 ```
 
-We have included the file `example.mat` in this repository to help the reader get started with the basics of EXTRACT.
+We have included the file `example.mat` and 'example_tutorial.m' in this repository to help the reader get started with the basics of EXTRACT.
 
 ## Advanced aspects
 Here, we discuss some of the more advanced aspects of EXTRACT. We suggest that the user first becomes familiar with the example extraction process before moving forward to the more advanced settings.
