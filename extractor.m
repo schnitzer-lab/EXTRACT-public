@@ -1,6 +1,10 @@
 function output = extractor(M, config)
 % Wrapper for EXTRACT for processing large movies
 
+%fd changes here
+dispfun('Warning: If the input movie is in dfof form, please make sure to add 1 to the whole movie before running EXTRACT. \n',1)
+%fd changes over
+
 % Get start time
 start_time = posixtime(datetime);
 io_time = 0;
@@ -11,6 +15,10 @@ PARTITION_SIDE_LEN = 250;
 
 if ~exist('config', 'var') || ~isfield(config, 'avg_cell_radius')
     error('"config.avg_cell_radius" must be specified.');
+end
+
+if ~exist('config', 'var') || ~isfield(config, 'trace_output_option')
+    error('"config.trace_output_option" must be specified. Pick "nonneg" for nonnegative output, pick "raw" for raw output.');
 end
 
 % Update config with defaults
