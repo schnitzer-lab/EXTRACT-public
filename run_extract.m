@@ -338,6 +338,22 @@ for iter = 1:config.max_iter
         break;
     end
 end
+
+switch config.trace_output_option
+    case 'raw'
+    str = sprintf('\t \t \t Providing raw traces. \n');
+    script_log = [script_log, str];
+    dispfun(str, config.verbose ==2);
+[T, ~, ~, ~, ~] = solve_T(T, S, Mt, fov_size, avg_radius, lambda, ...
+        kappa, config.max_iter_T, config.TOL_sub, ...
+        config.plot_loss, @fp_solve, config.use_gpu, 1);
+    case 'nonneg'
+    str = sprintf('\t \t \t Providing non-negative traces. \n');
+    script_log = [script_log, str];
+    dispfun(str, config.verbose ==2);
+        
+end
+
 clear M Mt;
 
 % Estimate full T if time was downsampled
