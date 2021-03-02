@@ -48,7 +48,7 @@ In this quick start, we first describe the inputs, specifically the most importa
 
 ### Inputs:
 `M`: either an existing 3-D movie matrix in the workspace, or a string that specifies an HDF5 path to a 3-D movie matrix.
-If M is a string, it must be in the following format: `filepath:dataset` (for example: `'example.h5:/1'`).
+If M is a string, it must be in the following format: `filepath:dataset` (for example: `'example.h5:/data'`).
 
 `config:` a struct whose fields define the various parameters used for signal extraction (See [Configurations](#configurations) for details on `config`). For a beginner, the most relevant fields are:
 
@@ -96,14 +96,14 @@ config.cellfind_min_snr=1; % 1 is the default SNR
 
 %Perform the extraction
 output=extractor(M,config); 
-% output=extractor('example.h5:/1',config); % If movie is large, do not pre-load. Use this instead
+% output=extractor('example.h5:/data',config); % If movie is large, do not pre-load. Use this instead
 
 % Perform post-processing such as cell checking and further data analysis.
 
 % Check example_tutorial.m for more in depth tutorial!
 ```
 
-We have included the file `example.mat` and 'example_tutorial.m' in this repository to help the reader get started with the basics of EXTRACT.
+We have included the file `example.mat` and `example_tutorial.m` in this repository to help the reader get started with the basics of EXTRACT.
 
 ## Advanced aspects
 Here, we discuss some of the more advanced aspects of EXTRACT. We suggest that the user first becomes familiar with the example extraction process before moving forward to the more advanced settings.
