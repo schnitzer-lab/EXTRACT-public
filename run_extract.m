@@ -344,9 +344,16 @@ switch config.trace_output_option
     str = sprintf('\t \t \t Providing raw traces. \n');
     script_log = [script_log, str];
     dispfun(str, config.verbose ==2);
-    if(config.max_iter==0)
-    	lambda = T(:, 1)' * 0;
+    
+    if config.l1_penalty_factor > ABS_TOL
+        % Penalize according to temporal overlap with neighbors
+        cor = get_comp_corr(S, T);
+        lambda = max(cor, [], 1) .* sum(S_smooth, 1) ...
+            * config.l1_penalty_factor;
+    else
+        lambda = T(:, 1)' * 0;
     end
+    
 [T, ~, ~, ~, ~] = solve_T(T, S, Mt, fov_size, avg_radius, lambda, ...
         kappa, config.max_iter_T, config.TOL_sub, ...
         config.plot_loss, @fp_solve, config.use_gpu, 1);
