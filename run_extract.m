@@ -344,7 +344,10 @@ switch config.trace_output_option
     str = sprintf('\t \t \t Providing raw traces. \n');
     script_log = [script_log, str];
     dispfun(str, config.verbose ==2);
-[T, ~, ~, ~, ~] = solve_T(T, S, Mt, fov_size, avg_radius, 0, ...
+    if config.max_iter=0
+    	lambda = T(:, 1)' * 0;
+    end
+[T, ~, ~, ~, ~] = solve_T(T, S, Mt, fov_size, avg_radius, lambda, ...
         kappa, config.max_iter_T, config.TOL_sub, ...
         config.plot_loss, @fp_solve, config.use_gpu, 1);
     case 'nonneg'
