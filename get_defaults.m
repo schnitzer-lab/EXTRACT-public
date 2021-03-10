@@ -1,6 +1,7 @@
 function config = get_defaults(config)
     % General parameters
     if ~isfield(config, 'preprocess'), config.preprocess = true; end
+    if ~isfield(config, 'trace_output_option'), config.trace_output_option = 'raw'; end
     if ~isfield(config, 'downsample_time_by'), config.downsample_time_by = 1; end
     if ~isfield(config, 'downsample_space_by'), config.downsample_space_by = 1; end
     if ~isfield(config, 'use_gpu'), config.use_gpu = true; end
