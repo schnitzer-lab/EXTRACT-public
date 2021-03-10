@@ -38,6 +38,10 @@ switch config.cellfind_filter_type
         M = spatial_gauss_lowpass(M, avg_radius, use_gpu);
     case 'wiener'
         M = imwiener(M, use_gpu);
+    case 'movavg'
+        moving_rad=floor(config.avg_cell_radius/2);
+        X=ones(moving_rad,moving_rad,1)/(moving_rad^2); 
+        M=convn(M,X,'same');
     case 'none'
     otherwise
         error('Filter type not supported.');
