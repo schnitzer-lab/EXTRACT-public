@@ -1,9 +1,9 @@
 function output = extractor(M, config)
 % Wrapper for EXTRACT for processing large movies
 
-%fd changes here
-dispfun('Warning: If the input movie is in dfof form, please make sure to add 1 to the whole movie before running EXTRACT. \n',1)
-%fd changes over
+%This warning is not required thanks to Hakan's implementation of the preprocessing module.
+%dispfun('Warning: If the input movie is in dfof form, please make sure to add 1 to the whole movie before running EXTRACT. \n',1)
+
 
 % Get start time
 start_time = posixtime(datetime);
