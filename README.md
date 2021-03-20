@@ -261,6 +261,10 @@ EXTRACT uses a set of thresholds decreasing the time that the user needs to spen
 
 Following the logic of the previous question, if for a particular movie, the false-positive count is high, one can increase the value of `cellfind_min_snr`.
 
+### Using the raw option gives some negative spikes, what is that and how can I prevent it?
+
+During the preprocessing module, EXTRACT performs a stationary background removal step. In some movies, during this step, the time-dependent background removal might lead to negative going spikes. In these cases, please set `remove_stationary_background=0` in the configuration file and run EXTRACT. Note that if this is done, it is important that one has a movie with a fairly stationary background throughout time points. Our general suggestion is to use non-negative traces for data analysis and use raw traces for noise estimation. Once noise is estimated from the raw traces, we suggest to perform thresholding to the traces (max(0,traces)), which turns them into non-negative traces.
+
 ### Any particular tips and tricks for observing how the algorithm performs while it is running? 
 
 In some cases, it may be beneficial to monitor the algorithm while it is running. In such cases, we suggest keeping `config.verbose=2`, which provides more detailed information of how many cells are found initially and how many are discarded during cell refinement processes. This way, one can monitor whether the thresholds are set too high or too low.
