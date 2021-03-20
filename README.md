@@ -159,6 +159,7 @@ Here is a list of more advanced configurations:
 * `temporal_corrupt_thresh` , `spatial_corrupt_thresh` : Spatial & temporal corruption indices (normalized to [`0`, `1`]) is calculated at each step of the alternating minimization routine. Images / traces that have an index higher than these are eliminated. Defaults : `0.7` & `0.7`.
 * `T_min_snr` : Cells with lower SNR value than `T_min_snr` will be eliminated. Default: `10`.
 
+We suggest to check `get_defaults.m` for further info on how to set these parameters.
 
 ### Cell checking
 
