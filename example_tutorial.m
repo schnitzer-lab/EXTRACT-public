@@ -41,7 +41,7 @@ T_ex = output.temporal_weights';
 M_res=reshape(M,2500,2000);
 X=mean(M_res,2);
 M_res=(M_res-X)./X; %perform dfof
-S=S_ground;
+S=S_ex;
 T_est=(S'*S)^(-1)*S'*M_res;
 % Since this movie does not contain unfound cells or neuropils, this will
 % be close to ground truth and EXTRACT outputs!
@@ -51,5 +51,5 @@ plot(T_ex(idx_match(1,pick),:));
 hold on
 plot(T_ground(idx_match(2,pick),:))
 hold on
-plot(T_est(idx_match(2,pick),:))
+plot(T_est(idx_match(1,pick),:))
 
