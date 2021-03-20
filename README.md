@@ -151,7 +151,7 @@ Here is a list of more advanced configurations:
 * `l1_penalty_factor`: A numeric in range `[0, 1]` which determines the strength of l1 regularization penalty to be applied when estimating the temporal components. The penalty is applied only to cells that overlap in space and whose temoral components are correlated. Use larger values if spurious cells are observed in the vicinity of high SNR cells. Default: `0`.
 * `max_iter_S`,`max_iter_T` : Maximum number of iterations for `S` and `T` estimation steps. Default: `100` and `100`.
 * `TOL_sub` : If the 1-step relative change in the objective within each `T` and `S` optimization is less than this, the respective optimization is terminated. Default: `1e-6`.
-* `kappa_std_ratio`. Kappa will be set to this times the noise std. Lower values introduce more robustness at the expense of an underestimation bias in `S` and `T` (especially in the low SNR regime). Default : `1`.
+* `kappa_std_ratio`. Kappa will be set to this times the noise std during the cell refinement process. Lower values introduce more robustness at the expense of an underestimation bias in `S` and `T` (especially in the low SNR regime). Default : `1`.
 * `TOL_main` : If the relative change in the main objective function between 2 consecutive alternating minimization steps is less than this, cell extraction is terminated. Default: `1e-6`.
 * `medfilt_outlier_pixels`: Flag that determines whether outlier pixels in the movie should be replaced with their neighborhood median. Default: `false`.
 * `remove_duplicate_cells`: For movies processed in multiple partitions, this flag controls duplicate removal in the overlap regions. Default: `true`.
@@ -264,6 +264,10 @@ Following the logic of the previous question, if for a particular movie, the fal
 ### Using the raw option gives some negative spikes, what is that and how can I prevent it?
 
 During the preprocessing module, EXTRACT performs a stationary background removal step. In some movies, during this step, the time-dependent background removal might lead to negative going spikes. In these cases, please set `remove_stationary_background=0` in the configuration file and run EXTRACT. Note that if this is done, it is important that one has a movie with a fairly stationary background throughout time points. Our general suggestion is to keep `remove_stationary_background=1` in all cases, use non-negative traces for data analysis and use raw traces (that might contain some negative spikes here and there) for noise estimation. Once noise is estimated from the raw traces, we suggest to perform thresholding to the traces (max(0,traces)), which turns them into non-negative traces.
+
+### What is the difference between `kappa_std_ratio` and `cellfind_kappa_std_ratio`?
+
+While `cellfind_kappa_std_ratio` sets the kappa value for the cell finding process, `kappa_std_ratio` sets the kappa value for the cell refinement process.
 
 ### Any particular tips and tricks for observing how the algorithm performs while it is running? 
 
