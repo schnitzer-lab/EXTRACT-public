@@ -263,7 +263,9 @@ Following the logic of the previous question, if for a particular movie, the fal
 
 ### Using the raw option gives some negative spikes, what is that and how can I prevent it?
 
-During the preprocessing module, EXTRACT performs a stationary background removal step. In some movies, during this step, the time-dependent background removal might lead to negative going spikes. In these cases, please set `remove_stationary_background=0` in the configuration file and run EXTRACT. Note that if this is done, it is important that one has a movie with a fairly stationary background throughout time points. Our general suggestion is to keep `remove_stationary_background=1` in all cases, use non-negative traces for data analysis and use raw traces (that might contain some negative spikes here and there) for noise estimation. Once noise is estimated from the raw traces, we suggest to perform thresholding to the traces (max(0,traces)), which turns them into non-negative traces.
+During the preprocessing module, EXTRACT performs a stationary background removal step. In some movies, during this step, the time-dependent background removal might lead to negative going spikes, but this will not affect the positive going (real) spikes. EXTRACT has a built-in assumption to threshold any negative activity, thus the negative going spikes do not affect the EXTRACTion process at all. In these cases, please set `remove_stationary_background=0` in the configuration file and run EXTRACT. Note that if this is done, it is important that one has a movie with a fairly stationary background throughout time points. 
+
+Our general suggestion is to keep `remove_stationary_background=1` in all cases, use non-negative traces for data analysis and use raw traces (that might contain some negative spikes here and there) for noise estimation. Once noise is estimated from the raw traces, we suggest to perform thresholding to the traces (max(0,traces)), which turns them into non-negative traces.
 
 ### What is the difference between `kappa_std_ratio` and `cellfind_kappa_std_ratio`?
 
