@@ -255,11 +255,11 @@ We tend to visually inspect the motion corrected movies for any artifacts that m
 
 ### I believe there are more cells in the movie than EXTRACT finds. Why is this the case?
 
-EXTRACT uses a set of thresholds decreasing the time that the user needs to spend on cell checking. If for a particular movie, the false-negative count is high, one can decrease the value of `cellfind_min_snr`.
+EXTRACT uses a set of thresholds decreasing the time that the user needs to spend on cell checking. If for a particular movie, the false-negative count is high, one can decrease the value of `cellfind_min_snr` and/or `T_min_SNR`. It may also be the case that `cellfind_max_steps` is set too low.
 
 ### EXTRACT is finding too many false-positives, what can I do to decrease it?
 
-Following the logic of the previous question, if for a particular movie, the false-positive count is high, one can increase the value of `cellfind_min_snr`.
+Following the logic of the previous question, if for a particular movie, the false-positive count is high, one can increase the value of `cellfind_min_snr` and/or `T_min_SNR`. This is rarely the case for EXTRACT, as many thresholding metrics ensures high precision values for typical movies.
 
 ### Using the raw option gives some negative spikes, what is that and how can I prevent it?
 
