@@ -54,9 +54,9 @@ If M is a string, it must be in the following format: `filepath:dataset` (for ex
 
 - `avg_cell_radius`: Radius estimate for an average cell in the movie. It does not have to be precise; however, setting it to a significantly larger or lower value will impair performance. It needs to be set at the start for any movie. A recommended way to set this is to consider the maximum projections of the video across time and pick the radius there (see [Example movie extraction](#example-movie-extraction)).
 - `num_partitions_x/num_partitions_y`: User specified number of movie partitions in x and y dimensions. Running EXTRACT on the whole movie at once could be computationally too expensive or simply impossible. In this case, we divide the input movie into smaller parts. Heuristics suggest that the size of the smaller FOV should not be smaller than 128 pixels in any of the x/y dimensions.
-- `cellfind_min_snr`: Minimum peak SNR (defined as peak value/noise std) value for an object to be considered as a cell. Increase this if you want to decrease the ratio of false-positives at the expense of losing some low SNR cells in the process.
-- `use_gpu`: This needs to be 1 to run EXTRACT on GPU, 0 to run EXTRACT on CPU. It is preferably, time-wise, to run EXTRACT on GPU.
-- `trace_output_option`: This is an important config, without which EXTRACT will give an error. Choose 'raw' for raw traces, 'nonneg' for non-negative traces. Keep in mind that EXTRACT underestimates the positive contaminants, which is beneficial to remove cross-contamination. Thus, raw traces can have noise baseline that is slightly more negative than the ones estimated through other methods, such as multivariate regression.
+- `cellfind_min_snr`: Minimum peak SNR (defined as peak value/noise std) value for an object to be considered as a cell. Increase this if you want to decrease the ratio of false-positives at the expense of losing some low SNR cells in the process. Default: `1`.
+- `use_gpu`: This needs to be 1 to run EXTRACT on GPU, 0 to run EXTRACT on CPU. It is preferably, time-wise, to run EXTRACT on GPU. Default: `1`.
+- `trace_output_option`: Choose 'raw' for raw traces, 'nonneg' for non-negative traces. Check [Frequently Asked Questions](#frequently-asked-questions) before using the option 'raw'. Default: `nonneg`.
 
 
 EXTRACT has a helper function that initializes the config struct to the most common configurations:
@@ -91,10 +91,10 @@ config = get_defaults(config);
 %Set some important settings
 config.use_gpu=1;
 config.avg_cell_radius=7;
-config.trace_output_option='nonneg';
+config.trace_output_option='nonneg'; 
 config.num_partitions_x=1;
 config.num_partitions_y=1;
-config.cellfind_min_snr=1; % 1 is the default SNR
+config.cellfind_min_snr=1; 
 
 %Perform the extraction
 output=extractor(M,config); 
@@ -120,42 +120,45 @@ In this repository, we are introducing an important part of the cell extraction 
 
 Here is a list of more advanced configurations:
 
-* `dendrite_aware`: Boolean flag, set it to `true` if dendrites exist in the movie & are desired in the output. Default: `false`.
-* `crop_cicrcular`: For microendoscopic movies, set it to `true` for automatically cropping out the region outside the circular imaging region. Default: `false`.
 * `preprocess`: EXTRACT does preprocessing steps such as taking dF/F, highpass filtering for suppressing excessive background, and circular masking for endoscopic movies. Set to `false` to skip all preprocessing. Default: `true`.
-* `cellfind_filter_type`: Type of the spatial smoothing filter used for cell finding. Options: `'butter'` (IIR butterworth filter), `'gauss'` (FIR filter with a gaussian kernel), `'wiener'` (wiener filter), `'none'` (no filtering). Default: `'butter'`.
-* `temporal_denoising`: Boolean flag that determines whether to apply temporal wavelet denoising. This functionality is experimental; expect it to increase runtime considerably if the input movie has >10K frames and hase larger field of view than 250x250 pixels. Default: `false`.
-* `remove_stationary_background`. Boolean flag that determines whether to subtract the (spatially) stationary background (largest spatiotemporal mode of the movie matrix). Default: `true`.
-* `smoothing_ratio_x2y`: If the movie contains mainly objects that are elongated in one dimension (e.g. dendrites), this parameter is useful for more smoothing in either x or y dimension. Default: `1`.
+* `downsample_time_by`, `downsample_space_by`: Downsampling factors. Set to `'auto'` for automatic downsampling factors based on avg cell radius and avg calcium event time constant. Defaults: `1` & `1`.
 * `multi_gpu:` Boolean flag for parralel processing of different movie partitions on multiple GPUs (if applicable) in the GPU mode. Default: `false`.
 * `parallel_cpu:` Boolean flag for parallel processing of different movie partitions in the CPU mode. This flag is only effective when `use_gpu = 0`. Default: `false`.
 * `num_parallel_cpu_workers:` When `config.parallel_cpu = 1`, this parameter can be used to set the desired number of CPU workers. Default is # of available cores to Matlab - 1 (minus 1 is for leaving compute room for other tasks).
-* `cellfind_numpix_threshold`: During cell finding, objects with an area < `cellfind_numpix_threshold` are discarded. Default: `9`.
-* `downsample_time_by`, `downsample_space_by`: Downsampling factors. Set to `'auto'` for automatic downsampling factors based on avg cell radius and avg calcium event time constant. Defaults: `1` & `1`.
-* `spatial_highpass_cutoff`, `spatial_lowpass_cutoff`: These cutoffs determine the strength of butterworth spatial filtering of the movie (higher values = more lenient filtering), and are relative to the average cell radius. Defaults: `5` & `2`.
-* `adaptive_kappa`: If `true`, then during cell finding, the robust esimation loss will adaptively set its robustness parameter. Default: `false`.
-* `smooth_T` : If set to `true`, calculated traces are smoothed using median filtering. Default : `false`.
-* `smooth_S` : If set to `true`, calculated images are smoothed using a 2-D gaussian filter. Default : `false`.
-* `verbose`: Log is emitted from the console output when set to `1`, set to `0` to suppress output. Default: `1`.
 * `min_radius_after_downsampling`: When `downsample_space_by= 'auto'`, this determines the spatial downsampling factor by setting a minimum avg radius after downsampling. Default: `5`.
 * `min_tau_after_downsampling`: When `downsample_time_by='auto'`, this determines the temporal downsampling factor by setting a minimum event tau after downsampling. Default: `5`.
 * `reestimate_S_if_downsampled`: When set to `true`, images are re-estimated from full movie at the end. When `false`, images are upsampled by interpolation. `reestimate_S_if_downsampled=true` is not recommended as precise shape of cell images are typically not essential, and re-estimation from full movie is costly.
+* `verbose`: Log is emitted from the console output when set to `1`, set to `0` to suppress output. When set to `2`, EXTRACT provides a detailed summary during the signal extraction process. Default: `2`.
+* `crop_cicrcular`: For microendoscopic movies, set it to `true` for automatically cropping out the region outside the circular imaging region. Default: `false`.
+* `dendrite_aware`: Boolean flag, set it to `true` if dendrites exist in the movie & are desired in the output. Default: `false`.
+* `adaptive_kappa`: If `true`, then during cell finding, the robust esimation loss will adaptively set its robustness parameter. Default: `false`.
+* `smoothing_ratio_x2y`: If the movie contains mainly objects that are elongated in one dimension (e.g. dendrites), this parameter is useful for more smoothing in either x or y dimension. Default: `1`.
+* `compact_output`: If set to `true`, then the output will not include bad components that were found but then eliminated. This usually reduces the memory used by the output struct substantially. Default: `true`.
+* `use_sparse_arrays`: If set to `true`, then the output cell images will be saved as sparse arrays. Default: `true`.
+* `temporal_denoising`: Boolean flag that determines whether to apply temporal wavelet denoising. This functionality is experimental; expect it to increase runtime considerably if the input movie has >10K frames and hase larger field of view than 250x250 pixels. Default: `false`.
+* `remove_stationary_background`. Boolean flag that determines whether to subtract the (spatially) stationary background (largest spatiotemporal mode of the movie matrix). Default: `true`.
+* `cellfind_max_steps`: Maximum number of cell candidate initialization during cell finding step. Default: `1000`.
+* `cellfind_kappa_std_ratio`: Kappa will be set to this times the noise std for the component-wise EXTRACT during initialization. Default: `1`.
+* `cellfind_filter_type`: Type of the spatial smoothing filter used for cell finding. Options: `'butter'` (IIR butterworth filter), `'gauss'` (FIR filter with a gaussian kernel), `'wiener'` (wiener filter), 'movavg' (moving average in space), `'none'` (no filtering). Default: `'butter'`.
+* `spatial_highpass_cutoff`, `spatial_lowpass_cutoff`: These cutoffs determine the strength of butterworth spatial filtering of the movie (higher values = more lenient filtering), and are relative to the average cell radius. Defaults: `5` & `2`.
+* `init_with_gaussian`: If true, then during cell finding, each cell is initialized with a gaussian shape prior to robust estimation. If false, then initialization is done with a correlation image (preferred for movies with dendrites). Default: `false`.
+* `cellfind_numpix_threshold`: During cell finding, objects with an area < `cellfind_numpix_threshold` are discarded. Default: `9`.
+* `S_init`: Optionally, provide cell images in `config.S_init` as a 2-D matrix (with the size of the first dimension equal to movie height x movie width), and the algorithm will use these as the initial set of cells, skipping its native initialization. Default: empty array.
+* `smooth_T` : If set to `true`, calculated traces are smoothed using median filtering. Default : `false`.
+* `smooth_S` : If set to `true`, calculated images are smoothed using a 2-D gaussian filter. Default : `true`.
+* `max_iter` : Maximum number of alternating estimation iterations. Default : `6`.
+* `plot_loss`: When set to `true`, empirical risk is plotted against iterations during alternating estimation. Default: `false`.
+* `l1_penalty_factor`: A numeric in range `[0, 1]` which determines the strength of l1 regularization penalty to be applied when estimating the temporal components. The penalty is applied only to cells that overlap in space and whose temoral components are correlated. Use larger values if spurious cells are observed in the vicinity of high SNR cells. Default: `0`.
+* `max_iter_S`,`max_iter_T` : Maximum number of iterations for `S` and `T` estimation steps. Default: `100` and `100`.
+* `TOL_sub` : If the 1-step relative change in the objective within each `T` and `S` optimization is less than this, the respective optimization is terminated. Default: `1e-6`.
+* `kappa_std_ratio`. Kappa will be set to this times the noise std. Lower values introduce more robustness at the expense of an underestimation bias in `S` and `T` (especially in the low SNR regime). Default : `1`.
+* `TOL_main` : If the relative change in the main objective function between 2 consecutive alternating minimization steps is less than this, cell extraction is terminated. Default: `1e-6`.
 * `medfilt_outlier_pixels`: Flag that determines whether outlier pixels in the movie should be replaced with their neighborhood median. Default: `false`.
 * `remove_duplicate_cells`: For movies processed in multiple partitions, this flag controls duplicate removal in the overlap regions. Default: `true`.
-* `kappa_std_ratio`. Kappa will be set to this times the noise std. Lower values introduce more robustness at the expense of an underestimation bias in `F` and `T` (especially in the low SNR regime). Default : `1`.
-* `init_with_gaussian`: If true, then during cell finding, each cell is initialized with a gaussian shape prior to robust estimation. If false, then initialization is done with a correlation image (preferred for movies with dendrites). Default: `true`.
-* `max_iter` : Maximum number of alternating estimation iterations. Default : `6`.
-* `max_iter_F`,`max_iter_T` : Maximum number of iterations for `F` and `T` estimation steps. Default: `100` and `50`.
-* `TOL_main` : If the relative change in the main objective function between 2 consecutive alternating minimization steps is less than this, cell extraction is terminated. Default: `1e-6`.
-* `TOL_sub` : If the 1-step relative change in the objective within each `T` and `F` optimization is less than this, the respective optimization is terminated. Default: `1e-6`.
-* `T_dup_corr_thresh`,`F_dup_corr_thresh` : Through alternating estimation, cells that have higher trace correlation than `T_dup_corr_thresh` and higher image correlation than `F_dup_corr_thresh` are eliminated. Defaults:  `0.9` & `0.95`.
-* `temporal_corrupt_thresh` , `spat_corrupt_thresh` : Spatial & temporal corruption indices (normalized to [`0`, `1`]) is calculated at each step of the alternating minimization routine. Images / traces that have an index higher than these are eliminated. Defaults : `0.7` & `0.5`.
-* `plot_loss`: When set to `true`, empirical risk is plotted against iterations during alternating estimation. Default: `false`.
-* `init_kappa_std_ratio`: Kappa will be set to this times the noise std for the component-wise EXTRACT during initialization. Default: `1`.
-* `cellfind_maxnum_iters`: Maximum number of intiialization iterations. Default: `1000`.
-* `compact_output`: If set to `true`, then the output will not include bad components that were found but then eliminated. This usually reduces the memory used by the output struct substantially. Default: `true`.
-* `S_init`: Optionally, provide cell images in `config.S_init` as a 2-D matrix (with the size of the first dimension equal to movie height x movie width), and the algorithm will use these as the initial set of cells, skipping its native initialization. Default: empty array.
-* `l1_penalty_factor`: A numeric in range `[0, 1]` which determines the strength of l1 regularization penalty to be applied when estimating the temporal components. The penalty is applied only to cells that overlap in space and whose temoral components are correlated. Use larger values if spurious cells are observed in the vicinity of high SNR cells. Default: `0.5`.
+* `T_dup_corr_thresh`,`S_dup_corr_thresh` : Through alternating estimation, cells that have higher trace correlation than `T_dup_corr_thresh` and higher image correlation than `S_dup_corr_thresh` are eliminated. Defaults: `0.95` & `0.95`.
+* `temporal_corrupt_thresh` , `spatial_corrupt_thresh` : Spatial & temporal corruption indices (normalized to [`0`, `1`]) is calculated at each step of the alternating minimization routine. Images / traces that have an index higher than these are eliminated. Defaults : `0.7` & `0.7`.
+* `T_min_snr` : Cells with lower SNR value than `T_min_snr` will be eliminated. Default: `10`.
+
 
 ### Cell checking
 
