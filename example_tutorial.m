@@ -6,13 +6,13 @@ config=[];
 config = get_defaults(config); %calls the defaults
 
 % Essentials, without these EXTRACT will give an error:
-config.trace_output_option='raw'; % Choose 'nonneg' for non-negative Ca2+ traces, 'raw' for raw ones!
 config.avg_cell_radius=7; %Average cell radius is 7.
 
 
 %Optionals, but strongly advised to handpick:
 %Movie is small enough that EXTRACT will not automatically partition this,
 %but still a good idea to keep these in sight!
+config.trace_output_option='raw'; % Choose 'nonneg' for non-negative Ca2+ traces, 'raw' for raw ones!
 config.num_partitions_x=1;
 config.num_partitions_y=1; 
 config.cellfind_filter_type='none'; % The movie is clean enough, no need for filtering
