@@ -22,7 +22,7 @@ Its main features and the mathematical foundations behind EXTRACT can be found i
 }
 ```
 
-
+Thank you for your interest in EXTRACT, a cell extraction routine with native GPU implementation.  To receive occasional updates about new releases, or to ask questions about EXTRACT usage, please send an email to extractneurons@gmail.com along with your name and institution. (Please be sure to add this email to your contact list so that replies and announcements do not go to your spam folder).  Thank you!  The EXTRACT team.
 
 ## Content
 
