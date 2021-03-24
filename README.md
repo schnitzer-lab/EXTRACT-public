@@ -1,5 +1,11 @@
 # EXTRACT
 
+## Latest News
+
+Thank you for your interest in EXTRACT, a cell extraction routine with native GPU implementation.  To receive occasional updates about new releases, or to ask questions about EXTRACT usage, please send an email to extractneurons@gmail.com along with your name and institution. (Please be sure to add this email to your contact list so that replies and announcements do not go to your spam folder).  Thank you!  The EXTRACT team.
+
+## Introduction
+
 EXTRACT is a  <ins>t</ins>ractable and <ins>r</ins>obust  <ins>a</ins>utomated <ins>c</ins>ell extraction  <ins>t</ins>ool for calcium imaging, which *extracts* the activities of cells as time series from both one-photon and two-photon Ca<sup>2+</sup> imaging movies. EXTRACT makes minimal assumptions about the data, which is the main reason behind its high robustness and superior performance. 
 
 <img src="https://user-images.githubusercontent.com/56279691/103445994-9e9a2780-4c8b-11eb-9693-6684cca73743.png" width="50%" align="right" alt="EXTRACT_pipeline">
@@ -21,8 +27,6 @@ Its main features and the mathematical foundations behind EXTRACT can be found i
   year={2017}
 }
 ```
-
-Thank you for your interest in EXTRACT, a cell extraction routine with native GPU implementation.  To receive occasional updates about new releases, or to ask questions about EXTRACT usage, please send an email to extractneurons@gmail.com along with your name and institution. (Please be sure to add this email to your contact list so that replies and announcements do not go to your spam folder).  Thank you!  The EXTRACT team.
 
 ## Content
 
