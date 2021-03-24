@@ -34,6 +34,7 @@ function config = get_defaults(config)
     if ~isfield(config, 'spatial_lowpass_cutoff'), config.spatial_lowpass_cutoff = 2; end
     if ~isfield(config, 'init_with_gaussian'), config.init_with_gaussian = false; end
     if ~isfield(config, 'cellfind_filter_type'), config.cellfind_filter_type = 'butter'; end
+    if ~isfield(config, 'moving_radius'), config.moving_radius = 3; end
     if ~isfield(config, 'cellfind_numpix_threshold'), config.cellfind_numpix_threshold = 9; end  % 3x3 region
     if ~isfield(config, 'high2low_brightness_ratio'), config.high2low_brightness_ratio = inf; end
     if ~isfield(config, 'S_init'), config.S_init = []; end
