@@ -15,7 +15,7 @@ EXTRACT is a  <ins>t</ins>ractable and <ins>r</ins>obust  <ins>a</ins>utomated <
 
 EXTRACT can be thought of as being part of a signal extraction pipeline, as illustrated by the figure on the right. The pipeline takes a raw 1p/2p Ca<sup>2+</sup> imaging movie as an input. Then, one performs motion correction and various pre-processing steps. Later, the processed movie is used by the EXTRACT algorithm to perform tractable and robust cell extraction, which puts out the temporal traces and spatial maps for future data analysis. EXTRACT code in this repository provides most of the pipeline (colored as green in the figure). We also provide some links to the external repositories whenever needed (colored as orange in the figure).
 
-Its main features and the mathematical foundations behind EXTRACT as well as a comparison with state-of-the-art methods can be found in the papers cited below. If you use EXTRACT for your own research, please consider citing these works.
+Its main features and the mathematical foundations behind EXTRACT as well as a comparison with state-of-the-art methods can be found in the papers [paper 1](https://papers.nips.cc/paper/2017/file/e449b9317dad920c0dd5ad0a2a2d5e49-Paper.pdf) and [paper 2](https://www.biorxiv.org/content/10.1101/2021.03.24.436279v1.full.pdf). If you use EXTRACT for your own research, please consider citing these works. 
 
 
 
