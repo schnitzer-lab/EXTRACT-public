@@ -32,7 +32,9 @@ Its main features and the mathematical foundations behind EXTRACT as well as a c
 
 ```
 @article {inan2021fast,
-	author = {Inan, Hakan and Schmuckermair, Claudia and Tasci, Tugce and Ahanonu, Biafra and Hernandez, Oscar and Lecoq, Jerome and Dinc, Fatih and Wagner, Mark J and Erdogdu, Murat and Schnitzer, Mark J},
+	author = {Inan, Hakan and Schmuckermair, Claudia and Tasci, Tugce and Ahanonu, 
+	Biafra and Hernandez, Oscar and Lecoq, Jerome and Dinc, Fatih and Wagner, 
+	Mark J and Erdogdu, Murat and Schnitzer, Mark J},
 	title = {Fast and statistically robust cell extraction from large-scale neural calcium imaging datasets},
 	elocation-id = {2021.03.24.436279},
 	year = {2021},
