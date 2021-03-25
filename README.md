@@ -161,7 +161,7 @@ Here is a list of more advanced configurations:
 * `remove_stationary_background`. Boolean flag that determines whether to subtract the (spatially) stationary background (largest spatiotemporal mode of the movie matrix). Default: `true`.
 * `cellfind_max_steps`: Maximum number of cell candidate initialization during cell finding step. Default: `1000`.
 * `cellfind_kappa_std_ratio`: Kappa will be set to this times the noise std for the component-wise EXTRACT during initialization. Default: `1`.
-* `cellfind_filter_type`: Type of the spatial smoothing filter used for cell finding. Options: `'butter'` (IIR butterworth filter), `'gauss'` (FIR filter with a gaussian kernel), `'wiener'` (wiener filter), 'movavg' (moving average in space), `'none'` (no filtering). Default: `'butter'`.
+* `cellfind_filter_type`: Type of the spatial smoothing filter used for cell finding. Options: `'butter'` (IIR butterworth filter), `'gauss'` (FIR filter with a gaussian kernel), `'wiener'` (wiener filter), `'movavg'` (moving average in space), `'none'` (no filtering). Default: `'butter'`.
 * `spatial_highpass_cutoff`, `spatial_lowpass_cutoff`: These cutoffs determine the strength of butterworth spatial filtering of the movie (higher values = more lenient filtering), and are relative to the average cell radius. Defaults: `5` & `2`.
 * `init_with_gaussian`: If true, then during cell finding, each cell is initialized with a gaussian shape prior to robust estimation. If false, then initialization is done with a correlation image (preferred for movies with dendrites). Default: `false`.
 * `cellfind_numpix_threshold`: During cell finding, objects with an area < `cellfind_numpix_threshold` are discarded. Default: `9`.
