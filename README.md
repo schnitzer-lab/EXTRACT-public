@@ -287,7 +287,7 @@ Following the logic of the previous question, if for a particular movie, the fal
 
 During the preprocessing module, EXTRACT performs a stationary background removal step. In some movies, during this step, the time-dependent background removal might lead to negative going spikes. EXTRACT has a built-in assumption to threshold any negative activity, thus the negative going spikes do not show-up during the usual EXTRACTion process, but only during the (optional) final robust regression of raw traces. In these cases, please set `remove_stationary_background=0` in the configuration file and run EXTRACT. Note that if this is done, it is important that one has a movie with a fairly stationary background throughout time points.
 
-Our general suggestion is to keep `remove_stationary_background=1` in all cases, use non-negative traces for data analysis and use raw traces (that might contain some negative spikes here and there) for noise estimation. Once noise is estimated from the raw traces, we suggest to perform thresholding to the traces (max(0,traces)), which turns them into non-negative traces.
+Our general suggestion is to keep `remove_stationary_background=1` in all cases, use non-negative traces for data analysis and use raw traces (that might contain some negative spikes here and there) for noise estimation. Once noise is estimated from the raw traces, we suggest to perform thresholding to the traces (max(0,traces)), which turns them into non-negative traces. This is consistent with EXTRACT's inherent assumption that signal is non-negative.
 
 ### What is the difference between `kappa_std_ratio` and `cellfind_kappa_std_ratio`?
 
