@@ -266,7 +266,7 @@ EXTRACT can be used for cell extraction from both one-photon and two-photon calc
 
 ### Why is EXTRACT's support built around hdf5?
 
-EXTRACT requires that the user had already performed motion correction and there is an option in the state-of-the-art motion correction algorithms to save the output as an hdf5 file (See for example: https://github.com/flatironinstitute/NoRMCorre). We do not advise running EXTRACT without motion correcting first. 
+EXTRACT requires that the user had already performed motion correction and there is an option in the state-of-the-art motion correction algorithms to save the output as an hdf5 file (See for example: [NoRMCorre](https://github.com/flatironinstitute/NoRMCorre)). We do not advise running EXTRACT without motion correcting first. 
 
 The current suggested workflow for running EXTRACT is the following: One performs the motion correction on the imaging file (which can be saved in many different ways, .avi, .tiff and/or .tif) and saves the motion corrected output as hdf5. We find that hdf5 works fastest and most convenient for EXTRACT pipeline. That being said, we intend to add support for various input file types to the EXTRACT pipeline in the future.
 
