@@ -41,7 +41,7 @@ function [M, config] = preprocess_movie(M, config)
         % Remove wandering signal baseline
         if isfield(config, 'avg_event_tau')
             M = correct_baseline(M, config.avg_event_tau, ...
-                config.remove_stationary_background, config.use_gpu);
+                config.remove_background, config.use_gpu);
         end
     
     else
