@@ -25,7 +25,8 @@ function config = get_defaults(config)
     if ~isfield(config, 'compact_output'), config.compact_output = true; end
     if ~isfield(config, 'use_sparse_arrays'), config.use_sparse_arrays = false; end
     if ~isfield(config, 'temporal_denoising'), config.temporal_denoising = false; end
-    if ~isfield(config, 'remove_stationary_background'), config.remove_stationary_background = true; end
+    if ~isfield(config, 'remove_background'), config.remove_stationary_background = true; end
+    if ~isfield(config, 'hyperparameter_tuning_flag'), config.remove_stationary_background = false; end
     % Cell finding parameters
     if ~isfield(config, 'cellfind_min_snr'), config.cellfind_min_snr = 1; end
     if ~isfield(config, 'cellfind_max_steps'), config.cellfind_max_steps = 1000; end
