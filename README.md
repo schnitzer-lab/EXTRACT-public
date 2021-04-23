@@ -158,7 +158,7 @@ Here is a list of more advanced configurations:
 * `compact_output`: If set to `true`, then the output will not include bad components that were found but then eliminated. This usually reduces the memory used by the output struct substantially. Default: `true`.
 * `use_sparse_arrays`: If set to `true`, then the output cell images will be saved as sparse arrays. Default: `true`.
 * `temporal_denoising`: Boolean flag that determines whether to apply temporal wavelet denoising. This functionality is experimental; expect it to increase runtime considerably if the input movie has >10K frames and hase larger field of view than 250x250 pixels. Default: `false`.
-* `remove_stationary_background`. Boolean flag that determines whether to subtract the (spatially) stationary background (largest spatiotemporal mode of the movie matrix). Default: `true`.
+* `remove_background`. Boolean flag that determines whether to subtract the (spatially) background (largest spatiotemporal mode of the movie matrix). Default: `true`.
 * `cellfind_max_steps`: Maximum number of cell candidate initialization during cell finding step. Default: `1000`.
 * `cellfind_kappa_std_ratio`: Kappa will be set to this times the noise std for the component-wise EXTRACT during initialization. Default: `1`.
 * `cellfind_filter_type`: Type of the spatial smoothing filter used for cell finding. Options: `'butter'` (IIR butterworth filter), `'gauss'` (FIR filter with a gaussian kernel), `'wiener'` (wiener filter), `'movavg'` (moving average in space), `'none'` (no filtering). Default: `'butter'`.
@@ -178,7 +178,7 @@ Here is a list of more advanced configurations:
 * `medfilt_outlier_pixels`: Flag that determines whether outlier pixels in the movie should be replaced with their neighborhood median. Default: `false`.
 * `remove_duplicate_cells`: For movies processed in multiple partitions, this flag controls duplicate removal in the overlap regions. Default: `true`.
 * `T_dup_corr_thresh`,`S_dup_corr_thresh` : Through alternating estimation, cells that have higher trace correlation than `T_dup_corr_thresh` and higher image correlation than `S_dup_corr_thresh` are eliminated. Defaults: `0.95` & `0.95`.
-* `temporal_corrupt_thresh` , `spatial_corrupt_thresh` : Spatial & temporal corruption indices (normalized to [`0`, `1`]) is calculated at each step of the alternating minimization routine. Images / traces that have an index higher than these are eliminated. Defaults : `0.7` & `0.7`.
+* `temporal_corrupt_thresh` , `spatial_corrupt_thresh` : Spatial & temporal corruption indices are calculated at each step of the alternating minimization routine. Images / traces that have an index higher than these are eliminated. Defaults : `0.7` & `0.7`.
 * `T_min_snr` : Cells with lower SNR value than `T_min_snr` will be eliminated. Default: `10`.
 
 We suggest to check `get_defaults.m` for further info on how to set these parameters.
