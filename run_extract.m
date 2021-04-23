@@ -259,8 +259,13 @@ for iter = 1:config.max_iter
         break;
     end
     % Update spatial binary mask
+    try
     mask = make_mask(maybe_gpu(config.use_gpu, single(S_smooth > 0.1)), ...
         fov_size, mask_extension_radius);
+    catch
+    mask = make_mask(maybe_gpu(0, single(S_smooth > 0.1)), ...
+        fov_size, mask_extension_radius);
+    end
     
     % Update S
     S_before = S;
@@ -291,6 +296,16 @@ for iter = 1:config.max_iter
         dispfun(str, config.verbose ==2);
     end
 
+    if (config.hyperparameter_tuning_flag==1)
+    [classification] = classification_hyperparameters(...
+                classification, S, S_smooth, T, M, S_surround, T_corr_in, T_corr_out, fov_size, round(avg_radius), ...
+                config.use_gpu);
+    
+	str = sprintf('\t \t \t Terminating the cell-refinement for hyperparameter tuning \n');
+	dispfun(str, config.verbose ==2);
+	break
+    end
+
     %---
     % Remove redundant cells
     %---
@@ -299,6 +314,7 @@ for iter = 1:config.max_iter
         [classification, is_bad] = remove_redundant(...
                 classification, S, S_smooth, T, M, S_surround, T_corr_in, T_corr_out, fov_size, round(avg_radius), ...
                 config.use_gpu, config.thresholds);
+		
 
         % Merge duplicate cells (update images)
         if ~isempty(classification(end).merge.idx_merged)

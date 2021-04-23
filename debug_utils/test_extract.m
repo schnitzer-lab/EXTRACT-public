@@ -48,7 +48,7 @@ plot_cells_overlay(output.spatial_weights);
 filters = double(output.spatial_weights);
 traces = output.temporal_weights;
 info.num_pairs = size(traces, 2);
-info.type = 'sana ne amk';
+info.type = 'none';
 save('rec_extract', 'filters', 'traces', 'info');
 ds = DaySummary('', '');
 
