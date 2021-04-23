@@ -18,7 +18,7 @@ config.num_partitions_y=1;
 config.cellfind_filter_type='none'; % The movie is clean enough, no need for lowpass filtering
 config.verbose=2; %Keeping verbose=2 gives insight into the EXTRACTion process, always advised to keep 2
 config.spatial_highpass_cutoff=inf; % no need for highpass filtering
-config.remove_stationary_background=0; %no need for background removal
+config.remove_background=0; %no need for background removal
 
 % Optionals whose defaults exist:
 config.use_gpu=0; % This is a small dataset, will be fast on cpu anyways.
