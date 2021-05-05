@@ -278,7 +278,7 @@ EXTRACT has been used by many members of Schnitzerlab in the last few years for 
 - The raw movie includes artifacts and/or inf values. Large artifacts existing in even few frames can cause the pre-processing step to fail or result in zero found cells. While EXTRACT performs well in low SNR movies, large movie artifacts tend to throw off both motion correction and cell extraction algorithms.
 - `avg_cell_radius` is too low or too high.
 - The input movie is low SNR and `cellfind_min_snr` is set too high.
-- If you are receiving a memory error, most likely the RAM memory is not sufficient for the process. In this case, we advise to increase the number of space partitions.
+- If you are receiving a memory error, most likely the RAM is not sufficient for the process. In this case, we advise to increase the number of space partitions.
 
 We tend to visually inspect the motion corrected movies for any artifacts that might exist in the raw movie or happen during the motion correction step. Whatever the error may be, it usually originates from sources outside of EXTRACT.
 
