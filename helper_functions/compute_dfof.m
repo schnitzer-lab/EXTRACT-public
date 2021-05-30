@@ -8,7 +8,7 @@ function [M,m] = compute_dfof(M, skip)
     % If mean activity is below ABS_THRESHOLD, it is considered 0
     ABS_THRESHOLD = 1e-2;
     
-    m = mean(M, 3);
+    m = median(M, 3);
     % If movie is centered around 0, then skip
     % Compare mean of mean image to the center pixel std
     t = M(round(end/2),round(end/2),:);
