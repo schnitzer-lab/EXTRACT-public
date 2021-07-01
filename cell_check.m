@@ -41,7 +41,7 @@ function cell_check(output, M)
     features = metrics';
     ims = cat(3, ims_good, ims_bad);
     num_cells = size(ims, 3);
-    extract_labels = [zeros(1, size(ims_good, 3)), -ones(1, size(ims_bad, 3))];
+    extract_labels = [zeros(1, size(ims_good, 3))];
 
     user_labels = zeros(size(extract_labels));
     labels = zeros(size(extract_labels));
