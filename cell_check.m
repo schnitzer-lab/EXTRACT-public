@@ -28,8 +28,13 @@ function cell_check(output, M)
     [output, output_handle] = parse_output(output);
     
     % Get cellcheck struct
-    [ims_bad, traces_bad, is_attr_bad, metrics] = get_bad_images_and_traces(output);
-    %is_elim = any(is_attr_bad, 1);
+    
+    [is_attr_bad,metrics,is_elim]=get_cellcheck_features(output);
+    
+    ims_bad=[];
+    traces_bad=[];
+    
+    
     ims_good = output.spatial_weights;
     traces_good = output.temporal_weights';
     summary_image = output.info.summary_image;
@@ -40,7 +45,6 @@ function cell_check(output, M)
 
     user_labels = zeros(size(extract_labels));
     labels = zeros(size(extract_labels));
-    is_elim=logical(zeros(size(extract_labels)));
     update_labels;
     
     cellcheck = struct('ims', ims,...
