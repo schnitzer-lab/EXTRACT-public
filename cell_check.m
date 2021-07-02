@@ -466,7 +466,8 @@ function cell_check(output, M)
             ml_labels(idx_current_cell) = 1;
             update_scoring_model;
         end
-
+        update_extract_labels;
+        update_labels;
         update_stats_all;
         set_current_cell_from_button_next;
     end
@@ -480,7 +481,8 @@ function cell_check(output, M)
             ml_labels(idx_current_cell) = -1;
             update_scoring_model;
         end
-
+        update_extract_labels;
+        update_labels;
         update_stats_all;
         set_current_cell_from_button_next;
     end
@@ -493,7 +495,8 @@ function cell_check(output, M)
         if active_learning
             update_scoring_model;
         end
-        
+        update_extract_labels;
+        update_labels;       
         update_stats_all;
         set_current_cell_from_button_next;
     end
