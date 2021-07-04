@@ -103,7 +103,7 @@ function cell_check(output, M)
     
     % Save & Load buttons
     button_save = uibutton(main_fig, 'text', 'save data',...
-         'position', norm2pix([0.55, 0.35, 0.05, 0.05], figure_pos));
+         'position', norm2pix([0.45, 0.30, 0.15, 0.05], figure_pos));
     add_callback(button_save, 'ButtonPushedFcn', @save_data);
     
 %     button_load = uibutton(main_fig, 'text', 'load',...
