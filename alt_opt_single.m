@@ -73,6 +73,8 @@ end
 % Correlation image
 if ~exist('M_subsub', 'var') % Break invoked before first s update
     s_corr = s_blank;
+elseif (size(M_subsub,2)==1)
+    s_corr = s_blank;
 else
     s_sub = M_subsub * (t_sub / (t_sub'*t_sub)) ;
     s_corr = s_blank;
