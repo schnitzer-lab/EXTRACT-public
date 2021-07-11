@@ -107,8 +107,12 @@ function cell_check(output, M)
     
     % Save & Load buttons
     button_save = uibutton(main_fig, 'text', 'save data',...
-         'position', norm2pix([0.45, 0.30, 0.15, 0.05], figure_pos));
+         'position', norm2pix([0.55, 0.40, 0.15, 0.05], figure_pos));
     add_callback(button_save, 'ButtonPushedFcn', @save_data);
+    
+    button_zoom = uibutton(main_fig, 'text', 'zoom to current cell',...
+         'position', norm2pix([0.45, 0.30, 0.05, 0.05], figure_pos));
+    add_callback(button_zoom, 'ButtonPushedFcn', @draw_current_region);
     
 %     button_load = uibutton(main_fig, 'text', 'load',...
 %          'position', norm2pix([0.55, 0.82, 0.05, 0.05], figure_pos));
@@ -428,6 +432,8 @@ function cell_check(output, M)
         idx_current_cell = val;
         update_one_cell(idx_previous_cell);
         update_one_cell(idx_current_cell);
+        xlim(ax_cellmap,'auto')
+        ylim(ax_cellmap,'auto')
         drawnow;
         % Update slider
         set(slider_cell,'Value',idx_current_cell);
@@ -441,6 +447,19 @@ function cell_check(output, M)
         plot_event_snapshots_with_neighbors;
         clear_axes(ax_snippet);
     end
+
+    function draw_current_region(varargin)
+        im_n=cellcheck.ims(:,:,idx_current_cell);
+        [h,w]=size(im_n);
+        im_n = im_n / sum(im_n(:));  % make it sum to one
+        x_center = sum((1:w) .* sum(im_n, 1));
+        y_center = sum((1:h)' .* sum(im_n, 2));
+        avg_radius=output.config.avg_cell_radius;
+        xlim(ax_cellmap,[x_center-3*avg_radius,x_center+3*avg_radius]);
+        ylim(ax_cellmap,[y_center-3*avg_radius,y_center+3*avg_radius]);
+    end
+
+
 
     function next_cell = decide_next_cell
         if checkbox_autolabel.Value == 1
