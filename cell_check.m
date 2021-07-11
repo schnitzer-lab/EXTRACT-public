@@ -751,17 +751,35 @@ function cell_check(output, M)
         y_current = y_range(1):y_range(2);
     end
 
-    function neighbors = get_all_neighbors(cellcheck)
+function neighbors = get_all_neighbors(cellcheck)
         n_components = size(cellcheck.ims, 3);
         neighbors = cell(1, n_components);
         [h, w, k] = size(cellcheck.ims);
-        ims_flat = reshape(cellcheck.ims, h*w, k);
-        % If ndSparse, convert to sparse
-        if isa(ims_flat, 'ndSparse')
-            ims_flat = sparse(ims_flat);
+        ims_f=cellcheck.ims;
+        
+        
+        for i=1:k
+            im_n=ims_f(:,:,i);
+            im_n = im_n / sum(im_n(:));  % make it sum to one
+            x_center(i) = sum((1:w) .* sum(im_n, 1));
+            y_center(i) = sum((1:h)' .* sum(im_n, 2));
+            
         end
-        ims_flat = zscore(ims_flat, 1, 1) / sqrt(size(ims_flat, 1));
-        C = ((ims_flat' * ims_flat) > 0);
+        avg_radius=output.config.avg_cell_radius;
+        C=zeros(k,k);
+        for i=1:k
+            tempx= (abs(x_center(i)-x_center)<2*avg_radius);
+            tempy= (abs(y_center(i)-y_center)<2*avg_radius);
+            C(i,:)=tempx.*tempy;
+        end
+        
+        %ims_flat = reshape(cellcheck.ims, h*w, k);
+        % If ndSparse, convert to sparse
+        %if isa(ims_flat, 'ndSparse')
+        %    ims_flat = sparse(ims_flat);
+        %end
+        %ims_flat = zscore(ims_flat, 1, 1) / sqrt(size(ims_flat, 1));
+        %C = ((ims_flat' * ims_flat) > 0);
         for i = 1:n_components
             neighbors{i} = setdiff(find(C(i, :)), i);
         end
