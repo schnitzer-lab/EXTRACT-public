@@ -751,7 +751,7 @@ function cell_check(output, M)
         y_current = y_range(1):y_range(2);
     end
 
-function neighbors = get_all_neighbors(cellcheck)
+    function neighbors = get_all_neighbors(cellcheck)
         n_components = size(cellcheck.ims, 3);
         neighbors = cell(1, n_components);
         [h, w, k] = size(cellcheck.ims);
