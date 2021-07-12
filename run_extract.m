@@ -119,7 +119,7 @@ else
     S_inv = pinv(S);
     for k = 1:num_chunks
         indices = select_indices(n, num_chunks, k);
-        M_small = gpuArray(M(:, indices));
+        M_small = maybe_gpu(config.use_gpu,M(:, indices));
         T(:, indices) = S_inv * M_small;
     end
     clear S_inv M_small;
@@ -240,7 +240,7 @@ for iter = 1:config.max_iter
     end
     % T-step summary
     if config.verbose == 2
-        fprintf(repmat('\b', 1, last_size));
+        %fprintf(repmat('\b', 1, last_size));
         str = sprintf('\t \t \t T-step # %d: %d cells (npx:%d, npy:%d, npt:%d) \n', ...
             iter, size(T, 1), np_x, np_y, np_time);
         last_size = length(str);
