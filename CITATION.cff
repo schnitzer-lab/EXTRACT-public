@@ -1,13 +1,2 @@
-@article{inan2021fast,
-	author = {Inan, Hakan and Schmuckermair, Claudia and Tasci, Tugce and Ahanonu, 
-	Biafra and Hernandez, Oscar and Lecoq, Jerome and Dinc, Fatih and Wagner, 
-	Mark J and Erdogdu, Murat and Schnitzer, Mark J},
-	title = {Fast and statistically robust cell extraction from 
-	large-scale neural calcium imaging datasets},
-	elocation-id = {2021.03.24.436279},
-	year = {2021},
-	doi = {10.1101/2021.03.24.436279},
-	URL = {https://www.biorxiv.org/content/early/2021/03/25/2021.03.24.436279},
-	eprint = {https://www.biorxiv.org/content/early/2021/03/25/2021.03.24.436279.full.pdf},
-	journal = {bioRxiv}
-}
+cff-version: 1.1.0
+message: If you use this software, please cite the associated papers provided in the readme file.
