@@ -3,6 +3,9 @@ message: If you use this software, please cite it as in the Readme File
 authors:
   - family-names: Inan et al.
     given-names: Hakan
-title: My Research Tool
+title: Fast and statistically robust cell extraction from 
+	large-scale neural calcium imaging datasets
+doi: 10.1101/2021.03.24.436279
+journal: BioRxiv
 version: 1.0.4
 date-released: 2017-12-18
