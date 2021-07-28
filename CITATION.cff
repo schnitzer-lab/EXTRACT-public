@@ -1,8 +1,8 @@
 cff-version: 1.1.0
-message: If you use this software, please cite it as below.
+message: If you use this software, please cite it as in the Readme File
 authors:
-  - family-names: Druskat
-    given-names: Stephan
+  - family-names: Inan et al.
+    given-names: Hakan
 title: My Research Tool
 version: 1.0.4
 date-released: 2017-12-18
