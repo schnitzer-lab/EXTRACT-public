@@ -107,7 +107,8 @@ function cell_check(output, M)
     
     % Save & Load buttons
     button_save = uibutton(main_fig, 'text', 'save data',...
-         'position', norm2pix([0.55, 0.40, 0.15, 0.05], figure_pos));
+      'position', norm2pix([0.55, 0.40, 0.15, 0.05], figure_pos));
+
     add_callback(button_save, 'ButtonPushedFcn', @save_data);
     
     button_zoom = uibutton(main_fig, 'text', 'zoom to current cell',...
