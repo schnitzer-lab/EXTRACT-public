@@ -28,19 +28,23 @@ function cell_check(output, M)
     [output, output_handle] = parse_output(output);
     
     % Get cellcheck struct
-    [ims_bad, traces_bad, is_attr_bad, metrics] = get_bad_images_and_traces(output);
-    %is_elim = any(is_attr_bad, 1);
+    
+    [is_attr_bad,metrics,is_elim]=get_cellcheck_features(output);
+    
+    ims_bad=[];
+    traces_bad=[];
+    
+    
     ims_good = output.spatial_weights;
     traces_good = output.temporal_weights';
     summary_image = output.info.summary_image;
     features = metrics';
     ims = cat(3, ims_good, ims_bad);
     num_cells = size(ims, 3);
-    extract_labels = [zeros(1, size(ims_good, 3)), -ones(1, size(ims_bad, 3))];
+    extract_labels = [zeros(1, size(ims_good, 3))];
 
     user_labels = zeros(size(extract_labels));
     labels = zeros(size(extract_labels));
-    is_elim=logical(zeros(size(extract_labels)));
     update_labels;
     
     cellcheck = struct('ims', ims,...
@@ -103,8 +107,13 @@ function cell_check(output, M)
     
     % Save & Load buttons
     button_save = uibutton(main_fig, 'text', 'save data',...
-         'position', norm2pix([0.45, 0.30, 0.15, 0.05], figure_pos));
+      'position', norm2pix([0.55, 0.40, 0.15, 0.05], figure_pos));
+
     add_callback(button_save, 'ButtonPushedFcn', @save_data);
+    
+    button_zoom = uibutton(main_fig, 'text', 'zoom to current cell',...
+         'position', norm2pix([0.45, 0.30, 0.05, 0.05], figure_pos));
+    add_callback(button_zoom, 'ButtonPushedFcn', @draw_current_region);
     
 %     button_load = uibutton(main_fig, 'text', 'load',...
 %          'position', norm2pix([0.55, 0.82, 0.05, 0.05], figure_pos));
@@ -424,6 +433,8 @@ function cell_check(output, M)
         idx_current_cell = val;
         update_one_cell(idx_previous_cell);
         update_one_cell(idx_current_cell);
+        xlim(ax_cellmap,'auto')
+        ylim(ax_cellmap,'auto')
         drawnow;
         % Update slider
         set(slider_cell,'Value',idx_current_cell);
@@ -437,6 +448,19 @@ function cell_check(output, M)
         plot_event_snapshots_with_neighbors;
         clear_axes(ax_snippet);
     end
+
+    function draw_current_region(varargin)
+        im_n=cellcheck.ims(:,:,idx_current_cell);
+        [h,w]=size(im_n);
+        im_n = im_n / sum(im_n(:));  % make it sum to one
+        x_center = sum((1:w) .* sum(im_n, 1));
+        y_center = sum((1:h)' .* sum(im_n, 2));
+        avg_radius=output.config.avg_cell_radius;
+        xlim(ax_cellmap,[x_center-3*avg_radius,x_center+3*avg_radius]);
+        ylim(ax_cellmap,[y_center-3*avg_radius,y_center+3*avg_radius]);
+    end
+
+
 
     function next_cell = decide_next_cell
         if checkbox_autolabel.Value == 1
@@ -462,7 +486,8 @@ function cell_check(output, M)
             ml_labels(idx_current_cell) = 1;
             update_scoring_model;
         end
-
+        update_extract_labels;
+        update_labels;
         update_stats_all;
         set_current_cell_from_button_next;
     end
@@ -476,7 +501,8 @@ function cell_check(output, M)
             ml_labels(idx_current_cell) = -1;
             update_scoring_model;
         end
-
+        update_extract_labels;
+        update_labels;
         update_stats_all;
         set_current_cell_from_button_next;
     end
@@ -489,7 +515,8 @@ function cell_check(output, M)
         if active_learning
             update_scoring_model;
         end
-        
+        update_extract_labels;
+        update_labels;       
         update_stats_all;
         set_current_cell_from_button_next;
     end
@@ -729,13 +756,31 @@ function cell_check(output, M)
         n_components = size(cellcheck.ims, 3);
         neighbors = cell(1, n_components);
         [h, w, k] = size(cellcheck.ims);
-        ims_flat = reshape(cellcheck.ims, h*w, k);
-        % If ndSparse, convert to sparse
-        if isa(ims_flat, 'ndSparse')
-            ims_flat = sparse(ims_flat);
+        ims_f=cellcheck.ims;
+        
+        
+        for i=1:k
+            im_n=ims_f(:,:,i);
+            im_n = im_n / sum(im_n(:));  % make it sum to one
+            x_center(i) = sum((1:w) .* sum(im_n, 1));
+            y_center(i) = sum((1:h)' .* sum(im_n, 2));
+            
         end
-        ims_flat = zscore(ims_flat, 1, 1) / sqrt(size(ims_flat, 1));
-        C = ((ims_flat' * ims_flat) > 0);
+        avg_radius=output.config.avg_cell_radius;
+        C=zeros(k,k);
+        for i=1:k
+            tempx= (abs(x_center(i)-x_center)<2*avg_radius);
+            tempy= (abs(y_center(i)-y_center)<2*avg_radius);
+            C(i,:)=tempx.*tempy;
+        end
+        
+        %ims_flat = reshape(cellcheck.ims, h*w, k);
+        % If ndSparse, convert to sparse
+        %if isa(ims_flat, 'ndSparse')
+        %    ims_flat = sparse(ims_flat);
+        %end
+        %ims_flat = zscore(ims_flat, 1, 1) / sqrt(size(ims_flat, 1));
+        %C = ((ims_flat' * ims_flat) > 0);
         for i = 1:n_components
             neighbors{i} = setdiff(find(C(i, :)), i);
         end

@@ -39,8 +39,15 @@ function [M_out, fov_occupation] = get_current_partition(...
     % Replace nan pixels with zeros
     M_out = replace_nans_with_zeros(M_out);
     % Trim zero edges (e.g. due to image registration ertifacts)
-    [M_out, nz_top, nz_bottom, nz_left, nz_right] = ...
-        remove_zero_edge_pixels(M_out);
+    try
+        [M_out, nz_top, nz_bottom, nz_left, nz_right] = ...
+            remove_zero_edge_pixels(M_out);
+    catch
+        nz_top=0;
+        nz_bottom=0;
+        nz_left=0;
+        nz_right=0;
+    end
     
     x_keep = x_keep(nz_left+1:end-nz_right);
     y_keep = y_keep(nz_top+1:end-nz_bottom);

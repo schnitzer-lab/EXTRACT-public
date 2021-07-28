@@ -234,6 +234,13 @@ S = cell2mat(S(~cellfun(@isempty, S)));
 T = cell2mat(T(~cellfun(@isempty, T)));
 summary = [summary{~cellfun(@isempty, summary)}];
 
+try
+    [cellcheck] = combine_metrics(summary);
+catch
+    warning('cellcheck classification metrics have an issue 1/3.')
+end
+
+
 dispfun(sprintf('%s: Total of %d cells are found.\n', ...
     datestr(now),size(S,2)),config.verbose~=0);
 
@@ -246,6 +253,14 @@ if config.remove_duplicate_cells
         idx_trash = find_duplicate_cells(S, T, overlap_idx);
         S(:, idx_trash) = [];
         T(:, idx_trash) = [];
+        try
+            cellcheck.is_bad(idx_trash)=[];
+            cellcheck.is_attr_bad(:,idx_trash)=[];
+            cellcheck.metrics(:,idx_trash)=[];
+        catch
+            warning('cellcheck classification metrics have an issue 2/3.')
+        end
+        
     end
 
     dispfun(sprintf(...
@@ -263,6 +278,11 @@ info.runtime = total_runtime;
 info.summary_image = summary_image;
 info.F_per_pixel = F_per_pixel;
 info.max_image = max_image;
+try
+    info.cellcheck=cellcheck;
+catch
+    warning('cellcheck classification metrics have an issue 3/3.')
+end
 
 if config.use_sparse_arrays
     % There are no 3-D sparse arrays -- use a FileExchange fn for storing
