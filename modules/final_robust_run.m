@@ -25,6 +25,6 @@ function [traces]=final_robust_run(output_in, M)
 	switch output_in.config.trace_output_option 
 		case 'nonneg'
 			output.temporal_weights=max(0,output.temporal_weights);
-
+	end
 	traces=output.temporal_weights;
 end
