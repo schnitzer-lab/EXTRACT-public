@@ -89,7 +89,7 @@ if isempty(config.S_init)
         summary.S_found = S;
         summary.T_found = T;
     end
-else
+elseif isempty(config.T_init)
     str = sprintf('\t \t \t Initializing using provided images...\n');
     script_log = [script_log, str];
     dispfun(str, config.verbose ==2);
@@ -105,7 +105,6 @@ else
     end
     S = max(config.S_init, 0);
     S = normalize_to_one(S);
-    S = maybe_gpu(config.use_gpu, S);
     % Downsample if needed
     if dss > 1
         S = reshape(S, fov_y, fov_x, size(S, 2));
@@ -113,19 +112,54 @@ else
         S = reshape(S, fov_size(1) * fov_size(2), size(S, 3));
     end
     % Do least-squares fit (truncated at 0) to find T
+    %% To do: Add a GPU implementation for least squares here!
     M = reshape(M, fov_size(1) * fov_size(2), n);
-    num_chunks = compute_lin_part_size(M, config.use_gpu, 3);
-    T = maybe_gpu(config.use_gpu, zeros(size(S, 2), n));
+    num_chunks = compute_lin_part_size(M, 0, 3);
+    T = maybe_gpu(0, zeros(size(S, 2), n));
     S_inv = pinv(S);
     for k = 1:num_chunks
         indices = select_indices(n, num_chunks, k);
-        M_small = maybe_gpu(config.use_gpu,M(:, indices));
+        M_small = maybe_gpu(0,M(:, indices));
         T(:, indices) = S_inv * M_small;
     end
     clear S_inv M_small;
     T = max(T , 0);
     S = gather(S);
     T = gather(T);
+    init_summary = 'external init';
+    M = reshape(M, fov_size(1), fov_size(2), n);
+    summary_image = max(M, [], 3);
+else
+    str = sprintf('\t \t \t Initializing using provided images and traces...\n');
+    script_log = [script_log, str];
+    dispfun(str, config.verbose ==2);
+    % Use given S -- ensure nonnegativity & correct scale
+    if dss > 1
+        [fov_y, fov_x, fov_z] = size(M_before_dss);
+    else
+        [fov_y, fov_x, fov_z] = size(M);
+    end
+    if size(config.S_init, 1) ~= fov_y * fov_x
+        error(['Size of the provided cell images',...
+            ' don''t match the size of the FOV.']);
+    end
+    S = max(config.S_init, 0);
+    S = normalize_to_one(S);
+    % Downsample if needed
+    if dss > 1
+        S = reshape(S, fov_y, fov_x, size(S, 2));
+        S = downsample_space(S, dss);
+        S = reshape(S, fov_size(1) * fov_size(2), size(S, 3));
+    end
+    if size(config.T_init, 2) ~= fov_z
+        error(['Size of the provided cell traces',...
+            ' don''t match the duration of the movie.']);
+    end
+    if size(config.T_init, 1) ~= size(config.S_init, 2)
+        error(['Number of cells in the provided cell traces',...
+            ' don''t match the cell images.']);
+    end
+    T=max(T_init,0):
     init_summary = 'external init';
     M = reshape(M, fov_size(1), fov_size(2), n);
     summary_image = max(M, [], 3);
