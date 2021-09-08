@@ -55,7 +55,8 @@ competences = preds;
     
     confidences = abs(preds - 0.5);
     % Existing ml labels are excluded
-    confidences(ml_labels ~= 0) = inf;
+    %confidences(ml_labels ~= 0) = inf; % Return to this part later!
+    
     % Existing labels are excluded
     confidences(labels ~= 0) = inf;
 
