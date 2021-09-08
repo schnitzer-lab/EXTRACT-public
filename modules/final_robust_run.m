@@ -20,8 +20,8 @@ function [traces,filters]=final_robust_run(M,output_in,choices)
 
 
 
-	filters=full(output.spatial_weights(:,:,logical(choices)));
-	traces_in=output.temporal_weights(:,logical(choices));
+	filters=full(output_in.spatial_weights(:,:,logical(choices)));
+	traces_in=output_in.temporal_weights(:,logical(choices));
 
 	S_in=filters;
 	config.S_init=reshape(S_in, size(S_in, 1) * size(S_in, 2), size(S_in, 3));
