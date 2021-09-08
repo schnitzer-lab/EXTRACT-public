@@ -39,6 +39,7 @@ function config = get_defaults(config)
     if ~isfield(config, 'cellfind_numpix_threshold'), config.cellfind_numpix_threshold = 9; end  % 3x3 region
     if ~isfield(config, 'high2low_brightness_ratio'), config.high2low_brightness_ratio = inf; end
     if ~isfield(config, 'S_init'), config.S_init = []; end
+    if ~isfield(config, 'T_init'), config.T_init = []; end
     if ~isfield(config, 'save_all_found'), config.save_all_found = false; end
     % Alternating estimation parameters
     if ~isfield(config, 'smooth_T'), config.smooth_T = false; end
