@@ -237,7 +237,7 @@ summary = [summary{~cellfun(@isempty, summary)}];
 try
     [cellcheck] = combine_metrics(summary);
 catch
-    warning('cellcheck classification metrics have an issue 1/3.')
+    %warning('cellcheck classification metrics have an issue 1/3.')
 end
 
 
@@ -258,7 +258,7 @@ if config.remove_duplicate_cells
             cellcheck.is_attr_bad(:,idx_trash)=[];
             cellcheck.metrics(:,idx_trash)=[];
         catch
-            warning('cellcheck classification metrics have an issue 2/3.')
+            %warning('cellcheck classification metrics have an issue 2/3.')
         end
         
     end
@@ -281,7 +281,7 @@ info.max_image = max_image;
 try
     info.cellcheck=cellcheck;
 catch
-    warning('cellcheck classification metrics have an issue 3/3.')
+    %warning('cellcheck classification metrics have an issue 3/3.')
 end
 
 if config.use_sparse_arrays
