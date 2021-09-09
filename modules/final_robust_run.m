@@ -8,7 +8,10 @@ function [traces,filters]=final_robust_run(M,output_in,choices)
 
 	config=output_in.config;
 
-
+    config.preprocess=0;
+    
+    X = median(M,3);
+    M = (M-X)./X;
 
 	% do not change the partition number here, otherwise it will lead to duplicate cells!
 	config.num_partitions_x=1;
