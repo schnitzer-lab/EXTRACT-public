@@ -31,24 +31,22 @@ function cell_check(output, M)
     
     [is_attr_bad,metrics,is_elim]=get_cellcheck_features(output);
     
-    ims_bad=[];
-    traces_bad=[];
     
     
-    ims_good = output.spatial_weights;
-    traces_good = output.temporal_weights';
+    ims = output.spatial_weights;
+    traces = output.temporal_weights';
     summary_image = output.info.summary_image;
     features = metrics';
-    ims = cat(3, ims_good, ims_bad);
+    
     num_cells = size(ims, 3);
-    extract_labels = [zeros(1, size(ims_good, 3))];
+    extract_labels = zeros(1, size(ims, 3));
 
     user_labels = zeros(size(extract_labels));
     labels = zeros(size(extract_labels));
     update_labels;
     
     cellcheck = struct('ims', ims,...
-        'traces', cat(1, traces_good, traces_bad),...
+        'traces', traces,...
         'is_attr_bad', is_attr_bad);
     
     % Train initial scores
@@ -760,7 +758,7 @@ function cell_check(output, M)
         
         
         for i=1:k
-            im_n=ims_f(:,:,i);
+            im_n=full(ims_f(:,:,i));
             im_n = im_n / sum(im_n(:));  % make it sum to one
             x_center(i) = sum((1:w) .* sum(im_n, 1));
             y_center(i) = sum((1:h)' .* sum(im_n, 2));
