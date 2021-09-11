@@ -17,8 +17,6 @@ function [traces,filters]=final_robust_run(M,output_in,choices)
 	config.num_partitions_x=1;
 	config.num_partitions_y=1;
 
-
-	config.trace_output_option='raw';
 	config.max_iter=0;
 
 
@@ -31,10 +29,5 @@ function [traces,filters]=final_robust_run(M,output_in,choices)
 	config.T_init=traces_in';
 
 	output=extractor(M,config);
-
-	switch output_in.config.trace_output_option 
-		case 'nonneg'
-			output.temporal_weights=max(0,output.temporal_weights);
-	end
 	traces=output.temporal_weights;
 end
