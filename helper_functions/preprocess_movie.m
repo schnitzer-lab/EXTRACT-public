@@ -18,7 +18,7 @@ function [M, config] = preprocess_movie(M, config)
     
     
         % delta F/F
-        [M, m] = compute_dfof(M, config.skip_dff);
+        [M, m] = compute_df(M, config.skip_dff);
         config.F_per_pixel = m;
         
         % Mild highpass filtering for reducing regional fluctuations
@@ -43,6 +43,9 @@ function [M, config] = preprocess_movie(M, config)
             M = correct_baseline(M, config.avg_event_tau, ...
                 config.remove_background, config.use_gpu);
         end
+
+        % One final df to make sure movie is median centered
+        [M, ~] = compute_df(M, config.skip_dff);
     
     else
         % Set mean fluorescence per pixel to all ones

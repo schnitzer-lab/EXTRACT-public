@@ -1,4 +1,4 @@
-function [M,m] = compute_dfof(M, skip)
+function [M,m] = compute_df(M, skip)
 % delta F/ F of a 3-D movie
 
     if nargin <2 || isempty(skip)

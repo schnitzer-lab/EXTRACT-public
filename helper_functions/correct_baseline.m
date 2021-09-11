@@ -128,7 +128,7 @@ function M = correct_baseline(M, tau, remove_background, use_gpu)
 %         std_subt = std(subt, 0, 2);
 %         fprintf('\t\t\t 70 percentile baseline std: %.4f \n', quantile(std_subt, 0.7));
         M = M - subt;
-        mean_M = median(M, 2); % changed this to median instead of mean!
+        mean_M = mean(M, 2);
         M = bsxfun(@minus, M, mean_M);
         M = gather(M);
     end
