@@ -1,6 +1,7 @@
 function config = get_defaults(config)
     % General parameters
     if ~isfield(config, 'preprocess'), config.preprocess = true; end
+    if ~isfield(config, 'skip_highpass'), config.skip_highpass = false; end
     if ~isfield(config, 'trace_output_option'), config.trace_output_option = 'nonneg'; end
     if ~isfield(config, 'downsample_time_by'), config.downsample_time_by = 1; end
     if ~isfield(config, 'downsample_space_by'), config.downsample_space_by = 1; end
@@ -85,6 +86,11 @@ function config = get_defaults(config)
         thresholds.size_lower_limit = 0;
         thresholds.size_upper_limit = inf;
     end
+
+    if config.skip_highpass
+        config.spatial_highpass_cutoff=inf;
+    end
+
     config.thresholds = thresholds;
 
 end
