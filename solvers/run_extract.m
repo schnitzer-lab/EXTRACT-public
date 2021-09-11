@@ -414,27 +414,10 @@ end
 
 switch config.trace_output_option
     case 'raw'
-    str = sprintf('\t \t \t Providing raw traces. \n');
-    script_log = [script_log, str];
-    dispfun(str, config.verbose ==2);
-    
-    if config.l1_penalty_factor > ABS_TOL
-        % Penalize according to temporal overlap with neighbors
-        cor = get_comp_corr(S, T);
-        lambda = max(cor, [], 1) .* sum(S_smooth, 1) ...
-            * config.l1_penalty_factor;
-    else
-        lambda = T(:, 1)' * 0;
-    end
-    
-[T, ~, ~, ~, ~] = solve_T(T, S, Mt, fov_size, avg_radius, lambda, ...
-        kappa, config.max_iter_T, config.TOL_sub, ...
-        config.plot_loss, @fp_solve, config.use_gpu, 1);
-    case 'nonneg'
-    str = sprintf('\t \t \t Providing non-negative traces. \n');
-    script_log = [script_log, str];
-    dispfun(str, config.verbose ==2);
-    if (config.max_iter == 0)
+        str = sprintf('\t \t \t Providing raw traces. \n');
+        script_log = [script_log, str];
+        dispfun(str, config.verbose ==2);
+        
         if config.l1_penalty_factor > ABS_TOL
             % Penalize according to temporal overlap with neighbors
             cor = get_comp_corr(S, T);
@@ -443,12 +426,30 @@ switch config.trace_output_option
         else
             lambda = T(:, 1)' * 0;
         end
-
-        [T, loss, np_x, np_y, np_time] = solve_T(T, S, Mt, fov_size, avg_radius, lambda, ...
+        
+        [T, ~, ~, ~, ~] = solve_T(T, S, Mt, fov_size, avg_radius, lambda, ...
             kappa, config.max_iter_T, config.TOL_sub, ...
-            config.plot_loss, fp_solve_func, config.use_gpu, 1);
+            config.plot_loss, @fp_solve, config.use_gpu, 1);
+            
+    case 'nonneg'
+        str = sprintf('\t \t \t Providing non-negative traces. \n');
+        script_log = [script_log, str];
+        dispfun(str, config.verbose ==2);
+        if (config.max_iter == 0)
+            if config.l1_penalty_factor > ABS_TOL
+                % Penalize according to temporal overlap with neighbors
+                cor = get_comp_corr(S, T);
+                lambda = max(cor, [], 1) .* sum(S_smooth, 1) ...
+                    * config.l1_penalty_factor;
+            else
+                lambda = T(:, 1)' * 0;
+            end
 
-    end
+            [T, loss, np_x, np_y, np_time] = solve_T(T, S, Mt, fov_size, avg_radius, lambda, ...
+                kappa, config.max_iter_T, config.TOL_sub, ...
+                config.plot_loss, fp_solve_func, config.use_gpu, 1);
+
+        end
         
 end
 
