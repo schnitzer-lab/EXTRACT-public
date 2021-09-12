@@ -1,10 +1,10 @@
-%% Decide on which movie to use
+% Decide on which movie to use
 
 M = single(hdf5read('jones.hdf5','/Data/Images'));
 % M = single(hdf5read('jones_denoised.hdf5','/Data/Images'));
 
 
-%% Decide on the partition number, and play with internal threshold parameters
+% Decide on the partition number, and play with internal threshold parameters
 
 config=[];
 config = get_defaults(config);
