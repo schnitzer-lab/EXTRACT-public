@@ -45,7 +45,7 @@ function [M, config] = preprocess_movie(M, config)
         end
 
         % One final df to make sure movie is median centered
-        [M, ~] = compute_df(M, config.skip_dff);
+        [M, ~] = compute_df(M, 0);
     
     else
         % Set mean fluorescence per pixel to all ones
