@@ -103,7 +103,7 @@ elseif isempty(config.T_init)
         error(['Size of the provided cell images',...
             ' don''t match the size of the FOV.']);
     end
-    S = max(config.S_init, 0);
+    S = full(max(config.S_init, 0));
     S = normalize_to_one(S);
     % Downsample if needed
     if dss > 1
@@ -143,7 +143,7 @@ else
         error(['Size of the provided cell images',...
             ' don''t match the size of the FOV.']);
     end
-    S = max(config.S_init, 0);
+    S = full(max(config.S_init, 0));
     S = normalize_to_one(S);
     % Downsample if needed
     if dss > 1
