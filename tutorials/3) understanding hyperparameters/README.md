@@ -1,13 +1,13 @@
-# Hyperparameter Optimization with EXTRACT
+# Understanding the Hyperparameters of EXTRACT
 
-This tutorial is about optimizing hyperparameters with EXTRACT. For the purpose of this tutorial, download the movie, whose link is given below. This is among those movies that we used for the Fig. 4 of our paper that introduces EXTRACT. Use the script 'tutorial_fig4.m' as a starting point to tune hyperparameters for most satisfactory cell extraction process. Follow the procedure outlined below. This should give you an intuitive understanding of how to maximize hyperparameters.
+This tutorial is about getting to know the hyperparameters of EXTRACT. For the purpose of this tutorial, download the movie, whose link is given below. This is among those movies that we used for the Fig. 4 of our paper that introduces EXTRACT. Use the script 'tutorial_fig4.m' as a starting point to tune hyperparameters for most satisfactory cell extraction process. Read below for the meaning behind each relevant hyperparameter and the simple ways to optimize them without diving too deep.
 
 The movie: https://drive.google.com/file/d/1FGkpTDXgspXddR1GDpgm1ludbIQHFwlS/view?usp=sharing
 
 
 ## Understanding the main modules before diving into hyperparameters
 
-The first step is to understand the general categories, that hyperparameters fall into and that an outside user needs to be able to navigate. While there are quite a few, most of them are self explanatory (like skip_dff that skips taking delta f over f of the movie). On the other hand, the best way to understand the parameters is to divide them into corresponding modules. EXTRACT has 3 main modules: 
+The first step is to understand the general categories that hyperparameters fall into and that an outside user needs to be able to navigate. While there are quite a few hyperparameters, most of them are self explanatory (like skip_dff that skips taking delta f over f of the movie). On the other hand, the best way to understand the parameters is to divide them into corresponding modules. EXTRACT has 3 main modules: 
 
 1. **Preprocessing:** At the minimum, the movie is preprocessed such that the baseline activity of cells correspond to zero, as is consistent with the assumptions of cell extrraction. There are other (optional) procedures happening inside the preprocess module as well, whose aim is to increase the SNR of the movie. We will discuss these below.
 
@@ -17,10 +17,9 @@ The first step is to understand the general categories, that hyperparameters fal
 
 While there are no particular hyperparameters associated with them, EXTRACT has two more modules. We will discuss them on another tutorial. For now, it is important to emphasize that running EXTRACT is first understanding these three modules. Other two are optional and can be skipped, although we strongly advise against skipping them!
 
-Finally, all the hyperparameters of EXTRACT controlled by an outside user is given inside the function 'get_defaults.m', which is the only script in the homepage of the repository. One can and should always double check the exact spelling of the hyperparameters by checking this script. We advise that users do not change this script, the defaults are picked to be most approprioate for a general set of movies. This script will never overwrite user given configurations.
+Finally, almost all the hyperparameters of EXTRACT controlled by an outside user is defaulted inside the function 'get_defaults.m', which is the only script in the homepage of the repository. One can and should always double check the exact spelling of the hyperparameters by checking this script. We advise that users do not change this script, the defaults are picked to be most approprioate for a general set of movies. This script will never overwrite user given configurations.
 
 ## General control hyperparameters
-
 
 There are a total of 14 general control parameters that are of interest to us. Among those, only one of them requires an outside input, without which EXTRACT will not run. The rest has defaults, but we strongly advise to change them as necessary. Here is the list of parameters and what they do:
 
@@ -53,6 +52,31 @@ There are a total of 14 general control parameters that are of interest to us. A
 
 
 ## Preprocessing module hyperparameters
+
+The preprocessing module consists of 7 separate processes, 3 of them are on by default. Each process is controlled by a hyperparameter and the full module is controlled by a single parameter. Here are the hyperparameters associated with this module, in order of the processes happening inside the preprocessing module:
+
+1. `preprocess`: Turns the preprocessing module on/off. If you turn this off, make sure that the input movie is in the delta F/F form. `Default: True`
+
+2. `fix_zero_FOV_strips`: As the name suggests, this procedure fixes zero strips inside the field of view that are stemming from motion correction algorithm. `Default: False`
+
+3. `medfilt_outlier_pixels`: If the movie has pixels that are dead or unconventionally on for some technical issue, this process finds those pixels and replaces them with median filtering. `Default: False`
+
+4. `skip_dff`: EXTRACT subtracts the median (empirically a better estimate of the baseline than the mean) of the movie and stores the baseline values in a separate file for normalizing the traces later. We note that EXTRACT performs the division by the baseline AFTER the cell extraction, so this process only subtracts the baseline, not divides by it. If this parameter is on, EXTRACT skips the subtraction, assuming that the input movie is already in a delta F/F form. `Default: False`
+
+5. `skip_highpass` : EXTRACT performs a highpass filtering during the preprocessing step. This is particularly useful for removing large contaminants in the movie. We find that highpass filtering makes a big difference especially for 1p movies, where it stabilizes the wandering baseline of cells. This parameter turns off the highpass filtering. `Default: False`
+
+6. `spatial_highpass_cutoff`: This parameter defines how strong the highpass filtering is. A larger value leads to mild filtering, with no filtering at the infinity. The first change to the highpass filtering should always be to turn it on or off, usually it is immediately clear if it helps or hurts. Afterwards, this parameter can be tuned to satisfactory filtering. `Default: 5`
+
+7. `temporal_denoising`: This is a slow process, so it is off by default. This module denoises the movie in time using wavelets, most movies do not need this. `Default: False`
+
+8. `remove_background`: This process removes the wandering signal baseline and makes sure that cells have a stable baseline over time. This parameter turns on or off the backround removal process. `Default: True`
+
+
+## Cell finding module hyperparameters
+
+
+
+
 
 
 
