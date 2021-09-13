@@ -17,9 +17,9 @@ if ~exist('config', 'var') || ~isfield(config, 'avg_cell_radius')
     error('"config.avg_cell_radius" must be specified.');
 end
 
-if ~exist('config', 'var') || ~isfield(config, 'trace_output_option')
-    error('"config.trace_output_option" must be specified. Pick "nonneg" for nonnegative output, pick "raw" for raw output.');
-end
+%if ~exist('config', 'var') || ~isfield(config, 'trace_output_option')
+%    error('"config.trace_output_option" must be specified. Pick "nonneg" for nonnegative output, pick "raw" for raw output.');
+%end
 
 % Update config with defaults
 config = get_defaults(config);
