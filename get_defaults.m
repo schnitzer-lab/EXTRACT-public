@@ -43,19 +43,22 @@ function config = get_defaults(config)
     else
         thresholds = config.thresholds;
     end
+    
     if ~isfield(thresholds, 'T_min_snr'), thresholds.T_min_snr = 10; end % multiply with noise_std
     if ~isfield(thresholds, 'size_lower_limit'), thresholds.size_lower_limit = 1/10; end  % to be multipled with avg_cell_area
     if ~isfield(thresholds, 'size_upper_limit'), thresholds.size_upper_limit = 10; end  % to be multiplied with avg_cell_area
     if ~isfield(thresholds, 'temporal_corrupt_thresh'), thresholds.temporal_corrupt_thresh = 0.7; end
     if ~isfield(thresholds, 'spatial_corrupt_thresh'), thresholds.spatial_corrupt_thresh = 0.7; end
-    if ~isfield(thresholds, 'T_dup_corr_thresh'), thresholds.T_dup_corr_thresh = 0.95; end
-    if ~isfield(thresholds, 'S_dup_corr_thresh'), thresholds.S_dup_corr_thresh = 0.95; end
     if ~isfield(thresholds, 'eccent_thresh'), thresholds.eccent_thresh = 6; end
     if ~isfield(thresholds, 'low_ST_index_thresh'), thresholds.low_ST_index_thresh = 1e-2; end
-    if ~isfield(thresholds, 'high_ST_index_thresh'), thresholds.high_ST_index_thresh = 0.8; end
-    if ~isfield(thresholds, 'confidence_thresh'), thresholds.confidence_thresh = 0.8; end
     if ~isfield(thresholds, 'low_ST_corr_thresh'), thresholds.low_ST_corr_thresh = 0; end
     
+
+    % Additional thresholds (not particularly/immediately relevant)
+    if ~isfield(thresholds, 'T_dup_corr_thresh'), thresholds.T_dup_corr_thresh = 0.95; end
+    if ~isfield(thresholds, 'S_dup_corr_thresh'), thresholds.S_dup_corr_thresh = 0.95; end
+    if ~isfield(thresholds, 'confidence_thresh'), thresholds.confidence_thresh = 0.8; end
+    if ~isfield(thresholds, 'high_ST_index_thresh'), thresholds.high_ST_index_thresh = 0.8; end
 
     % Additional parameters (will not change for 99.9% of time, no urgent need to know about them)
 

@@ -74,6 +74,43 @@ The preprocessing module consists of 7 separate processes, 3 of them are on by d
 
 ## Cell finding module hyperparameters
 
+Cell finding module extracts cell filters from the movie using a greedy algorithm, in a one-by-one manner. Once a cell is extracted, it is subtracted from the movie and the full process begins again. This process ends either once the algorithm reaches a number of cells pre-defined by the user or if the latest few cells found are garbage and thus discarded. The following are the parameters associated with the cell finding module:
+
+1. `cellfind_filter_type`: Type of the spatial smoothing filter used for cell finding. Options: `'butter'` (IIR butterworth filter), `'gauss'` (FIR filter with a gaussian kernel), `'wiener'` (wiener filter), `'movavg'` (moving average in space), `'none'` (no filtering). `Default: 'butter'`
+
+2. `spatial_lowpass_cutoff`: This is only relevant if the cellfind_filter_type is selected to be butter. Then, this defines the lowpass cutoff of the filter. A larger value means less filtering. `Default: 2`
+
+3. `moving_radius`: This is only relevant if the cellfind_filter_type is selected to be butter. This defines the width of the moving average computed in space. `Default: 3`
+
+4. `cellfind_min_snr`: Minimum peak SNR (defined as peak value/noise std) value for an object to be considered as a cell. Increase this if you want to decrease the ratio of false-positives at the expense of losing some low SNR cells in the process. `Default: 1`
+
+5. `thresholds.T_min_snr`: While this is a threshold parameter, and thus affects the cell refinement process, this is among the threshold parameters that also affect the cell finding module. Cells with lower SNR value than `T_min_snr` will be eliminated immediately, without making it into the cell refinement module. Lower cellfind_min_snr first before consider lowering this, as cellfind_min_snr affects only cell finding while this affects two modules. `Default: 10`
+
+6. and 7. `thresholds.size_lower_limit` and `thresholds.size_upper_limit`: These factors are multiplied with the average cell area (determined from the average cell radius) and any cell with an area outside of these will be eliminated before making into the cell refinement module. `Defaults: 0.1 / 10`
+
+8. `cellfind_max_steps`: This defines the maximum number of cells that will be searched inside the FOV per partition. Picking this too high can lead to memory and time inefficiency issues, setting it too low would lead to missed cells. We suggest to keep it 1.5 or 2x the expected number of cells (or 1000, whichever is larger) in the movie, as most garbage found during the cell-finding will be discarded later in the cell refinement. `Defaults: 1000`
+
+9. `cellfind_kappa_std_ratio`: Kappa will be set to this times the noise std for the component-wise EXTRACT during initialization. Large kappa means low contamination by non-Gaussian noise, setting kappa = inf recovers least squares. Note that this parameter affects only cell finding module, there is a separate kappa for the cell refinement. Moreover, turning adaptive_kappa on will overwrite the effects of this parameter, as kappa will be determined from the movie. `Default: 1`
+
+10. `init_with_gaussian`: If true, then during cell finding, each cell is initialized with a gaussian shape prior to robust estimation. If false, then initialization is done with a correlation image. If cells are of different shape and size, keep this off. `Default: false`.
+
+
+## Cell refinement module hyperparameters
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
