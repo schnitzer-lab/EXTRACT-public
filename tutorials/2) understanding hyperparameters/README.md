@@ -27,7 +27,7 @@ There are a total of 14 general control parameters that are of interest to us. A
 
 - `trace_output_option`: EXTRACT has two options for trace output: 'raw' and 'nonneg'. 'nonneg' outputs only the signal portion of the trace, consistent with the fundamental assumptions of EXTRACT. 'raw' outputs signal + noise. `Default: 'nonneg'.`
 
-** Important Note:** We strongly advise to use 'nonneg' over 'raw'. The traces obtained with the former are not equivalent to the thresholded (over baseline) traces found via the latter. The former is obtained internally via a different, more accurate solver that iteratively ensures a non-negativity condition at each step, which prevents structured negative noise to affect subsequent data analysis. This condition is missing from the 'raw' option, thus the trace estimation is less accurate and may include structured negative noise that is effectively no different than crosstalk between neighbors. This is why we are not outputting both options at once, as we do not advise to use the 'raw' option for a general pipeline, only for rare occasions. Remember, the robustness of EXTRACT is only in the positive direction, where the signal is.
+**Important Note:** We strongly advise to use 'nonneg' over 'raw'. The traces obtained with the former are not equivalent to the thresholded (over baseline) traces found via the latter. The former is obtained internally via a different, more accurate solver that iteratively ensures a non-negativity condition at each step, which prevents structured negative noise to affect subsequent data analysis. This condition is missing from the 'raw' option, thus the trace estimation is less accurate and may include structured negative noise that is effectively no different than crosstalk between neighbors. This is why we are not outputting both options at once, as we do not advise to use the 'raw' option for a general pipeline, only for rare occasions. Remember, the robustness of EXTRACT is only in the positive direction, where the signal is.
 
 
 - `use_gpu` and `parallel_cpu`: If you have a gpu, set the former to one and latter to 0. If not, if you have multiple cores, set the former to 0 and latter to 1. If you do not have both, both should be zero. `Defaults: 'true'/'false'`
@@ -48,7 +48,7 @@ There are a total of 14 general control parameters that are of interest to us. A
 
 - `T_init` and `S_init`: These configurations are used to skip the cell finding module and instead initialize with an outside set of filters and corresponding traces. We will provide more information on these on a future tutorial. For now, we emphasize that T_init is a 2D n_cell x n_time size matrix, whereas S_init is also a (flattened in space) 2D n_space x n_cell matrix. `No defaults`
 
-** For a typical run: ** Set the average cell radius, define the space partitions and run the algorithm. 
+**For a typical run: ** Set the average cell radius, define the space partitions and run the algorithm.**
 
 
 ## Preprocessing module hyperparameters
