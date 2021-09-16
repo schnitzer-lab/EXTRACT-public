@@ -48,7 +48,7 @@ There are a total of 14 general control parameters that are of interest to us. A
 
 - `T_init` and `S_init`: These configurations are used to skip the cell finding module and instead initialize with an outside set of filters and corresponding traces. We will provide more information on these on a future tutorial. For now, we emphasize that T_init is a 2D n_cell x n_time size matrix, whereas S_init is also a (flattened in space) 2D n_space x n_cell matrix. `No defaults`
 
-**For a typical run: ** Set the average cell radius, define the space partitions and run the algorithm.**
+**For a typical run:** Set the average cell radius, define the space partitions and run the algorithm.
 
 
 ## Preprocessing module hyperparameters
