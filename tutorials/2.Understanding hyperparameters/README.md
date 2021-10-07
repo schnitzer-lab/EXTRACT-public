@@ -61,7 +61,10 @@ The preprocessing module consists of 7 separate processes, 3 of them are on by d
 
 - `medfilt_outlier_pixels`: If the movie has pixels that are dead or unconventionally on for some technical issue, this process finds those pixels and replaces them with median filtering. `Default: False`
 
-- `skip_dff`: EXTRACT subtracts the median (empirically a better estimate of the baseline than the mean) of the movie and stores the baseline values in a separate file for normalizing the traces later. We note that EXTRACT performs the division by the baseline AFTER the cell extraction, so this process only subtracts the baseline, not divides by it. If this parameter is on, EXTRACT skips the subtraction, assuming that the input movie is already in a delta F/F form. `Default: False`
+- `skip_dff`: EXTRACT subtracts the baseline of the movie and stores the baseline values in a separate file for normalizing the traces later. We note that EXTRACT performs the division by the baseline AFTER the cell extraction, so this process only subtracts the baseline, not divides by it. This helps preventing numerical issues arising from dividing with very small values, sometimes 0. If this parameter is on, EXTRACT skips the subtraction, assuming that the input movie is already in a delta F/F form. `Default: False`
+
+- `baseline_quantile`: This defines the baseline value of the movie. Currently, 40% (from below) quantile will be used to estimate the baseline, set it to 0.5 for using median as the baseline.  `Default: 0.4`
+
 
 - `skip_highpass` : EXTRACT performs a highpass filtering during the preprocessing step. This is particularly useful for removing large contaminants in the movie. We find that highpass filtering makes a big difference especially for 1p movies, where it stabilizes the wandering baseline of cells. This parameter turns off the highpass filtering. `Default: False`
 
