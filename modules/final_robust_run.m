@@ -8,11 +8,6 @@ function [traces,filters]=final_robust_run(M,output_in,choices)
 
 	config=output_in.config;
 
-    config.preprocess=0;
-    
-    X = median(M,3);
-    M = (M-X)./X;
-
 	% do not change the partition number here, otherwise it will lead to duplicate cells!
 	config.num_partitions_x=1;
 	config.num_partitions_y=1;
@@ -20,9 +15,13 @@ function [traces,filters]=final_robust_run(M,output_in,choices)
 	config.max_iter=0;
 
 
-
-	filters=full(output_in.spatial_weights(:,:,logical(choices)));
-	traces_in=output_in.temporal_weights(:,logical(choices));
+    if size(choice,2)>0
+        filters=output_in.spatial_weights(:,:,logical(choices));
+        traces_in=output_in.temporal_weights(:,logical(choices));
+    else
+        filters=output_in.spatial_weights;
+        traces_in=output_in.temporal_weights);
+    end
 
 	S_in=filters;
 	config.S_init=reshape(S_in, size(S_in, 1) * size(S_in, 2), size(S_in, 3));
