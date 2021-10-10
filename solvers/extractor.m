@@ -17,9 +17,9 @@ if ~exist('config', 'var') || ~isfield(config, 'avg_cell_radius')
     error('"config.avg_cell_radius" must be specified.');
 end
 
-if ~exist('config', 'var') || ~isfield(config, 'trace_output_option')
-    error('"config.trace_output_option" must be specified. Pick "nonneg" for nonnegative output, pick "raw" for raw output.');
-end
+%if ~exist('config', 'var') || ~isfield(config, 'trace_output_option')
+%    error('"config.trace_output_option" must be specified. Pick "nonneg" for nonnegative output, pick "raw" for raw output.');
+%end
 
 % Update config with defaults
 config = get_defaults(config);
@@ -237,7 +237,7 @@ summary = [summary{~cellfun(@isempty, summary)}];
 try
     [cellcheck] = combine_metrics(summary);
 catch
-    warning('cellcheck classification metrics have an issue 1/3.')
+    %warning('cellcheck classification metrics have an issue 1/3.')
 end
 
 
@@ -258,7 +258,7 @@ if config.remove_duplicate_cells
             cellcheck.is_attr_bad(:,idx_trash)=[];
             cellcheck.metrics(:,idx_trash)=[];
         catch
-            warning('cellcheck classification metrics have an issue 2/3.')
+            %warning('cellcheck classification metrics have an issue 2/3.')
         end
         
     end
@@ -272,7 +272,7 @@ end
 end_time = posixtime(datetime);
 total_runtime = end_time - start_time - io_time;
 
-info.version = '0.7.3';
+info.version = '0.8.0';
 info.summary = summary;
 info.runtime = total_runtime;
 info.summary_image = summary_image;
@@ -281,7 +281,7 @@ info.max_image = max_image;
 try
     info.cellcheck=cellcheck;
 catch
-    warning('cellcheck classification metrics have an issue 3/3.')
+    %warning('cellcheck classification metrics have an issue 3/3.')
 end
 
 if config.use_sparse_arrays

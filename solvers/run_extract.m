@@ -89,7 +89,7 @@ if isempty(config.S_init)
         summary.S_found = S;
         summary.T_found = T;
     end
-else
+elseif isempty(config.T_init)
     str = sprintf('\t \t \t Initializing using provided images...\n');
     script_log = [script_log, str];
     dispfun(str, config.verbose ==2);
@@ -103,9 +103,8 @@ else
         error(['Size of the provided cell images',...
             ' don''t match the size of the FOV.']);
     end
-    S = max(config.S_init, 0);
+    S = full(max(config.S_init, 0));
     S = normalize_to_one(S);
-    S = maybe_gpu(config.use_gpu, S);
     % Downsample if needed
     if dss > 1
         S = reshape(S, fov_y, fov_x, size(S, 2));
@@ -113,19 +112,54 @@ else
         S = reshape(S, fov_size(1) * fov_size(2), size(S, 3));
     end
     % Do least-squares fit (truncated at 0) to find T
+    % To do: Add a GPU implementation for least squares here!
     M = reshape(M, fov_size(1) * fov_size(2), n);
-    num_chunks = compute_lin_part_size(M, config.use_gpu, 3);
-    T = maybe_gpu(config.use_gpu, zeros(size(S, 2), n));
+    num_chunks = compute_lin_part_size(M, 0, 3);
+    T = maybe_gpu(0, zeros(size(S, 2), n));
     S_inv = pinv(S);
     for k = 1:num_chunks
         indices = select_indices(n, num_chunks, k);
-        M_small = maybe_gpu(config.use_gpu,M(:, indices));
+        M_small = maybe_gpu(0,M(:, indices));
         T(:, indices) = S_inv * M_small;
     end
     clear S_inv M_small;
     T = max(T , 0);
     S = gather(S);
     T = gather(T);
+    init_summary = 'external init';
+    M = reshape(M, fov_size(1), fov_size(2), n);
+    summary_image = max(M, [], 3);
+else
+    str = sprintf('\t \t \t Initializing using provided images and traces...\n');
+    script_log = [script_log, str];
+    dispfun(str, config.verbose ==2);
+    % Use given S -- ensure nonnegativity & correct scale
+    if dss > 1
+        [fov_y, fov_x, fov_z] = size(M_before_dss);
+    else
+        [fov_y, fov_x, fov_z] = size(M);
+    end
+    if size(config.S_init, 1) ~= fov_y * fov_x
+        error(['Size of the provided cell images',...
+            ' don''t match the size of the FOV.']);
+    end
+    S = full(max(config.S_init, 0));
+    S = normalize_to_one(S);
+    % Downsample if needed
+    if dss > 1
+        S = reshape(S, fov_y, fov_x, size(S, 2));
+        S = downsample_space(S, dss);
+        S = reshape(S, fov_size(1) * fov_size(2), size(S, 3));
+    end
+    if size(config.T_init, 2) ~= fov_z
+        error(['Size of the provided cell traces',...
+            ' don''t match the duration of the movie.']);
+    end
+    if size(config.T_init, 1) ~= size(config.S_init, 2)
+        error(['Number of cells in the provided cell traces',...
+            ' don''t match the cell images.']);
+    end
+    T=max(config.T_init,0);
     init_summary = 'external init';
     M = reshape(M, fov_size(1), fov_size(2), n);
     summary_image = max(M, [], 3);
@@ -220,9 +254,19 @@ for iter = 1:config.max_iter
         lambda = T(:, 1)' * 0;
     end
 
+    try
+
     [T, loss, np_x, np_y, np_time] = solve_T(T, S, Mt, fov_size, avg_radius, lambda, ...
             kappa, config.max_iter_T, config.TOL_sub, ...
             config.plot_loss, fp_solve_func, config.use_gpu, 1);
+    catch
+    
+    [T, loss, np_x, np_y, np_time] = solve_T(T, S, Mt, fov_size, avg_radius, lambda, ...
+            kappa, config.max_iter_T, config.TOL_sub, ...
+            config.plot_loss, fp_solve_func, 0, 1);
+    warning('GPU memory insufficient, will abord GPU utilization for this step.')
+
+    end
 
     % Update T_loss
     T_loss = [T_loss, loss]; %#ok<*AGROW>
@@ -270,10 +314,23 @@ for iter = 1:config.max_iter
     % Update S
     S_before = S;
     lambda = S(1,:)*0;
+
+    try
+
     [S, loss, np_x, np_y, T_corr_in, T_corr_out, S_surround] = solve_S(...
         S, T, Mt, mask, fov_size, avg_radius, ...
             lambda, kappa, config.max_iter_S, config.TOL_sub, ...
             config.plot_loss, @fp_solve_admm, config.use_gpu);
+
+    catch
+    
+    [S, loss, np_x, np_y, T_corr_in, T_corr_out, S_surround] = solve_S(...
+        S, T, Mt, mask, fov_size, avg_radius, ...
+            lambda, kappa, config.max_iter_S, config.TOL_sub, ...
+            config.plot_loss, @fp_solve_admm, 0);
+    warning('GPU memory insufficient, will abord GPU utilization for this step.')
+
+    end
 
     S_smooth = smooth_images(S, fov_size,...
         round(avg_radius / 2), config.use_gpu, true);
@@ -357,26 +414,42 @@ end
 
 switch config.trace_output_option
     case 'raw'
-    str = sprintf('\t \t \t Providing raw traces. \n');
-    script_log = [script_log, str];
-    dispfun(str, config.verbose ==2);
-    
-    if config.l1_penalty_factor > ABS_TOL
-        % Penalize according to temporal overlap with neighbors
-        cor = get_comp_corr(S, T);
-        lambda = max(cor, [], 1) .* sum(S_smooth, 1) ...
-            * config.l1_penalty_factor;
-    else
-        lambda = T(:, 1)' * 0;
-    end
-    
-[T, ~, ~, ~, ~] = solve_T(T, S, Mt, fov_size, avg_radius, lambda, ...
-        kappa, config.max_iter_T, config.TOL_sub, ...
-        config.plot_loss, @fp_solve, config.use_gpu, 1);
+        str = sprintf('\t \t \t Providing raw traces. \n');
+        script_log = [script_log, str];
+        dispfun(str, config.verbose ==2);
+        
+        if config.l1_penalty_factor > ABS_TOL
+            % Penalize according to temporal overlap with neighbors
+            cor = get_comp_corr(S, T);
+            lambda = max(cor, [], 1) .* sum(S_smooth, 1) ...
+                * config.l1_penalty_factor;
+        else
+            lambda = T(:, 1)' * 0;
+        end
+        
+        [T, ~, ~, ~, ~] = solve_T(T, S, Mt, fov_size, avg_radius, lambda, ...
+            kappa, config.max_iter_T, config.TOL_sub, ...
+            config.plot_loss, @fp_solve, config.use_gpu, 1);
+            
     case 'nonneg'
-    str = sprintf('\t \t \t Providing non-negative traces. \n');
-    script_log = [script_log, str];
-    dispfun(str, config.verbose ==2);
+        str = sprintf('\t \t \t Providing non-negative traces. \n');
+        script_log = [script_log, str];
+        dispfun(str, config.verbose ==2);
+        if (config.max_iter == 0)
+            if config.l1_penalty_factor > ABS_TOL
+                % Penalize according to temporal overlap with neighbors
+                cor = get_comp_corr(S, T);
+                lambda = max(cor, [], 1) .* sum(S_smooth, 1) ...
+                    * config.l1_penalty_factor;
+            else
+                lambda = T(:, 1)' * 0;
+            end
+
+            [T, loss, np_x, np_y, np_time] = solve_T(T, S, Mt, fov_size, avg_radius, lambda, ...
+                kappa, config.max_iter_T, config.TOL_sub, ...
+                config.plot_loss, fp_solve_func, config.use_gpu, 1);
+
+        end
         
 end
 

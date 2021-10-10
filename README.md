@@ -140,6 +140,8 @@ In this repository, we are introducing an important part of the cell extraction 
 
 ### Configurations
 
+Check tutorial 3 for the list of all relevant hyperparameters and learn about them. We strongly suggest the regular users to at least give a read to the tutorial 3, as it explains the full range of EXTRACT's capabilities in a concise way.
+
 Here is a list of more advanced configurations:
 
 * `preprocess`: EXTRACT does preprocessing steps such as taking dF/F, highpass filtering for suppressing excessive background, and circular masking for endoscopic movies. Set to `false` to skip all preprocessing. Default: `true`.
