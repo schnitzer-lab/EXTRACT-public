@@ -79,7 +79,7 @@ The preprocessing module consists of 7 separate processes, 3 of them are on by d
 
 Cell finding module extracts cell filters from the movie using a greedy algorithm, in a one-by-one manner. Once a cell is extracted, it is subtracted from the movie and the full process begins again. This process ends either once the algorithm reaches a number of cells pre-defined by the user or if the latest few cells found are garbage and thus discarded. The following are the parameters associated with the cell finding module:
 
-- `cellfind_filter_type`: Type of the spatial smoothing filter used for cell finding. Options: `'butter'` (IIR butterworth filter), `'gauss'` (FIR filter with a gaussian kernel), `'wiener'` (wiener filter), `'movavg'` (moving average in space), `'none'` (no filtering). `Default: 'butter'`
+- `cellfind_filter_type`: Type of the spatial smoothing filter used for cell finding. Options: `'butter'` (IIR butterworth filter), `'gauss'` (FIR filter with a gaussian kernel), `'wiener'` (wiener filter), `'movavg'` (moving average in space), `'median'` (median filtering in 3D), `'none'` (no filtering). `Default: 'butter'`
 
 - `spatial_lowpass_cutoff`: This is only relevant if the cellfind_filter_type is selected to be butter. Then, this defines the lowpass cutoff of the filter. A larger value means less filtering. `Default: 2`
 
