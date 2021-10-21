@@ -20,13 +20,14 @@ config.verbose=2; %Keeping verbose=2 gives insight into the EXTRACTion process, 
 config.spatial_highpass_cutoff=inf; % no need for highpass filtering
 config.remove_background=0; %no need for background removal
 
+
 % Optionals whose defaults exist:
 config.use_gpu=0; % This is a small dataset, will be fast on cpu anyways.
 config.max_iter = 10; % 10 is a good number for this dataset
 config.adaptive_kappa = 1;% Adaptive kappa is on for this movie. For an actual movie, keeping it off
 % may be beneficial depending on the noise levels.
 config.cellfind_min_snr=0.5;% Default snr is 1, lower this (never less than 0) to increase cell count at the expense of more spurious cells!
-
+config.thresholds.T_min_snr=5;
 
 % Perform EXTRACTion:
 output=extractor(M,config);
