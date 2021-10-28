@@ -8,4 +8,4 @@ function [x_range, y_range] = get_image_xy_ranges(im, ex)
     idx_y_occupied = find(sum(im, 2)>0.05);
     y_range = [max(1, idx_y_occupied(1)-ex), min(h, idx_y_occupied(end)+ex)];
     
-    
+end
