@@ -1,36 +1,66 @@
-%function nwb_append_EXTRACT_output(nwb, output)
+function nwb = EXTRACT_output_to_nwb(output, options)
+% EXTRACT_output_to_nwb writes the data within the EXTRACT output structure
+% to an NWB file
+%
+%  output: EXTRACT output structure
+%
+%  options: structure with details necessary for nwb file creation.
+%
+%
 
-% create NwbFile object with required fields
-nwb = NwbFile( ...
+%create nwb file if none passed in
+if ~isfield(options,'nwb_file')
+    nwb = NwbFile( ...
     'session_start_time', '2021-01-01 00:00:00', ...
     'identifier', 'ident1', ...
-    'session_description', 'EXTRACT_output_tutorial' ...
+    'session_description', 'EXTRACT output file' ...
     );
-
-% hard-code these variables, for now
-processing_module_name = 'ophys';
-img_segmentation_name = 'ImageSegmentation'; 
-plane_segmentation_name = 'PlaneSegmentation'; 
-data_unit = 'n.a.';
-
-%if these, are not provided, we can try to figure out from file
-imaging_plane_path = '/general/optophysiology/TwoPhotonSeries';
-%imaging_plane_path = nwb.acquisition.get('TwoPhotonSeries'). ...
- %   imaging_plane.path;
-%get start time and rate from source data
-starting_time_rate = 0;%nwb.acquisition.get('TwoPhotonSeries').starting_time_rate;
-starting_time = 15;%nwb.acquisition.get('TwoPhotonSeries').starting_time;
-
-
+else
+    nwb = options.nwb_file;
+end
+%check if timing details in ooptions structure
+if (~isfield(options, 'starting_time') || ~isfield(options, s'tarting_time_rate'))
+    % get timing details from nwb file, if source_acqusition define
+    if isfield(options, source_acquisition)
+        options.starting_time = nwb.acquisition. ...
+            get(source_acquisition).starting_time;
+        options.starting_time_rate = nwb.acquisition. ...
+            get(source_acquisition).starting_time_rate;
+    else
+        error(['starting_time and starting_time_rate must be provided ', ...
+        'if source_acquisition not provided'])
+    end
+end
+if ~isfield(options, 'processing_module_name')
+    options.processing_module_name = 'ophys';
+end
+if ~isfield(options, 'img_segmentation_name')
+    options.img_segmentation_name = 'ImageSegmentation';
+end
+if ~isfield(options, 'plane_segmentation_name')
+    options.plane_segmentation_name = 'PlaneSegmentation';
+end
+if ~isfield(options, 'data_unit')
+    options.data_unit = 'n.a.';
+end
+%get imaging plane path if a source acquisition is defined
+if isfield(options, 'source_acquisition')
+    imaging_plane_path = types.untyped.SoftLink( ...
+        nwb.acquisition.get(source_acquisition).imaging_plane.path ...
+        );
+else
+    imaging_plane_path = [];
+end
 
 % get processing module; create if it doesn't exist
-if any(strcmp(keys(nwb.processing),processing_module_name))
-    ophys_module = nwb.processing.get(processing_module_name);
+if any(strcmp(keys(nwb.processing),options.processing_module_name))
+    ophys_module = nwb.processing.get(options.processing_module_name);
 else
     ophys_module = types.core.ProcessingModule(...
     'description', 'holds processed calcium imaging data');
-    nwb.processing.set(processing_module_name, ophys_module);
+    nwb.processing.set(options.processing_module_name, ophys_module);
 end
+
 % get dimension of ROI masks 
 mask_dims = size(output.spatial_weights);
 % introduce singleton dimension, if neccesary
@@ -43,7 +73,7 @@ plane_segmentation = types.core.PlaneSegmentation( ...
     'description', 'EXTRACT ouput', ...
     'id', types.hdmf_common.ElementIdentifiers( ...
         'data', int64(0:mask_dims(3)).'), ...
-    'imaging_plane', types.untyped.SoftLink(imaging_plane_path) ...
+    'imaging_plane', imaging_plane_path ...
     );
 % define image masks
 plane_segmentation.image_mask = types.hdmf_common.VectorData( ...
@@ -52,8 +82,8 @@ plane_segmentation.image_mask = types.hdmf_common.VectorData( ...
     );
 % define image segmentation object and place in module
 img_seg = types.core.ImageSegmentation();
-img_seg.planesegmentation.set(plane_segmentation_name, plane_segmentation);
-ophys_module.nwbdatainterface.set(img_segmentation_name, img_seg);
+img_seg.planesegmentation.set(options.plane_segmentation_name, plane_segmentation);
+ophys_module.nwbdatainterface.set(options.img_segmentation_name, img_seg);
 % Dynamic table region with reference to ROIs
 roi_table_region = types.hdmf_common.DynamicTableRegion( ...
     'table', types.untyped.ObjectView(plane_segmentation), ...
@@ -63,7 +93,7 @@ roi_table_region = types.hdmf_common.DynamicTableRegion( ...
 roi_response_series = types.core.RoiResponseSeries( ...
     'rois', roi_table_region, ...
     'data', output.temporal_weights, ...
-    'data_unit', data_unit, ... %needs to be defined by user
+    'data_unit', options.data_unit, ... 
     'starting_time_rate', starting_time_rate, ... 
     'starting_time', starting_time); 
 % Fluoresence or df/F depending on whether config.preprocessing value
