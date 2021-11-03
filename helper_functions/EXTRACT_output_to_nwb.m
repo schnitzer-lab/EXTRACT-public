@@ -1,25 +1,46 @@
 function nwb = EXTRACT_output_to_nwb(output, options)
-% EXTRACT_output_to_nwb writes the data within the EXTRACT output structure
+% EXTRACT_OUTPUT_TO_NWB writes the data within the EXTRACT output structure
 % to an NWB file
 %
 %  output: EXTRACT output structure
 %
 %  options: structure with details necessary for nwb file creation.
+%       - nwb_file: NwbFile object specifying where to the output data. If
+%       none provided, a new file will be generated
+%       - processing_module_name: identifying string of processing 
+%       module with optical physiology data. Defaults to 'ophys'. Will
+%       create the processing module, if none exists in file
+%       - img_segmentation_name: identifying string of ImageSegmentation 
+%       object.  Defaults to 'ImageSegmentation'.
+%       - plane_segmentation_name: identifying string of PlaneSegmentation 
+%       object.  Defaults to 'PlaneSegmentation'.
+%       - data_unit: string identifying measuring unit of ROI timeseries
+%       data (e.g., 'pixel_intensity'). Defaults to 'n.a.'
+%       - source_acquisition identifying string of TwoPhotonSeries object, 
+%       containing raw image data. Not necessary if writing to new NWB file.
+%       - starting_time: numeric value identifying the start time of ROI
+%       timeseries. REQUIRED if source_acquisition is not defined.
+%       Otherwise, will try to infer from provided NWB file
+%       - starting_time_rate: numeric value identifying the sampling rate of 
+%       ROI timeseries. REQUIRED if source_acquisition is not defined.
+%       Otherwise, will try to infer from provided NWB file
 %
-%
+%       TODO: allow for input of irregular timing interval
+%       
+
 
 %create nwb file if none passed in
 if ~isfield(options,'nwb_file')
     nwb = NwbFile( ...
-    'session_start_time', '2021-01-01 00:00:00', ...
+    'session_start_time', '2021-01-01 00:00:00', ... %should be specified by user?
     'identifier', 'ident1', ...
     'session_description', 'EXTRACT output file' ...
     );
 else
     nwb = options.nwb_file;
 end
-%check if timing details in ooptions structure
-if (~isfield(options, 'starting_time') || ~isfield(options, s'tarting_time_rate'))
+%check if timing details in options structure
+if ~isfield(options, 'starting_time') || ~isfield(options, 'starting_time_rate')
     % get timing details from nwb file, if source_acqusition define
     if isfield(options, source_acquisition)
         options.starting_time = nwb.acquisition. ...
@@ -49,7 +70,7 @@ if isfield(options, 'source_acquisition')
         nwb.acquisition.get(source_acquisition).imaging_plane.path ...
         );
 else
-    imaging_plane_path = [];
+    imaging_plane_path = [];% enfore user input?
 end
 
 % get processing module; create if it doesn't exist
@@ -94,8 +115,8 @@ roi_response_series = types.core.RoiResponseSeries( ...
     'rois', roi_table_region, ...
     'data', output.temporal_weights, ...
     'data_unit', options.data_unit, ... 
-    'starting_time_rate', starting_time_rate, ... 
-    'starting_time', starting_time); 
+    'starting_time_rate', options.starting_time_rate, ... 
+    'starting_time', options.starting_time); 
 % Fluoresence or df/F depending on whether config.preprocessing value
 if output.config.preprocess
     output_timeseries = types.core.DfOverF();
@@ -118,7 +139,9 @@ max_img = types.core.GrayscaleImage( ...
     'data', output.info.max_image ...
     );
 % put images in container
-img_container = types.core.Images();
+img_container = types.core.Images( ...
+    'description', 'EXTRACT info images' ...
+    );
 img_container.image.set('summary_image', summary_img);
 img_container.image.set('F_per_pixel', F_img);
 img_container.image.set('max_img', max_img);
