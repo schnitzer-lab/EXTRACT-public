@@ -148,10 +148,12 @@ function options = get_timing_details(options)
 if isfield(options, 'source_acquisition')
     if ~isfield(options, 'timestamps')
         if ~isfield(options, 'starting_time') || ~isfield(options, 'sampling_rate')
-            options.timestamps = nwb.acquisition.get(source_acquisition).timestamps;
+            options.timestamps = options.nwb_file.acquisition.get(options.source_acquisition).timestamps;
             if isempty(options.timestamps)
-                options.starting_time = nwb.acquisition.get(source_acquisition).starting_time;
-                options.sampling_time = nwb.acquisition.get(source_acquisition).starting_time_rate;
+                options.starting_time = options.nwb_file.acquisition. ... 
+                    get(options.source_acquisition).starting_time;
+                options.sampling_rate = options.nwb_file.acquisition. ...
+                    get(options.source_acquisition).starting_time_rate;
             end
         else
             options.timestamps = [];
