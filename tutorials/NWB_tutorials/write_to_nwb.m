@@ -12,7 +12,7 @@ options.nwb_file = NwbFile( ...
     'session_start_time', '2021-01-01 00:00:00', ... % change to your own session start time
     'identifier', char(java.util.UUID.randomUUID.toString), ... % UUID string
     'session_description', 'EXTRACT_output_tutorial' ...
-    );
+);
 % name of processing  module with optical physiology data. Defaults to 'ophys'
 options.processing_module_name = 'ophys'; 
 % label for of ImageSegmentation object.  Defaults to 'ImageSegmentation'
