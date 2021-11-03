@@ -27,7 +27,7 @@ generateCore();
 inputFilePath = '/Users/cesar/Documents/DANDI_files/sub-F1_ses-20190407T210000_behavior+ophys.nwb';
 nwb = nwbRead(inputFilePath);
 % Load in image stack
-image_stack = nwb.acquisition.get('TwoPhotonSeries').data(:, :, 1:2000);
+image_stack = nwb.acquisition.get('TwoPhotonSeries').data.internal.stub(:, :, 1:2000);
 
 %% 
 % The code belows creates a simple config structure with default parameters. 
@@ -39,6 +39,7 @@ config = [];
 config = get_defaults(config); %calls the defaults
 config.avg_cell_radius = 7; % Set average cell radius estimate (REQUIRED)
 config.prepocess = true;% preprocess data before EXTRACT
+config.use_gpu = false;% assuming no GPU available
 
 %% *Run EXTRACT*
 % Finally, you can run EXTRACT on the loaded image stack with the parameters 
