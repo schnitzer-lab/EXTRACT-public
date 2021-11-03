@@ -19,14 +19,13 @@ function nwb = EXTRACT_output_to_nwb(output, options)
 %       containing raw image data. Not necessary if writing to new NWB file.
 %       - starting_time: numeric value identifying the start time of ROI
 %       timeseries. Defaults to 0. Will try to infer from provided
-%       NWB file if source_acquisition is defined.
+%       NWB file if source_acquisition is defined. Supply if timing is regular.
 %       - sampling_rate: numeric value identifying the sampling rate of 
 %       ROI timeseries. Defaults to NaN. Will try to infer from provided
-%       NWB file if source_acquisition is defined.
-
+%       NWB file if source_acquisition is defined. Supply if timing is regular.
+%       - timestamps: numeric array identifying timestamps of ROI time
+%       series. Supply if timing is irregular.
 %
-%       TODO: allow for input of irregular timing interval
-%       
 
 
 % Make sure nwbFile object in options
@@ -35,19 +34,10 @@ assert((isfield(options,'nwb_file') && isa(options.nwb_file,'types.core.NWBFile'
     'options structure must contain a valid NWBFile' ...
     );
 nwb = options.nwb_file;
-%check if timing details in options structure
-if ~isfield(options, 'starting_time') || ~isfield(options, 'starting_time_rate')
-    % get timing details from nwb file, if source_acqusition defined
-    if isfield(options, 'source_acquisition')
-        options.starting_time = nwb.acquisition. ...
-            get(source_acquisition).starting_time;
-        options.sampling_rate = nwb.acquisition. ...
-            get(source_acquisition).starting_time_rate;
-    else
-        options.starting_time = 0;
-        options.sampling_rate = NaN;
-    end
-end
+
+%get timing details
+options = get_timing_details(options);
+
 if ~isfield(options, 'processing_module_name')
     options.processing_module_name = 'ophys';
 end
@@ -76,7 +66,6 @@ else
     ophys_module = types.core.ProcessingModule('description', 'holds processed calcium imaging data');
     nwb.processing.set(options.processing_module_name, ophys_module);
 end
-
 % get dimension of ROI masks 
 mask_dims = size(output.spatial_weights);
 % introduce singleton dimension, if neccesary
@@ -127,7 +116,8 @@ roi_response_series = types.core.RoiResponseSeries( ...
     'data', output.temporal_weights, ...
     'data_unit', options.data_unit, ... 
     'starting_time_rate', options.sampling_rate, ... 
-    'starting_time', options.starting_time ...
+    'starting_time', options.starting_time, ...
+    'timestamps', options.timestamps ...
     ); 
 % Fluoresence or df/F depending on config.preprocess value
 if output.config.preprocess
@@ -151,3 +141,37 @@ img_container.image.set('F_per_pixel', F_img);
 img_container.image.set('max_img', max_img);
 % segmentation images to processing module
 ophys_module.nwbdatainterface.set('EXTRACTSegmentationImages', img_container);
+end
+function options = get_timing_details(options)
+% resolve timing details, infer when necessary and possible
+% if no information is provided, defaults to regular timing values
+if isfield(options, 'source_acquisition')
+    if ~isfield(options, 'timestamps')
+        if ~isfield(options, 'starting_time') || ~isfield(options, 'sampling_rate')
+            options.timestamps = nwb.acquisition.get(source_acquisition).timestamps;
+            if isempty(options.timestamps)
+                options.starting_time = nwb.acquisition.get(source_acquisition).starting_time;
+                options.sampling_time = nwb.acquisition.get(source_acquisition).starting_time_rate;
+            end
+        else
+            options.timestamps = [];
+        end
+    else
+        options.starting_time = [];
+        options.sampling_rate = [];
+    end
+else
+    if ~isfield(options, 'timestamps')
+        if ~isfield(options, 'starting_time') || ~isfield(options, 'sampling_rate')
+            options.starting_time = 0;
+            options.sampling_rate = NaN;
+            options.timestamps = [];
+        else
+            options.timestamps = [];
+        end
+    else
+        options.starting_time = [];
+        options.sampling_rate = [];
+    end
+end
+end

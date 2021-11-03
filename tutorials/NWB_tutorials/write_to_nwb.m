@@ -22,8 +22,11 @@ options.plane_segmentation_name = 'PlaneSegmentation';
 % unit of ROI timeseries data. Defaults to 'n.a.'
 options.data_unit = 'n.a.';
 % timing details of ROI time series.
-options.starting_time = 0; % starting time. Defaults to 0
-options.sampling_rate = 15; % sampling rate. Defaults to NaN
+% If timing is regular, need only supply starting time and sampling rate
+% options.starting_time = 0; % starting time. Defaults to 0
+% options.sampling_rate = 15; % sampling rate. Defaults to NaN
+% If timing is irregular, supply timestamps instead
+%options.timestamps = 0:1999;
 %% EXTRACT Output to NwbFile Object
 % Append output data to NWB file
 output_nwb = EXTRACT_output_to_nwb(output, options);
