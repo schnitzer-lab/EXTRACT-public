@@ -18,7 +18,7 @@ generateCore();
 
 % You can read in an nwb file with the nwbRead function from MatNWB. The code 
 % below reads in a file downloaded from this DANDIset https://dandiarchive.org/dandiset/000054/0.210819.1547 
-%For this file, the raw images are located as a DataStub within 
+% For this file, the raw images are located as a DataStub within 
 % the TwoPhotonSeries object. In MatNWB, the data is read "lazily". This means 
 % that, instead of reading the entire dataset into memory, you have the option 
 % of reading just a subset of the data stored on disk. The code below reads into 
