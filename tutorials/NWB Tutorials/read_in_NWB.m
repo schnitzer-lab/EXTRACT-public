@@ -1,10 +1,12 @@
 %% *MatNWB Setup*
-% Start by setting up your MATLAB workspace. The code below adds the directory 
-% containing the MatNWB package to the MATLAB search path. MatNWB works by automatically 
+% Start by setting up your MATLAB workspace. The code below clones the
+% MatNWB repo to the current directory and adds the folder ontaining the 
+% MatNWB package to the MATLAB search path. MatNWB works by automatically 
 % creating API classes based on a defined schema. Running the generateCore() function
 % generates these classes for the lastest schema version.
 
-path_to_matnwb = '~/Repositories/matnwb';% change to your own path location
+!git clone https://github.com/NeurodataWithoutBorders/matnwb.git
+cd ../matnwb
 addpath(genpath(pwd));
 generateCore();
 %% *Load in Image Files*
