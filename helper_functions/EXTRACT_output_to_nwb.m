@@ -6,23 +6,36 @@ function nwb = EXTRACT_output_to_nwb(output, options)
 %
 %  options: structure with details necessary for nwb file creation.
 %       - nwb_file: NwbFile object specifying where to the output data.
+
 %       - processing_module_name: identifying string of processing 
 %       module with optical physiology data. Defaults to 'ophys'. Will
 %       create the processing module, if none exists in file
+
+%       - imaging_plane_name: identifying string of relevant ImagingPlane
+%       object. If absent, will try to infer from file, if
+%       source_acquisition provided. If both absent, will create
+%       ImagingPlane object with default non-informative values
+%       
 %       - img_segmentation_name: identifying string of ImageSegmentation 
 %       object.  Defaults to 'ImageSegmentation'.
+
 %       - plane_segmentation_name: identifying string of PlaneSegmentation 
 %       object.  Defaults to 'PlaneSegmentation'.
+
 %       - data_unit: string identifying measuring unit of ROI timeseries
 %       data (e.g., 'pixel_intensity'). Defaults to 'n.a.'
+
 %       - source_acquisition identifying string of TwoPhotonSeries object, 
 %       containing raw image data. Not necessary if writing to new NWB file.
+
 %       - starting_time: numeric value identifying the start time of ROI
 %       timeseries. Defaults to 0. Will try to infer from provided
 %       NWB file if source_acquisition is defined. Supply if timing is regular.
+
 %       - sampling_rate: numeric value identifying the sampling rate of 
 %       ROI timeseries. Defaults to NaN. Will try to infer from provided
 %       NWB file if source_acquisition is defined. Supply if timing is regular.
+
 %       - timestamps: numeric array identifying timestamps of ROI time
 %       series. Supply if timing is irregular.
 %
@@ -50,13 +63,36 @@ end
 if ~isfield(options, 'data_unit')
     options.data_unit = 'n.a.';
 end
-%get imaging plane path if a source acquisition is defined
-if isfield(options, 'source_acquisition')
-    imaging_plane_path = types.untyped.SoftLink( ...
-        nwb.acquisition.get(options.source_acquisition).imaging_plane.path ...
-    );
+
+if isfield(options, 'imaging_plane_name')
+    % fetch defined imaging plane
+    imaging_plane = nwb.general_optophysiology.get(options.imaging_plane_name);
 else
-    imaging_plane_path = types.untyped.SoftLink('/');% @Ben: best way to deal with no imaging plane?
+    if isfield(options, 'source_acquisition')
+        % infer imaging plane name, if acquisition defined
+        imaging_plane_path = nwb.acquisition.get(options.source_acquisition).imaging_plane.path;
+        slash_locs = strfind(imaging_plane_path,'/');
+        options.imaging_plane_name = imaging_plane_path(slash_locs(end)+1:end);
+        imaging_plane = nwb.general_optophysiology.get(options.imaging_plane_name);
+    else
+        % create imaging plane with default values
+        optical_channel = types.core.OpticalChannel( ...
+            'description', 'optical channel', ...
+            'emission_lambda', NaN ...
+        );
+        device_obj = types.core.Device();
+        nwb.general_devices.set('microscope', device_obj);
+        imaging_plane = types.core.ImagingPlane( ...
+            'optical_channel', optical_channel, ...
+            'description', 'imaging plane description', ...
+            'device', device_obj, ...
+            'excitation_lambda', NaN, ...
+            'location', 'unknown', ...
+            'indicator', 'unknown' ...
+        );
+        % attach to nwb file
+        nwb.general_optophysiology.set('ImagingPlane', imaging_plane);
+    end
 end
 
 % get processing module; create if it doesn't exist
@@ -78,7 +114,7 @@ plane_segmentation = types.core.PlaneSegmentation( ...
     'description', 'EXTRACT ouput', ...
     'id', types.hdmf_common.ElementIdentifiers( ...
         'data', int64(0:mask_dims(3)).'), ...
-    'imaging_plane', imaging_plane_path ...
+    'imaging_plane', imaging_plane ...
 );
 % define image masks
 plane_segmentation.image_mask = types.hdmf_common.VectorData( ...
