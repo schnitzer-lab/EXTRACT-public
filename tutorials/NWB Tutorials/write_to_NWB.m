@@ -9,7 +9,7 @@
 % below clones the github repo defining this extension and generates the
 % MATLAB code implementing the extension. 
 % !git clone https://github.com/catalystneuro/ndx-extract.git
-% generateExtension('ndx-extract/spec/EXTRACTSegmentation.namespace.yaml');
+% generateExtension('ndx-extract/spec/ndx-EXTRACT.namespace.yaml');
 %% Approach 1. Writing data to a new NWB file
 %% Building options Structure
 % %
