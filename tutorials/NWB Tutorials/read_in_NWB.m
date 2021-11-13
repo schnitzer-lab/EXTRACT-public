@@ -5,10 +5,10 @@
 % creating API classes based on a defined schema. Running the generateCore() function
 % generates these classes for the lastest schema version.
 
-% !git clone https://github.com/NeurodataWithoutBorders/matnwb.git
-% cd ../matnwb
-% addpath(genpath(pwd));
-% generateCore();
+!git clone https://github.com/NeurodataWithoutBorders/matnwb.git
+cd ../matnwb
+addpath(genpath(pwd));
+generateCore();
 %% *Load in Image Files*
 % The extractor.m function function requires two inputs
 

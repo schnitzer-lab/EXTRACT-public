@@ -11,10 +11,18 @@ function nwb = EXTRACT_output_to_nwb(output, options)
 %       module with optical physiology data. Defaults to 'ophys'. Will
 %       create the processing module, if none exists in file
 
-%       - imaging_plane_name: identifying string of relevant ImagingPlane
-%       object. If absent, will try to infer from file, if
-%       source_acquisition provided. If both absent, will create
-%       ImagingPlane object with default non-informative values
+%       - imaging_plane: substructure with parameters to fetch or create the
+%       relevant ImagingPlane object. If any of the required parameters is
+%       missing, default values will be used when creating the object. 
+%       Parameters include: name, description, excitation_lambda,
+%       imaging_rate, indicator, and location
+%
+%       - device_name: identifying string of Device object used when creating new
+%       ImagingPlane object
+
+%       - optical channel: substructure with parameters to create
+%       OpticalChannel used when creating new Imaging plane object.
+%       Parameters include: description, emission_lambda
 %       
 %       - img_segmentation_name: identifying string of ImageSegmentation 
 %       object.  Defaults to 'ImageSegmentation'.
@@ -46,7 +54,7 @@ assert((isfield(options,'nwb_file') && isa(options.nwb_file,'types.core.NWBFile'
     'EXTRACT_output_to_nwb:NoNWBFile', ...
     'options structure must contain a valid NWBFile' ...
 );
-nwb = options.nwb_file;
+
 
 %get timing details
 options = get_timing_details(options);
@@ -64,36 +72,21 @@ if ~isfield(options, 'data_unit')
     options.data_unit = 'n.a.';
 end
 
-if isfield(options, 'imaging_plane_name')
-    % fetch defined imaging plane
-    imaging_plane = nwb.general_optophysiology.get(options.imaging_plane_name);
-else
-    if isfield(options, 'source_acquisition')
-        % infer imaging plane name, if acquisition defined
-        imaging_plane_path = nwb.acquisition.get(options.source_acquisition).imaging_plane.path;
-        slash_locs = strfind(imaging_plane_path,'/');
-        options.imaging_plane_name = imaging_plane_path(slash_locs(end)+1:end);
-        imaging_plane = nwb.general_optophysiology.get(options.imaging_plane_name);
-    else
-        % create imaging plane with default values
-        optical_channel = types.core.OpticalChannel( ...
-            'description', 'optical channel', ...
-            'emission_lambda', NaN ...
-        );
-        device_obj = types.core.Device();
-        nwb.general_devices.set('microscope', device_obj);
-        imaging_plane = types.core.ImagingPlane( ...
-            'optical_channel', optical_channel, ...
-            'description', 'imaging plane description', ...
-            'device', device_obj, ...
-            'excitation_lambda', NaN, ...
-            'location', 'unknown', ...
-            'indicator', 'unknown' ...
-        );
-        % attach to nwb file
-        nwb.general_optophysiology.set('ImagingPlane', imaging_plane);
+if isfield(options, 'imaging_plane')
+    if isfield(options.imaging_plane, 'name')
+        % try fetching defined imaging plane
+        try
+            imaging_plane = option.nwb_file.general_optophysiology.get(options.imaging_plane.name);
+        catch
+            imaging_plane = get_or_make_imaging_plane(options);
+        end
     end
+else
+    imaging_plane = get_or_make_imaging_plane(options);
 end
+
+%retrieve nwb file
+nwb = options.nwb_file;
 
 % get processing module; create if it doesn't exist
 if any(strcmp(keys(nwb.processing),options.processing_module_name))
@@ -212,4 +205,76 @@ else
         options.sampling_rate = [];
     end
 end
+end
+function imaging_plane = get_or_make_imaging_plane(options)
+    if isfield(options, 'source_acquisition')
+        % infer imaging plane name, if acquisition defined
+        imaging_plane_path = options.nwb_file.acquisition.get(options.source_acquisition).imaging_plane.path;
+        slash_locs = strfind(imaging_plane_path,'/');
+        options.imaging_plane_name = imaging_plane_path(slash_locs(end)+1:end);
+        imaging_plane = options.nwb_file.general_optophysiology.get(options.imaging_plane_name);
+    else
+        if ~isfield(options,'device_name')
+            options.device_name = 'microscope';
+        end
+        if isfield(options,'optical_channel')
+            if ~isfield(options.optical_channel,'description')
+                options.optical_channel.description = 'optical channel';
+            end
+            if ~isfield(options.optical_channel,'emission_lambda')
+                options.optical_channel.emission_lambda = NaN;
+            end
+        else
+            options.optical_channel.description = 'optical channel';
+            options.optical_channel.emission_lambda = NaN;
+        end
+        if isfield(options,'imaging_plane')
+            if ~isfield(options.imaging_plane, 'name')
+                options.imaging_plane.name = 'ImagingPlane';
+            end
+            if ~isfield(options.imaging_plane, 'description')
+                options.imaging_plane.description = 'imaging plane description';
+            end
+            if ~isfield(options.imaging_plane, 'excitation_lambda')
+                options.imaging_plane.excitation_lambda = NaN;
+            end
+            if ~isfield(options.imaging_plane, 'imaging_rate')
+                options.imaging_plane.imaging_rate = NaN;
+            end
+            if ~isfield(options.imaging_plane, 'indicator')
+                options.imaging_plane.indicator = 'unknown';
+            end
+            if ~isfield(options.imaging_plane, 'location')
+                options.imaging_plane.location = 'unknown';
+            end
+
+        else
+            options.imaging_plane.name = 'ImagingPlane';
+            options.imaging_plane.description = 'imaging plane description';
+            options.imaging_plane.excitation_lambda = NaN;
+            options.imaging_plane.imaging_rate = NaN;
+            options.imaging_plane.indicator = 'unknown';
+            options.imaging_plane.location = 'unknown';
+        end
+        
+        % create imaging plane with default values
+        optical_channel = types.core.OpticalChannel( ...
+            'description', options.optical_channel.description, ...
+            'emission_lambda', options.optical_channel.emission_lambda ...
+        );
+        device_obj = types.core.Device();
+        options.nwb_file.general_devices.set(options.device_name , device_obj);
+        imaging_plane = types.core.ImagingPlane( ...
+            'optical_channel', optical_channel, ...
+            'device', device_obj ...
+        );
+        imaging_plane_props = fieldnames(options.imaging_plane);
+        for i = 1:length(imaging_plane_props)
+            if ~strcmp(imaging_plane_props{i},'name')
+                imaging_plane.(imaging_plane_props{i}) = options.imaging_plane.(imaging_plane_props{i});
+            end
+        end
+        % attach to nwb file
+        options.nwb_file.general_optophysiology.set(options.imaging_plane.name, imaging_plane);
+    end
 end

@@ -23,15 +23,15 @@ options.nwb_file = NwbFile( ...
 % % Creating a valid NWB file requires definition of an ImagingPlane object
 % % and its dependencies. The below group of parameters defines the necessary
 % % properties. If these are not provided, default values will be used
-options.imaging_plane.name = 'imaging_plane'; %Defaults to ImagingPlane
-% options.device_name = 'microscope'; %Defaults to 'microscope'
-% options.optical_channel.description = 'optical channel';% Defaults to 'optical channel'
-options.optical_channel.emission_lambda = 500;% Defaults to NaN
-options.imaging_plane.description = '250 um below surface';% Defaults to 'imaging plane description'
-options.imaging_plane.excitation_lambda = 600;% Defaults to NaN
-options.imaging_plane.imaging_rate = 15;% Defaults to NaN
-options.imaging_plane.indicator = 'GCaMP';% Defaults to 'unknown'
-options.imaging_plane.location = 'brain location';% Defaults to 'unknown'
+% options.imaging_plane.name = 'imaging_plane'; %Defaults to ImagingPlane
+% % options.device_name = 'microscope'; %Defaults to 'microscope'
+% % options.optical_channel.description = 'optical channel';% Defaults to 'optical channel'
+% options.optical_channel.emission_lambda = 500;% Defaults to NaN
+% options.imaging_plane.description = '250 um below surface';% Defaults to 'imaging plane description'
+% options.imaging_plane.excitation_lambda = 600;% Defaults to NaN
+% options.imaging_plane.imaging_rate = 15;% Defaults to NaN
+% options.imaging_plane.indicator = 'GCaMP';% Defaults to 'unknown'
+% options.imaging_plane.location = 'brain location';% Defaults to 'unknown'
 
 % % Other parameters
 % % name of processing  module with optical physiology data. Defaults to 'ophys'
