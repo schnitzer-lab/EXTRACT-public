@@ -3,13 +3,31 @@
 % file:
 %   1. Writing data to a new NWB file
 %   2. Writing data to an existing NWB file
+%% *MatNWB Setup*
+% Start by setting up your MATLAB workspace. The code below clones the
+% MatNWB repo to the current directory and adds the folder ontaining the 
+% MatNWB package to the MATLAB search path. MatNWB works by automatically 
+% creating API classes based on a defined schema. Running the generateCore() function
+% generates these classes for the lastest schema version.
+
+!git clone https://github.com/NeurodataWithoutBorders/matnwb.git
+cd ../matnwb
+addpath(genpath(pwd));
+generateCore();
+
 %% *NWB Extension Setup*
 % The helper function below uses an extension of the NWB:N format to store
 % the configuration options and output of the EXTRACT pipeline. The code
 % below clones the github repo defining this extension and generates the
 % MATLAB code implementing the extension. 
-% !git clone https://github.com/catalystneuro/ndx-extract.git
-% generateExtension('ndx-extract/spec/ndx-EXTRACT.namespace.yaml');
+!git clone https://github.com/catalystneuro/ndx-extract.git
+generateExtension('ndx-extract/spec/ndx-EXTRACT.namespace.yaml');
+
+%NOTE: This tutorial assumes you have an output variable in your workspace
+%after running the EXTRACT pipeline. See the read_in_NWB.m tutorial  in the 
+%same folder or the '1. Starting code' tutorial for details on how to run
+%the EXTRACT pipeline.
+
 %% Approach 1. Writing data to a new NWB file
 %% Building options Structure
 % %

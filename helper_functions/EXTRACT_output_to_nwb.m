@@ -92,7 +92,9 @@ nwb = options.nwb_file;
 if any(strcmp(keys(nwb.processing),options.processing_module_name))
     ophys_module = nwb.processing.get(options.processing_module_name);
 else
-    ophys_module = types.core.ProcessingModule('description', 'holds processed calcium imaging data');
+    ophys_module = types.core.ProcessingModule( ...
+        'description', 'holds processed calcium imaging data' ...
+    );
     nwb.processing.set(options.processing_module_name, ophys_module);
 end
 % get dimension of ROI masks 
