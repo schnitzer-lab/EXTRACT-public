@@ -20,6 +20,7 @@ generateCore();
 % the configuration options and output of the EXTRACT pipeline. The code
 % below clones the github repo defining this extension and generates the
 % MATLAB code implementing the extension. 
+
 !git clone https://github.com/catalystneuro/ndx-extract.git
 generateExtension('ndx-extract/spec/ndx-EXTRACT.namespace.yaml');
 
@@ -32,34 +33,33 @@ generateExtension('ndx-extract/spec/ndx-EXTRACT.namespace.yaml');
 %% Building options Structure
 % %
 options = struct();
-% %NWB file to which to write the EXTRACT output.
-options.nwb_file = NwbFile( ...
-    'session_start_time', '2021-01-01 00:00:00', ... % change to your own session start time
-    'identifier', char(java.util.UUID.randomUUID.toString), ... % UUID string
-    'session_description', 'EXTRACT_output_tutorial' ...
-);
-% % Creating a valid NWB file requires definition of an ImagingPlane object
-% % and its dependencies. The below group of parameters defines the necessary
-% % properties. If these are not provided, default values will be used
-% options.imaging_plane.name = 'imaging_plane'; %Defaults to ImagingPlane
-% % options.device_name = 'microscope'; %Defaults to 'microscope'
-% % options.optical_channel.description = 'optical channel';% Defaults to 'optical channel'
-% options.optical_channel.emission_lambda = 500;% Defaults to NaN
-% options.imaging_plane.description = '250 um below surface';% Defaults to 'imaging plane description'
-% options.imaging_plane.excitation_lambda = 600;% Defaults to NaN
-% options.imaging_plane.imaging_rate = 15;% Defaults to NaN
-% options.imaging_plane.indicator = 'GCaMP';% Defaults to 'unknown'
-% options.imaging_plane.location = 'brain location';% Defaults to 'unknown'
+% define propperties of NWB to which to write the EXTRACT output.
+options.nwb_file.session_start_time =  '2021-01-01 00:00:00'; % change to your own session start time
+%options.nwb_file.identifier = 'test_file';% Defaults to a UUID string
+options.nwb_file.session_description = 'EXTRACT_output_tutorial';
 
-% % Other parameters
-% % name of processing  module with optical physiology data. Defaults to 'ophys'
-% options.processing_module_name = 'ophys';
-% % label for of ImageSegmentation object.  Defaults to 'ImageSegmentation'
-% options.img_segmentation_name = 'ImageSegmentation'; 
-% % label for of PlaneSegmentation object. Defaults to 'PlaneSegmentation'
-% options.plane_segmentation_name = 'PlaneSegmentation';
-% % unit of ROI timeseries data. Defaults to 'n.a.'
-% options.timeseries_data_unit = 'n.a.';
+% Creating a valid NWB file requires definition of an ImagingPlane object
+% and its dependencies. The below group of parameters defines the necessary
+% properties. If these are not provided, default values will be used
+options.imaging_plane.name = 'imaging_plane'; %Defaults to ImagingPlane
+% options.device_name = 'microscope'; %Defaults to 'microscope'
+% options.optical_channel.description = 'optical channel';% Defaults to 'optical channel'
+options.optical_channel.emission_lambda = 500;% Defaults to NaN
+options.imaging_plane.description = '250 um below surface';% Defaults to 'imaging plane description'
+options.imaging_plane.excitation_lambda = 600;% Defaults to NaN
+options.imaging_plane.imaging_rate = 15;% Defaults to NaN
+options.imaging_plane.indicator = 'GCaMP';% Defaults to 'unknown'
+options.imaging_plane.location = 'brain location';% Defaults to 'unknown'
+
+% Other parameters
+% name of processing  module with optical physiology data. Defaults to 'ophys'
+options.processing_module_name = 'ophys';
+% label for of ImageSegmentation object.  Defaults to 'ImageSegmentation'
+options.img_segmentation_name = 'ImageSegmentation'; 
+% label for of PlaneSegmentation object. Defaults to 'PlaneSegmentation'
+options.plane_segmentation_name = 'PlaneSegmentation';
+% unit of ROI timeseries data. Defaults to 'n.a.'
+options.timeseries_data_unit = 'n.a.';
 % % timing details of ROI time series.
 % % If timing is regular, need only supply starting time and sampling rate
 % options.starting_time = 0; % starting time. Defaults to 0
@@ -67,7 +67,6 @@ options.sampling_rate = 15; % sampling rate. Defaults to NaN
 % % If timing is irregular, supply timestamps instead
 % options.timestamps = 0:1999;
 %% EXTRACT Output to NwbFile Object
-% % Append output data to NWB file
 output_nwb = EXTRACT_output_to_nwb(output, options);
 %% Export NWB file
 nwbExport(output_nwb, 'EXTRACT_output.nwb');
@@ -75,7 +74,7 @@ nwbExport(output_nwb, 'EXTRACT_output.nwb');
 % %% Building options Structure
 % %
 % % Writing to an existing NWB file is very similar to the above. Simply
-% % supply the existing NwbFile object in the 'nwb_file' field.
+% % supply an existing NwbFile object in the 'nwb_file' field.
 options = struct();
 % % NWB file to which to write the EXTRACT output.
 options.nwb_file = nwb;
@@ -90,10 +89,9 @@ options.source_acquisition = 'TwoPhotonSeries';
 % options.plane_segmentation_name = 'PlaneSegmentation';
 % % unit of ROI timeseries data. Defaults to 'n.a.'
 options.timeseries_data_unit = 'n.a.';
-% %% EXTRACT Output to NwbFile Object
-% % Append output data to NWB file
+%% EXTRACT Output to NwbFile Object
 output_nwb = EXTRACT_output_to_nwb(output, options);
-% % Export NWB file
+%% Export NWB file
 % % When appending to an NWB file that was read in from disk, you MUST use the same 
 % % file path. Otherwise, the nwbExport function will produce an error. 
 inputFilePath = '/Users/cesar/Documents/DANDI_files/sub-F1_ses-20190407T210000_behavior+ophys.nwb';

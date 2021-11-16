@@ -5,8 +5,11 @@ function nwb = EXTRACT_output_to_nwb(output, options)
 %  output: EXTRACT output structure
 %
 %  options: structure with details necessary for nwb file creation.
-%       - nwb_file: NwbFile object specifying where to the output data.
-
+%       - nwb_file: either an nwb file or a substructure with parameters to 
+%       create the NWB file. If any of the required parameters is missing, 
+%       default values will be used when creating the file. Parameters include:
+%       session_start_time, identifier, and session_dewcription.
+%
 %       - processing_module_name: identifying string of processing 
 %       module with optical physiology data. Defaults to 'ophys'. Will
 %       create the processing module, if none exists in file
@@ -48,13 +51,10 @@ function nwb = EXTRACT_output_to_nwb(output, options)
 %       series. Supply if timing is irregular.
 %
 
-
-% Make sure nwbFile object in options
-assert((isfield(options,'nwb_file') && isa(options.nwb_file,'types.core.NWBFile')), ...
-    'EXTRACT_output_to_nwb:NoNWBFile', ...
-    'options structure must contain a valid NWBFile' ...
-);
-
+% If NWB file not provided, create NWB file with provided details
+if ~isa(options.nwb_file,'types.core.NWBFile')
+    options = make_nwb_file(options);
+end
 
 %get timing details
 options = get_timing_details(options);
@@ -162,8 +162,10 @@ for i = 1:length(config_params)
                 img_seg.(thresh_params{t}) = output.config.thresholds.(thresh_params{t});
             end
         elseif any(strcmpi(config_params{i}, num_or_char_params))
-            % numeric or string parameter values to strings
-            img_seg.(config_params{i}) = char(output.config.(config_params{i}));
+            % if downsample parameters are strings (i.e. 'auto'), leave blank
+            if ~isa(output.config.(config_params{i}),'char')
+                img_seg.(config_params{i}) = output.config.(config_params{i});
+            end
         else
             img_seg.(config_params{i}) = output.config.(config_params{i});
         end
@@ -243,6 +245,30 @@ else
         options.sampling_rate = [];
     end
 end
+end
+function options = make_nwb_file(options)
+    if ~isfield(options,'nwb_file')
+        options.nwb_file.session_start_time =  '2021-01-01 00:00:00';
+        options.nwb_file.identifier = char(java.util.UUID.randomUUID.toString);
+        options.nwb_file.session_description = 'EXTRACT output file';
+    else
+        if ~isfield (options.nwb_file,'session_start_time')
+            options.nwb_file.session_start_time =  '2021-01-01 00:00:00';
+        end
+        if ~isfield (options.nwb_file,'identifier')
+            options.nwb_file.identifier = char(java.util.UUID.randomUUID.toString);
+        end
+        if ~isfield (options.nwb_file,'session_description')
+            options.nwb_file.session_description = 'EXTRACT output file';
+        end
+    end
+    % generate file
+    nwb = NwbFile();
+    nwb_file_props = fieldnames(options.nwb_file);
+    for i = 1:length(nwb_file_props)
+        nwb.(nwb_file_props{i}) = options.nwb_file.(nwb_file_props{i});
+    end
+    options.nwb_file = nwb;
 end
 function imaging_plane = get_or_make_imaging_plane(options)
     if isfield(options, 'source_acquisition')
