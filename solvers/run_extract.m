@@ -36,7 +36,7 @@ config.avg_event_tau = tau;
 
 % Space downsampling
 dss = config.downsample_space_by;
-if strcmp(dss, 'auto')
+if strcmp(dss, 'auto') || ismepty(dss)
     dss = max(round(config.avg_cell_radius ...
         / config.min_radius_after_downsampling), 1);
 end
@@ -58,7 +58,7 @@ max_image = max(M, [], 3);
 
 % Time downsampling
 dst = config.downsample_time_by;
-if strcmp(dst, 'auto')
+if strcmp(dst, 'auto') || isempty(dst)
     dst = max(round(tau / config.min_tau_after_downsampling), 1);
 end
 config.downsample_time_by = dst;
