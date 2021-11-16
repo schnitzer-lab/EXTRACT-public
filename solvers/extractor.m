@@ -121,7 +121,7 @@ if ~do_auto_partition
 else
     % Account for downsampling
     dss = config.downsample_space_by;
-    if strcmp(dss, 'auto')
+    if strcmp(dss, 'auto') || isempty(dss)
         dss = max(round(config.avg_cell_radius / ...
             config.min_radius_after_downsampling), 1);
     end
