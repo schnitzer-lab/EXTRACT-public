@@ -36,7 +36,7 @@ config.avg_event_tau = tau;
 
 % Space downsampling
 dss = config.downsample_space_by;
-if strcmp(dss, 'auto') || ismepty(dss)
+if strcmp(dss, 'auto') || isempty(dss)
     dss = max(round(config.avg_cell_radius ...
         / config.min_radius_after_downsampling), 1);
 end
