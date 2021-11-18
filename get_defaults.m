@@ -11,8 +11,10 @@ function config = get_defaults(config)
     if ~isfield(config, 'hyperparameter_tuning_flag'), config.hyperparameter_tuning_flag = false; end
     if ~isfield(config, 'remove_duplicate_cells'), config.remove_duplicate_cells = true; end
     if ~isfield(config, 'max_iter'), config.max_iter = 6; end
+    if ~isfield(config, 'config.num_iter_stop_quality_checks'), config.num_iter_stop_quality_checks = 3; end
     if ~isfield(config, 'S_init'), config.S_init = []; end
     if ~isfield(config, 'T_init'), config.T_init = []; end
+    
     
 
     % Preprocessing module parameters
