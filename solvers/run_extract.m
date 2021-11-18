@@ -363,6 +363,27 @@ for iter = 1:config.max_iter
 	break
     end
 
+    if(i>config.num_iter_stop_quality_checks)
+
+        if (i == config.max_iter)
+            [classification] = classification_hyperparameters(...
+                classification, S, S_smooth, T, M, S_surround, T_corr_in, T_corr_out, fov_size, round(avg_radius), ...
+                config.use_gpu);
+        end
+
+        if config.verbose == 2
+            fprintf(repmat('\b', 1, last_size));
+            str = sprintf('\t \t \t End of iter # %d: # cells: %d (no more quality checks) \n', ...
+                iter, size(T, 1));
+            last_size = length(str);
+            script_log = [script_log, str];
+            dispfun(str, config.verbose ==2);
+        end
+
+        continue
+
+    end
+
     %---
     % Remove redundant cells
     %---
@@ -448,6 +469,8 @@ switch config.trace_output_option
         [T, ~, ~, ~, ~] = solve_T_robust(T, S, Mt, fov_size, avg_radius, lambda, ...
             kappa, config.max_iter_T, config.TOL_sub, ...
             config.plot_loss, config.baseline_quantile, config.use_gpu, 1);
+
+        T = T - min(T,[],1);
             
     case 'nonneg'
         str = sprintf('\t \t \t Providing non-negative traces. \n');
