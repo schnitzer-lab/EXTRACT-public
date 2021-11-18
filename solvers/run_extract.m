@@ -363,9 +363,9 @@ for iter = 1:config.max_iter
 	break
     end
 
-    if(i>config.num_iter_stop_quality_checks)
+    if(iter>config.num_iter_stop_quality_checks)
 
-        if (i == config.max_iter)
+        if (iter == config.max_iter)
             [classification] = classification_hyperparameters(...
                 classification, S, S_smooth, T, M, S_surround, T_corr_in, T_corr_out, fov_size, round(avg_radius), ...
                 config.use_gpu);
