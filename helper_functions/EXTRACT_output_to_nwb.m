@@ -167,7 +167,12 @@ for i = 1:length(config_params)
                 img_seg.(config_params{i}) = output.config.(config_params{i});
             end
         else
-            img_seg.(config_params{i}) = output.config.(config_params{i});
+            val = output.config.(config_params{i});
+            % cast logical values to int32 - logicals not supported by HDF5
+            if islogical(val)
+                val = int32(val);
+            end
+            img_seg.(config_params{i}) = val;
         end
     end
 end
