@@ -272,7 +272,7 @@ end
 end_time = posixtime(datetime);
 total_runtime = end_time - start_time - io_time;
 
-info.version = '0.8.0';
+info.version = '0.8.1';
 info.summary = summary;
 info.runtime = total_runtime;
 info.summary_image = summary_image;
