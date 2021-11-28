@@ -1,4 +1,4 @@
-# EXTRACT v0.8
+# EXTRACT 
 
 ## Latest News
 
