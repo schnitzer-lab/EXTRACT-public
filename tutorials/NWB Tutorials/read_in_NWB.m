@@ -40,7 +40,7 @@ image_stack = nwb.acquisition.get('TwoPhotonSeries').data.internal.stub(:, :, 1:
 config = [];
 config = get_defaults(config); %calls the defaults
 config.avg_cell_radius = 7; % Set average cell radius estimate (REQUIRED)
-config.prepocess = true;% preprocess data before EXTRACT
+config.preprocess = true;% preprocess data before EXTRACT
 config.use_gpu = false;% assuming no GPU available
 
 %% *Run EXTRACT*
