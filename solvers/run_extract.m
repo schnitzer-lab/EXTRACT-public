@@ -36,7 +36,7 @@ config.avg_event_tau = tau;
 
 % Space downsampling
 dss = config.downsample_space_by;
-if strcmp(dss, 'auto')
+if strcmp(dss, 'auto') || isempty(dss)
     dss = max(round(config.avg_cell_radius ...
         / config.min_radius_after_downsampling), 1);
 end
@@ -58,7 +58,7 @@ max_image = max(M, [], 3);
 
 % Time downsampling
 dst = config.downsample_time_by;
-if strcmp(dst, 'auto')
+if strcmp(dst, 'auto') || isempty(dst)
     dst = max(round(tau / config.min_tau_after_downsampling), 1);
 end
 config.downsample_time_by = dst;
@@ -363,6 +363,27 @@ for iter = 1:config.max_iter
 	break
     end
 
+    if(iter>config.num_iter_stop_quality_checks)
+
+        if (iter == config.max_iter)
+            [classification] = classification_hyperparameters(...
+                classification, S, S_smooth, T, M, S_surround, T_corr_in, T_corr_out, fov_size, round(avg_radius), ...
+                config.use_gpu);
+        end
+
+        if config.verbose == 2
+            fprintf(repmat('\b', 1, last_size));
+            str = sprintf('\t \t \t End of iter # %d: # cells: %d (no more quality checks) \n', ...
+                iter, size(T, 1));
+            last_size = length(str);
+            script_log = [script_log, str];
+            dispfun(str, config.verbose ==2);
+        end
+
+        continue
+
+    end
+
     %---
     % Remove redundant cells
     %---
@@ -430,6 +451,26 @@ switch config.trace_output_option
         [T, ~, ~, ~, ~] = solve_T(T, S, Mt, fov_size, avg_radius, lambda, ...
             kappa, config.max_iter_T, config.TOL_sub, ...
             config.plot_loss, @fp_solve, config.use_gpu, 1);
+
+    case 'robust'
+        str = sprintf('\t \t \t Providing robust traces. \n');
+        script_log = [script_log, str];
+        dispfun(str, config.verbose ==2);
+        
+        if config.l1_penalty_factor > ABS_TOL
+            % Penalize according to temporal overlap with neighbors
+            cor = get_comp_corr(S, T);
+            lambda = max(cor, [], 1) .* sum(S_smooth, 1) ...
+                * config.l1_penalty_factor;
+        else
+            lambda = T(:, 1)' * 0;
+        end
+        
+        [T, ~, ~, ~, ~] = solve_T_robust(T, S, Mt, fov_size, avg_radius, lambda, ...
+            kappa, config.max_iter_T, config.TOL_sub, ...
+            config.plot_loss, config.trace_quantile, config.use_gpu, 1);
+
+        T = T - min(T,[],2);
             
     case 'nonneg'
         str = sprintf('\t \t \t Providing non-negative traces. \n');

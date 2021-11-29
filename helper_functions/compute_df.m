@@ -15,7 +15,7 @@ function [M,m] = compute_df(M, skip,baseline)
     median_val = quantile(m(:),baseline);
     is_centered = (median_val < std(t)/ 10) || (median_val < ABS_THRESHOLD);
     if is_centered || skip
-        m = ones(size(m));
+        m = max(m,ones(size(m)));
         return;
     end
 

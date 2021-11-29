@@ -3,6 +3,7 @@ function config = get_defaults(config)
     % General control parameters 
 
     if ~isfield(config, 'trace_output_option'), config.trace_output_option = 'nonneg'; end
+    if ~isfield(config, 'trace_quantile'), config.trace_quantile = 0.3; end
     if ~isfield(config, 'use_gpu'), config.use_gpu = true; end
     if ~isfield(config, 'parallel_cpu'), config.parallel_cpu = false; end
     if ~isfield(config, 'dendrite_aware'), config.dendrite_aware = false; end
@@ -11,8 +12,10 @@ function config = get_defaults(config)
     if ~isfield(config, 'hyperparameter_tuning_flag'), config.hyperparameter_tuning_flag = false; end
     if ~isfield(config, 'remove_duplicate_cells'), config.remove_duplicate_cells = true; end
     if ~isfield(config, 'max_iter'), config.max_iter = 6; end
+    if ~isfield(config, 'config.num_iter_stop_quality_checks'), config.num_iter_stop_quality_checks = 3; end
     if ~isfield(config, 'S_init'), config.S_init = []; end
     if ~isfield(config, 'T_init'), config.T_init = []; end
+    
     
 
     % Preprocessing module parameters
@@ -21,7 +24,7 @@ function config = get_defaults(config)
     if ~isfield(config, 'fix_zero_FOV_strips'), config.fix_zero_FOV_strips = false; end
     if ~isfield(config, 'medfilt_outlier_pixels'), config.medfilt_outlier_pixels = false; end
     if ~isfield(config, 'skip_dff'), config.skip_dff = false; end
-    if ~isfield(config, 'baseline_quantile'), config.baseline_quantile = 0.4; end
+    if ~isfield(config, 'baseline_quantile'), config.baseline_quantile = 0.3; end
     if ~isfield(config, 'skip_highpass'), config.skip_highpass = false; end
     if ~isfield(config, 'spatial_highpass_cutoff'), config.spatial_highpass_cutoff = 5; end
     if ~isfield(config, 'temporal_denoising'), config.temporal_denoising = false; end

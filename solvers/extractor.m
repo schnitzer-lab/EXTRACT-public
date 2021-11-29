@@ -121,7 +121,7 @@ if ~do_auto_partition
 else
     % Account for downsampling
     dss = config.downsample_space_by;
-    if strcmp(dss, 'auto')
+    if strcmp(dss, 'auto') || isempty(dss)
         dss = max(round(config.avg_cell_radius / ...
             config.min_radius_after_downsampling), 1);
     end
@@ -272,7 +272,7 @@ end
 end_time = posixtime(datetime);
 total_runtime = end_time - start_time - io_time;
 
-info.version = '0.8.0';
+info.version = '0.8.2';
 info.summary = summary;
 info.runtime = total_runtime;
 info.summary_image = summary_image;
