@@ -24,10 +24,10 @@ generateCore();
 !git clone https://github.com/catalystneuro/ndx-extract.git
 generateExtension('ndx-extract/spec/ndx-EXTRACT.namespace.yaml');
 
-%NOTE: This tutorial assumes you have an output variable in your workspace
-%after running the EXTRACT pipeline. See the read_in_NWB.m tutorial  in the 
-%same folder or the '1. Starting code' tutorial for details on how to run
-%the EXTRACT pipeline.
+% NOTE: This tutorial assumes you have an output variable in your workspace
+% after running the EXTRACT pipeline. See the read_in_NWB.m tutorial  in the 
+% same folder or the '1. Starting code' tutorial for details on how to run
+% the EXTRACT pipeline.
 
 %% Approach 1. Writing data to a new NWB file
 %% Building options Structure
@@ -41,7 +41,7 @@ options.nwb_file.session_description = 'EXTRACT_output_tutorial';
 % Creating a valid NWB file requires definition of an ImagingPlane object
 % and its dependencies. The below group of parameters defines the necessary
 % properties. If these are not provided, default values will be used
-options.imaging_plane.name = 'imaging_plane'; %Defaults to ImagingPlane
+%options.imaging_plane.name = 'imaging_plane'; %Defaults to ImagingPlane
 % options.device_name = 'microscope'; %Defaults to 'microscope'
 % options.optical_channel.description = 'optical channel';% Defaults to 'optical channel'
 options.optical_channel.emission_lambda = 500;% Defaults to NaN
