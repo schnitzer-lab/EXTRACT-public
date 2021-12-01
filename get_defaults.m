@@ -2,8 +2,8 @@ function config = get_defaults(config)
 
     % General control parameters 
 
-    if ~isfield(config, 'trace_output_option'), config.trace_output_option = 'nonneg'; end
-    if ~isfield(config, 'trace_quantile'), config.trace_quantile = 0.3; end
+    if ~isfield(config, 'trace_output_option'), config.trace_output_option = 'robust'; end
+    if ~isfield(config, 'trace_quantile'), config.trace_quantile = 0.1; end
     if ~isfield(config, 'use_gpu'), config.use_gpu = true; end
     if ~isfield(config, 'parallel_cpu'), config.parallel_cpu = false; end
     if ~isfield(config, 'dendrite_aware'), config.dendrite_aware = false; end
