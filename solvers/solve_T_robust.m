@@ -42,8 +42,6 @@ function [T_out, l, np_x, np_y, np_time] = solve_T_robust(T_in, S, M, fov_size, 
             S_sub = S(idx_space, :);
             idx_comp = find(sum(S_sub, 1)>0);
             if ~isempty(idx_comp)  % Proceed only if non-empty partition
-                idx_space = find(sum(S(:,idx_comp), 2) > 0);
-                S_sub = S(idx_space, :);
                 S_sub = S_sub(:,idx_comp);
                 power_s_sub = sum(S_sub.^2, 1)';
                 for i_t = 1:np_time
