@@ -53,11 +53,15 @@ end
 if config.visualize_cellfinding
     
     max_im = max(M,[],3);
+    min_movie_show = quantile(M,0.2,3);
+    max_movie_show = quantile(M,0.7,3);
+
+
     trace_snr_all = [];
     mov_snr_all = [];
     
     subplot(121)
-    imshow(max_im,[])
+    imshow(max_im,[min(min_movie_show(:)) max(max_movie_show(:)) ])
     drawnow;
     subplot(222)
     histogram(trace_snr_all)
