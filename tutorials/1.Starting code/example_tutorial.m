@@ -29,6 +29,8 @@ config.adaptive_kappa = 1;% Adaptive kappa is on for this movie. For an actual m
 config.cellfind_min_snr=0.5;% Default snr is 1, lower this (never less than 0) to increase cell count at the expense of more spurious cells!
 config.thresholds.T_min_snr=5;
 
+config.visualize_cellfinding=1
+
 % Perform EXTRACTion:
 output=extractor(M,config);
 
