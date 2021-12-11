@@ -290,6 +290,12 @@ for i = 1:max_steps
             i, num_good_cells), config.verbose == 2);
     end
 end
+
+if config.visualize_cellfinding
+    subplot(121)
+    title('Cell finding completed')
+end
+
 % Organize S & T matrices
 S = S(:, is_good);
 T = T(is_good, :);
