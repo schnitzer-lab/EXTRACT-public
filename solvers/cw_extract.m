@@ -294,6 +294,7 @@ end
 if config.visualize_cellfinding
     subplot(121)
     title('Cell finding completed')
+    drawnow;
 end
 
 % Organize S & T matrices
