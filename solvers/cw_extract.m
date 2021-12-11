@@ -50,6 +50,26 @@ switch config.cellfind_filter_type
 end
 
 
+if config.visualize_cellfinding
+    
+    max_im = max(M,[],3);
+    trace_snr_all = [];
+    mov_snr_all = [];
+    
+    subplot(121)
+    imshow(max_im,[])
+    drawnow;
+    subplot(222)
+    histogram(trace_snr_all)
+    xlabel('Trace snr')
+    drawnow;
+    subplot(224)
+    histogram(mov_snr_all)
+    xlabel('cellfind min snr')
+    drawnow;
+    
+end
+
 % Flatten for subsequent processing
 M = reshape(M, h * w, n);
 
@@ -196,6 +216,26 @@ for i = 1:max_steps
         subplot(3, 2, [5, 6]);
         plot(t);
         pause;
+    end
+
+    if config.visualize_cellfinding
+    
+
+        trace_snr_all = [trace_snr_all, gather(trace_snr)];
+        mov_snr_all = [mov_snr_all, gather(max_t/noise_std - bias_func(config.cellfind_kappa_std_ratio))];
+
+        subplot(121)
+        plot_cells_overlay(reshape(gather(s),h,w),[0,1,0],[])
+        drawnow;
+        subplot(222)
+        histogram(trace_snr_all,ceil(i/10))
+        xlabel('Trace snr')
+        drawnow;
+        subplot(224)
+        histogram(mov_snr_all,ceil(i/10))
+        xlabel('cellfind min snr')
+        drawnow;
+    
     end
 
     % Subtract s * t
