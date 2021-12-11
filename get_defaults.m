@@ -16,7 +16,8 @@ function config = get_defaults(config)
     if ~isfield(config, 'S_init'), config.S_init = []; end
     if ~isfield(config, 'T_init'), config.T_init = []; end
     if ~isfield(config, 'visualize_cellfinding'), config.visualize_cellfinding = 0; end
-    
+    if ~isfield(config, 'visualize_cellfinding_min'), config.visualize_cellfinding_min = []; end
+    if ~isfield(config, 'visualize_cellfinding_max'), config.visualize_cellfinding_max = []; end  
     
 
     % Preprocessing module parameters

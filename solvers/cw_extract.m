@@ -53,15 +53,27 @@ end
 if config.visualize_cellfinding
     
     max_im = max(M,[],3);
-    min_movie_show = quantile(M,0.2,3);
-    max_movie_show = quantile(M,0.7,3);
+    if ~isempty(config.visualize_cellfinding_min)
+
+        min_movie_show = config.visualize_cellfinding_min
+    else
+        min_movie_show = quantile(M,0.2,3);
+        min_movie_show = min(min_movie_show(:))
+    end
+    if ~isempty(config.visualize_cellfinding_max)
+
+        min_movie_show = config.visualize_cellfinding_max
+    else
+        min_movie_show = quantile(M,0.99,3);
+        min_movie_show = max(max_movie_show(:))
+    end
 
 
     trace_snr_all = [];
     mov_snr_all = [];
     
     subplot(121)
-    imshow(max_im,[min(min_movie_show(:)) max(max_movie_show(:)) ])
+    imshow(max_im,[min_movie_show max_movie_show ])
     drawnow;
     subplot(222)
     histogram(trace_snr_all)
