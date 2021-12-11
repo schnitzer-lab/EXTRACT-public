@@ -73,7 +73,11 @@ if config.visualize_cellfinding
     mov_snr_all = [];
     
     subplot(121)
-    imshow(max_im,[min_movie_show max_movie_show ])
+    if config.visualize_cellfinding_full_range
+        imshow(max_im,[ ])
+    else
+        imshow(max_im,[min_movie_show max_movie_show ])
+    end
     drawnow;
     subplot(222)
     histogram(trace_snr_all)
@@ -234,25 +238,7 @@ for i = 1:max_steps
         pause;
     end
 
-    if config.visualize_cellfinding
     
-
-        trace_snr_all = [trace_snr_all, gather(trace_snr)];
-        mov_snr_all = [mov_snr_all, gather(max_t/noise_std - bias_func(config.cellfind_kappa_std_ratio))];
-
-        subplot(121)
-        plot_cells_overlay(reshape(gather(s),h,w),[0,1,0],[])
-        drawnow;
-        subplot(222)
-        histogram(trace_snr_all,ceil(i/10))
-        xlabel('Trace snr')
-        drawnow;
-        subplot(224)
-        histogram(mov_snr_all,ceil(i/10))
-        xlabel('cellfind min snr')
-        drawnow;
-    
-    end
 
     % Subtract s * t
     idx_s = find(s_corr > 0);
@@ -279,6 +265,25 @@ for i = 1:max_steps
         vals_max = [vals_max, val_max];
         T(i, :) = gather(t);
         S(:, i) = gather(s);
+        if config.visualize_cellfinding
+    
+
+            trace_snr_all = [trace_snr_all, gather(trace_snr)];
+            mov_snr_all = [mov_snr_all, gather(max_t/noise_std - bias_func(config.cellfind_kappa_std_ratio))];
+
+            subplot(121)
+            plot_cells_overlay(reshape(gather(s),h,w),[0,1,0],[])
+            drawnow;
+            subplot(222)
+            histogram(trace_snr_all,ceil(i/10))
+            xlabel('Trace snr')
+            drawnow;
+            subplot(224)
+            histogram(mov_snr_all,ceil(i/10))
+            xlabel('cellfind min snr')
+            drawnow;
+    
+        end
     end
     
     % Stopping criterion based on the running yield of cells
