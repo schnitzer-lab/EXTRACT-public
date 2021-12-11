@@ -15,11 +15,6 @@ function config = get_defaults(config)
     if ~isfield(config, 'num_iter_stop_quality_checks'), config.num_iter_stop_quality_checks = []; end
     if ~isfield(config, 'S_init'), config.S_init = []; end
     if ~isfield(config, 'T_init'), config.T_init = []; end
-    if ~isfield(config, 'visualize_cellfinding'), config.visualize_cellfinding = 0; end
-    if ~isfield(config, 'visualize_cellfinding_full_range'), config.visualize_cellfinding_full_range = 1; end
-    if ~isfield(config, 'visualize_cellfinding_min'), config.visualize_cellfinding_min = []; end
-    if ~isfield(config, 'visualize_cellfinding_max'), config.visualize_cellfinding_max = []; end  
-    
 
     % Preprocessing module parameters
 
@@ -41,6 +36,13 @@ function config = get_defaults(config)
     if ~isfield(config, 'cellfind_max_steps'), config.cellfind_max_steps = 1000; end
     if ~isfield(config, 'cellfind_kappa_std_ratio'), config.cellfind_kappa_std_ratio = 1; end
     if ~isfield(config, 'init_with_gaussian'), config.init_with_gaussian = false; end
+
+    % Visualizing cell finding module
+    if ~isfield(config, 'visualize_cellfinding'), config.visualize_cellfinding = 0; end
+    if ~isfield(config, 'visualize_cellfinding_full_range'), config.visualize_cellfinding_full_range = 1; end
+    if ~isfield(config, 'visualize_cellfinding_min'), config.visualize_cellfinding_min = 0.2; end
+    if ~isfield(config, 'visualize_cellfinding_max'), config.visualize_cellfinding_max = 0.99; end  
+    
 
 
     % Cell refinement module parameters
