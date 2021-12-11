@@ -62,7 +62,7 @@ if config.visualize_cellfinding
     if config.visualize_cellfinding_full_range
         imshow(max_im,[ ])
     else
-        min_movie_show = quantile(M,visualize_cellfinding_min,3);
+        min_movie_show = quantile(M,config.visualize_cellfinding_min,3);
         min_movie_show = min(min_movie_show(:));
 
         max_movie_show = quantile(M,config.visualize_cellfinding_max,3);
