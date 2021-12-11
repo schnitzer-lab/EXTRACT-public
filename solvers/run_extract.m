@@ -363,7 +363,7 @@ for iter = 1:config.max_iter
 	break
     end
 
-    if(iter>config.num_iter_stop_quality_checks)
+    if( ismember(iter,config.num_iter_stop_quality_checks))
 
         if (iter == config.max_iter)
             [classification] = classification_hyperparameters(...
