@@ -373,7 +373,7 @@ for iter = 1:config.max_iter
 
         if config.verbose == 2
             fprintf(repmat('\b', 1, last_size));
-            str = sprintf('\t \t \t End of iter # %d: # cells: %d (no more quality checks) \n', ...
+            str = sprintf('\t \t \t End of iter # %d: # cells: %d (no quality checks) \n', ...
                 iter, size(T, 1));
             last_size = length(str);
             script_log = [script_log, str];
