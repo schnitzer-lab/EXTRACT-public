@@ -55,17 +55,17 @@ if config.visualize_cellfinding
     max_im = max(M,[],3);
     if ~isempty(config.visualize_cellfinding_min)
 
-        min_movie_show = config.visualize_cellfinding_min
+        min_movie_show = config.visualize_cellfinding_min;
     else
         min_movie_show = quantile(M,0.2,3);
-        min_movie_show = min(min_movie_show(:))
+        min_movie_show = min(min_movie_show(:));
     end
     if ~isempty(config.visualize_cellfinding_max)
 
-        min_movie_show = config.visualize_cellfinding_max
+        max_movie_show = config.visualize_cellfinding_max;
     else
-        min_movie_show = quantile(M,0.99,3);
-        min_movie_show = max(max_movie_show(:))
+        max_movie_show = quantile(M,0.99,3);
+        max_movie_show = max(max_movie_show(:));
     end
 
 
