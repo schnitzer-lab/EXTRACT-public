@@ -181,6 +181,15 @@ for i = 1:max_steps
     s_2d_init = single(s_2d_init);
     s_2d_init = maybe_gpu(use_gpu, s_2d_init);
 
+    
+    if (config.visualize_cellfinding && i>1 && ~is_bad)
+        
+            subplot(121)
+            plot_cells_overlay(reshape(gather(s),h,w),[0,1,0],[])
+            drawnow;
+        
+    end
+
     % Robust cell finding
     [s, t, t_corr, s_corr, s_change, t_change] = ...
         alt_opt_single(Mt, s_2d_init, noise_std, max_num_pixels, use_gpu, kappa_t, kappa_s);
@@ -263,7 +272,7 @@ for i = 1:max_steps
             mov_snr_all = [mov_snr_all, gather(max_t/noise_std - bias_func(config.cellfind_kappa_std_ratio))];
 
             subplot(121)
-            plot_cells_overlay(reshape(gather(s),h,w),[0,1,0],[])
+            plot_cells_overlay(reshape(gather(s),h,w),[1,0,0],[])
             drawnow;
             subplot(222)
             histogram(trace_snr_all,ceil(i/10))
