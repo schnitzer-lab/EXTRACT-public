@@ -469,6 +469,8 @@ switch config.trace_output_option
         [T, ~, ~, ~, ~] = solve_T_robust(T, S, Mt, fov_size, avg_radius, lambda, ...
             kappa, config.max_iter_T, config.TOL_sub, ...
             config.plot_loss, config.trace_quantile, config.use_gpu, 1);
+
+        T = T - min(T,[],2);
             
     case 'nonneg'
         str = sprintf('\t \t \t Providing non-negative traces. \n');
