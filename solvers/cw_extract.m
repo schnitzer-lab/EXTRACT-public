@@ -76,12 +76,12 @@ if config.visualize_cellfinding
     subplot(222)
     histogram(trace_snr_all)
     xlabel('Trace snr')
-    ylabel('Number of good cells')
+    ylabel('Number of cells')
     drawnow;
     subplot(224)
     histogram(mov_snr_all)
     xlabel('cellfind min snr')
-    ylabel('Number of good cells')
+    ylabel('Number of cells')
     drawnow;
     
 end
