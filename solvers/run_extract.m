@@ -407,6 +407,14 @@ for iter = 1:config.max_iter
         % Delete bad cells
         S_bad = [S(:, is_bad), S_bad];
         T_bad = [T(is_bad, :); T_bad];
+
+        if config.visualize_cellfinding
+            
+            subplot(121)
+            plot_cells_overlay(reshape(gather(S_bad),fov_size(1),fov_size(2),size(S_bad,2)),[1,0,0],[])
+            drawnow;
+        end
+
         [S, S_smooth] = delete_columns(is_bad, S, S_smooth);
         [T, T_change, S_change] = delete_rows(is_bad, T, T_change, S_change);
         if config.verbose == 2
