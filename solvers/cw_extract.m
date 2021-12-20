@@ -52,6 +52,9 @@ end
 
 if config.visualize_cellfinding
     
+    str = sprintf('\t \t \t Using cell finding visualization tool...\n');
+    dispfun(str, config.verbose ==2);
+    
     max_im = max(M,[],3);
 
 
@@ -266,13 +269,13 @@ for i = 1:max_steps
         T(i, :) = gather(t);
         S(:, i) = gather(s);
         if config.visualize_cellfinding
-    
 
             trace_snr_all = [trace_snr_all, gather(trace_snr)];
             mov_snr_all = [mov_snr_all, gather(max_t/noise_std - bias_func(config.cellfind_kappa_std_ratio))];
 
             subplot(121)
             plot_cells_overlay(reshape(gather(s),h,w),[1,0,0],[])
+            title(['Cell finding in process. ' num2str(i) ' iterations ' num2str(num_good_cells) ' found.'])
             drawnow;
             subplot(222)
             histogram(trace_snr_all,ceil(i/10))
@@ -302,7 +305,7 @@ end
 
 if config.visualize_cellfinding
     subplot(121)
-    title('Cell finding completed')
+    title(['Cell finding completed. ' num2str(i) ' iterations ' num2str(num_good_cells) ' found.'])
     drawnow;
 end
 
