@@ -264,6 +264,19 @@ for i = 1:max_steps
         summary_stack(pix_idx, 1) = summary_stack(pix_idx, 1) * 0;
         T_trash(i, :) = gather(t);
         S_trash(:, i) = gather(s);
+
+        if config.visualize_cellfinding 
+            if config.visualize_cellfinding_show_bad_cells
+
+                
+                subplot(121)
+                plot_cells_overlay(reshape(gather(s),h,w),[1,0,0],[])
+                title(['Cell finding in process. ' num2str(i) ' iterations ' num2str(num_good_cells) ' found.'])
+                drawnow;
+            end
+    
+        end
+
     else
         num_good_cells = num_good_cells + 1;
         is_good(i) = true;
