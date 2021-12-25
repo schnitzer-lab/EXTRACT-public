@@ -385,7 +385,7 @@ for iter = 1:config.max_iter
             subplot(121)
             clf
             imshow(max_image,[])
-            plot_cells_overlay(reshape(gather(S),fov_size(1),fov_size(2),size(S,2)),[1,0,0],[])
+            plot_cells_overlay(reshape(gather(S),fov_size(1),fov_size(2),size(S,2)),[0,1,0],[])
             title(['Cell refinement step: ' num2str(iter) ' # Cells: ' num2str(size(T,1)) ' # Removed: 0'  ])
             drawnow;
         end
@@ -433,7 +433,7 @@ for iter = 1:config.max_iter
             subplot(121)
             clf
             imshow(max_image,[])
-            plot_cells_overlay(reshape(gather(S),fov_size(1),fov_size(2),size(S,2)),[1,0,0],[])
+            plot_cells_overlay(reshape(gather(S),fov_size(1),fov_size(2),size(S,2)),[0,1,0],[])
             title(['Cell refinement step: ' num2str(iter) ' # Cells: ' num2str(size(T,1)) ' # Removed: ' num2str(sum(is_bad)) ])
             drawnow;
         end
