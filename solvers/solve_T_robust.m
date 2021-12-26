@@ -1,6 +1,9 @@
 function [T_out, l, np_x, np_y, np_time] = solve_T_robust(T_in, S, M, fov_size, avg_radius, lambda, ...
         kappa, max_iter, TOL, compute_loss, baseline, use_gpu, is_M_transposed)
     
+
+    min_vals = zeros(1,size(S,2))-100;
+
     GPU_SLACK_FACTOR = 4;
     CPU_SPACE_SIDELEN = 10 * 2 * avg_radius; % ~10 cells wide
     T_out = zeros(size(T_in), 'single');
@@ -56,13 +59,21 @@ function [T_out, l, np_x, np_y, np_time] = solve_T_robust(T_in, S, M, fov_size, 
                     [Tt_out_sub, l{end+1}] = fp_solve_admm_baseline(T_in_sub', S_sub', M_sub, ...
                         [], lambda(idx_comp), kappa, max_iter, TOL, ...
                         compute_loss, use_gpu, transpose_M,baseline);
+
                     % Weight T components by their image powers
                     T_out(idx_comp, idx_t) = T_out(idx_comp, idx_t) + ...
                         bsxfun(@times, Tt_out_sub', power_s_sub);
+                    
+                    temp_vals = min(T_out(idx_comp, idx_t),[],2)';
+
+                    min_vals(idx_comp) = max(temp_vals , min_vals(idx_comp));
                 end
             end
         end
     end
+
+    T_out = max(T_out,min_vals');
+
     % Divide each T component by total power of its image
     power_s = sum(S.^2, 1)';
     T_out = bsxfun(@rdivide, T_out, power_s);

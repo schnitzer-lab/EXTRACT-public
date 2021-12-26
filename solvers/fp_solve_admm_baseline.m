@@ -67,7 +67,7 @@ for k = 1:nIter
     % X2 update
     X2_m1 = X2;
     X2 = X + Y;
-    X2 = max(X2,quantile(X2,baseline,1));
+    X2 = max(X2,min(0,quantile(X2,baseline,1)));
     if ~isempty(mask)
         X2 = X2 .* mask;
     end

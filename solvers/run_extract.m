@@ -363,7 +363,7 @@ for iter = 1:config.max_iter
 	break
     end
 
-    if(iter>config.num_iter_stop_quality_checks)
+    if( ismember(iter,config.num_iter_stop_quality_checks))
 
         if (iter == config.max_iter)
             [classification] = classification_hyperparameters(...
@@ -373,11 +373,21 @@ for iter = 1:config.max_iter
 
         if config.verbose == 2
             fprintf(repmat('\b', 1, last_size));
-            str = sprintf('\t \t \t End of iter # %d: # cells: %d (no more quality checks) \n', ...
+            str = sprintf('\t \t \t End of iter # %d: # cells: %d (no quality checks) \n', ...
                 iter, size(T, 1));
             last_size = length(str);
             script_log = [script_log, str];
             dispfun(str, config.verbose ==2);
+        end
+
+        if config.visualize_cellfinding
+            
+            subplot(121)
+            clf
+            imshow(max_image,[])
+            plot_cells_overlay(reshape(gather(S),fov_size(1),fov_size(2),size(S,2)),[0,1,0],[])
+            title(['Cell refinement step: ' num2str(iter) ' # Cells: ' num2str(size(T,1)) ' # Removed: 0'  ])
+            drawnow;
         end
 
         continue
@@ -407,6 +417,7 @@ for iter = 1:config.max_iter
         % Delete bad cells
         S_bad = [S(:, is_bad), S_bad];
         T_bad = [T(is_bad, :); T_bad];
+
         [S, S_smooth] = delete_columns(is_bad, S, S_smooth);
         [T, T_change, S_change] = delete_rows(is_bad, T, T_change, S_change);
         if config.verbose == 2
@@ -416,6 +427,15 @@ for iter = 1:config.max_iter
             last_size = length(str);
             script_log = [script_log, str];
             dispfun(str, config.verbose ==2);
+        end
+        if config.visualize_cellfinding
+            
+            subplot(121)
+            clf
+            imshow(max_image,[])
+            plot_cells_overlay(reshape(gather(S),fov_size(1),fov_size(2),size(S,2)),[0,1,0],[])
+            title(['Cell refinement step: ' num2str(iter) ' # Cells: ' num2str(size(T,1)) ' # Removed: ' num2str(sum(is_bad)) ])
+            drawnow;
         end
     end
     if config.smooth_S, S = S_smooth; end
@@ -452,8 +472,8 @@ switch config.trace_output_option
             kappa, config.max_iter_T, config.TOL_sub, ...
             config.plot_loss, @fp_solve, config.use_gpu, 1);
 
-    case 'robust'
-        str = sprintf('\t \t \t Providing robust traces. \n');
+    case 'baseline_adjusted'
+        str = sprintf('\t \t \t Providing baseline adjusted traces. \n');
         script_log = [script_log, str];
         dispfun(str, config.verbose ==2);
         
@@ -553,6 +573,8 @@ if dss > 1
     % Upsample summary_image & max_image
     summary_image = interp2(X, Y, summary_image, Xq, Yq, 'spline');
     max_image = interp2(X, Y, max_image, Xq, Yq, 'spline');
+    config.F_per_pixel = interp2(X, Y, config.F_per_pixel , Xq, Yq, ...
+                'spline');
     if ~isempty(S)
         num_components = size(S, 2);
         S_3d = reshape(S, fov_size(1), fov_size(2), num_components);
