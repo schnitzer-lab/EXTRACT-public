@@ -573,6 +573,8 @@ if dss > 1
     % Upsample summary_image & max_image
     summary_image = interp2(X, Y, summary_image, Xq, Yq, 'spline');
     max_image = interp2(X, Y, max_image, Xq, Yq, 'spline');
+    config.F_per_pixel = interp2(X, Y, config.F_per_pixel , Xq, Yq, ...
+                'spline');
     if ~isempty(S)
         num_components = size(S, 2);
         S_3d = reshape(S, fov_size(1), fov_size(2), num_components);
