@@ -1,0 +1,13 @@
+function config = get_defaults_mc(config)
+
+    if ~isfield(config, 'nt_template'), config.nt_template = 1000; end
+    if ~isfield(config, 'temporal_ds'), config.temporal_ds = 1; end
+    if ~isfield(config, 'template'), config.template = []; end
+    if ~isfield(config, 'numFrame'), config.numFrame = 1000; end
+    if ~isfield(config, 'nonrigid_mc'), config.nonrigid_mc = 0; end
+    if ~isfield(config, 'ns_nonrigid'), config.ns_nonrigid = 128; end
+    if ~isfield(config, 'bandpass'), config.bandpass = 0; end
+    if ~isfield(config, 'avg_cell_radius'), config.avg_cell_radius = 7; end
+    if ~isfield(config, 'use_gpu'), config.use_gpu = 0; end
+
+end
