@@ -472,8 +472,8 @@ switch config.trace_output_option
             kappa, config.max_iter_T, config.TOL_sub, ...
             config.plot_loss, @fp_solve, config.use_gpu, 1);
 
-    case 'robust'
-        str = sprintf('\t \t \t Providing robust traces. \n');
+    case 'baseline_adjusted'
+        str = sprintf('\t \t \t Providing baseline adjusted traces. \n');
         script_log = [script_log, str];
         dispfun(str, config.verbose ==2);
         

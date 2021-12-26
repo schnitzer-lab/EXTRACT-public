@@ -78,7 +78,7 @@ If M is a string, it must be in the following format: `filepath:dataset` (for ex
 - `num_partitions_x/num_partitions_y`: User specified number of movie partitions in x and y dimensions. Running EXTRACT on the whole movie at once could be computationally too expensive or simply impossible. In this case, we divide the input movie into smaller parts. Heuristics suggest that the size of the smaller FOV should not be smaller than 128 pixels in any of the x/y dimensions.
 - `cellfind_min_snr`: Minimum peak SNR (defined as peak value/noise std) value for an object to be considered as a cell. Increase this if you want to decrease the ratio of false-positives at the expense of losing some low SNR cells in the process. Default: `1`.
 - `use_gpu`: This needs to be 1 to run EXTRACT on GPU, 0 to run EXTRACT on CPU. It is preferably, time-wise, to run EXTRACT on GPU. Default: `1`.
-- `trace_output_option`: Choose 'raw' for raw traces, 'nonneg' for non-negative traces. Check [Frequently Asked Questions](#frequently-asked-questions) before using the option 'raw'. Default: `nonneg`.
+- `trace_output_option`: Choose 'raw' for raw traces, 'nonneg' for non-negative traces, 'baseline_adjusted' for non-negative traces adjusted for spatially varying baseline. Check [Frequently Asked Questions](#frequently-asked-questions) before using the option 'raw'. Default: `baseline_adjusted`.
 
 
 EXTRACT has a helper function that initializes the config struct to the most common configurations:
