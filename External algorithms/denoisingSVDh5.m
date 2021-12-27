@@ -38,7 +38,7 @@ disp(sprintf('%s: Running SVD denoising split into %s movies', datestr(now),num2
 
 for i=1:numel(startno)
     % parfor can even improve, but h5write is too slow thus missing data
-    disp(sprintf('%s: Processing %s/%s movies ', datestr(now),num2str(i),num2str(numel(startno))))
+    disp(sprintf('\t %s: Processing %s/%s movies ', datestr(now),num2str(i),num2str(numel(startno))))
     data = h5read([filename '.h5'],datasetname,[1,1,startno(i)],[nx,ny,perframes(i)]);
     
     denoised_SVD = denoisingSVD(single(data));
