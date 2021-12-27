@@ -181,6 +181,5 @@ for i=1:numel(startno)
 end
 disp(sprintf('%s: Motion correction finished', datestr(now)))
 
-denoisingSVDh5(output_filename(1:end-3), output_datasetname);
 end
    
