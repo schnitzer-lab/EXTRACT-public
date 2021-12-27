@@ -2,6 +2,8 @@ function denoisingSVDh5(input)
 
 [filename,datasetname] = parse_movie_name(input);
 
+filename  = filename(1:end-3);
+
 hinfo=h5info([filename '.h5']);
 totalnum = hinfo.Datasets.Dataspace.Size(3);
 nx = hinfo.Datasets.Dataspace.Size(1);
