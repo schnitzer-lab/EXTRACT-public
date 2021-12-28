@@ -26,8 +26,11 @@ movie_info = h5info(input_filename,input_datasetname);
 movie_size = num2cell(movie_info.Dataspace.Size);
 [nx, ny, totalnum] = deal(movie_size{:});
 
+try
 h5create(output_filename,output_datasetname,[nx ny totalnum],'Datatype','single','ChunkSize',[nx,ny,numFrame]);
-
+catch 
+h5create(output_filename,output_datasetname,[nx ny totalnum],'Datatype','single','ChunkSize',[nx,ny,round(numFrame/2)]);
+end
 
 windowsize = min(totalnum, numFrame);
 

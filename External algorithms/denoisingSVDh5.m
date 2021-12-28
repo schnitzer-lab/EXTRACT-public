@@ -17,8 +17,12 @@ if isfile([outputfilenameSVD '.h5'])
     delete([outputfilenameSVD '.h5']);
 end
 
-
+try
 h5create([outputfilenameSVD '.h5'],datasetname,[nx ny totalnum],'Datatype','single','ChunkSize',[nx,ny,numFrame]);
+catch
+h5create([outputfilenameSVD '.h5'],datasetname,[nx ny totalnum],'Datatype','single','ChunkSize',[nx,ny,round(numFrame/2)]);
+end
+
 
 windowsize = min(totalnum, numFrame);
 
