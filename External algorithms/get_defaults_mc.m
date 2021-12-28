@@ -9,5 +9,6 @@ function config = get_defaults_mc(config)
     if ~isfield(config, 'bandpass'), config.bandpass = 0; end
     if ~isfield(config, 'avg_cell_radius'), config.avg_cell_radius = 7; end
     if ~isfield(config, 'use_gpu'), config.use_gpu = 0; end
+    if ~isfield(config, 'file_type'), config.file_type = 'h5'; end
 
 end

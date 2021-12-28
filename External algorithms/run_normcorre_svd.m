@@ -9,12 +9,16 @@ ns_nonrigid     = config.ns_nonrigid;
 bandpass        = config.bandpass;
 avg_cell_radius = config.avg_cell_radius;
 use_gpu         = config.use_gpu;
+file_type       = config.file_type;
 
 
-
-[input_filename,input_datasetname] = parse_movie_name(input);
+switch file_type
+    case 'h5'
+        [input_filename,input_datasetname] = parse_movie_name(input);
+end
 
 [output_filename,output_datasetname] = parse_movie_name(output);
+
 
 
 if isfile(output_filename)
@@ -50,8 +54,15 @@ end
 
 
 if isempty(template)
-    im1 = single(h5read(input_filename, input_datasetname, [1, 1, 1], [nx, ny, nt_template]));   %Create downsampled reference image for motion correction
-    
+    switch file_type
+        case 'h5'
+            im1 = single(h5read(input_filename, input_datasetname, [1, 1, 1], [nx, ny, nt_template]));   %Create downsampled reference image for motion correction
+        case 'tif'
+            im1 = single(read_from_tif(input,1,nt_template));
+        case 'tiff'
+            im1 = single(read_from_tif(input,1,nt_template));
+    end
+
     if bandpass
         im1 = spatial_bandpass(im1,avg_cell_radius,10,2,use_gpu);
     end
@@ -74,7 +85,14 @@ for i=1:numel(startno)
     % parfor can even improve, but h5write is too slow thus missing data
     disp(sprintf('\t %s: Processing %s/%s movies', datestr(now),num2str(i),num2str(numel(startno)) ))
 
-    M_block = h5read(input_filename,input_datasetname,[1,1,startno(i)],[nx,ny,perframes(i)]);
+    switch file_type
+        case 'h5'
+            M_block = single(h5read(input_filename,input_datasetname,[1,1,startno(i)],[nx,ny,perframes(i)]));
+        case 'tif'
+            M_block = single(read_from_tif(input,startno(i),perframes(i)));
+        case 'tiff'
+            M_block = single(read_from_tif(input,startno(i),perframes(i)));
+    end
     
     
     
