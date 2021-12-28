@@ -1,4 +1,4 @@
-function M = read_from_tif(s,startno,count)
+function M = read_from_tif(s,startno,nt)
 
 tiff_info = imfinfo(s);
 nx = tiff_info(1).Height;
@@ -7,8 +7,6 @@ ny = tiff_info(1).Width;
 if nargin <2
     startno =1;
     nt = size(tiff_info, 1);
-else
-    nt = count;
 end
 
 
