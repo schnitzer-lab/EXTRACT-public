@@ -51,6 +51,7 @@ end
 
 
 if config.visualize_cellfinding
+    is_bad=1;
     
     str = sprintf('\t \t \t Using cell finding visualization tool...\n');
     dispfun(str, config.verbose ==2);
