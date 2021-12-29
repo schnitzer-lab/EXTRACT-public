@@ -162,6 +162,13 @@ end
 
 num_good_cells = 0;
 for i = 1:max_steps
+    if (config.visualize_cellfinding && i>1 && ~is_bad)
+        
+            subplot(121)
+            plot_cells_overlay(reshape(gather(s),h,w),[0,1,0],[])
+            drawnow;
+        
+    end
     % Select seed pixel for next init cell
     mod_im_summary = modify_summary_image(summary_stack(:, 1), h, w, ...
         min_magnitude, elim_size_thresh);
@@ -187,13 +194,7 @@ for i = 1:max_steps
     s_2d_init = maybe_gpu(use_gpu, s_2d_init);
 
     
-    if (config.visualize_cellfinding && i>1 && ~is_bad)
-        
-            subplot(121)
-            plot_cells_overlay(reshape(gather(s),h,w),[0,1,0],[])
-            drawnow;
-        
-    end
+
 
     % Robust cell finding
     [s, t, t_corr, s_corr, s_change, t_change] = ...
@@ -309,6 +310,13 @@ for i = 1:max_steps
     avg_yield = mean(is_good(max(1, i-n+1):i));
     if i > 2 * n && avg_yield <= avg_yield_threshold
         init_stop_reason = 'yield';
+        if (config.visualize_cellfinding && i>1 && ~is_bad)
+        
+            subplot(121)
+            plot_cells_overlay(reshape(gather(s),h,w),[0,1,0],[])
+            drawnow;
+        
+        end
         break;
     end
     
