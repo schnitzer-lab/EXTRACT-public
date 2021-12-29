@@ -1,11 +1,13 @@
-function downsampletime_pipeline(input,blocks,dt)
+function downsampletime_pipeline(input,blocks,dt,totalnum)
 
 [filename,datasetname] = parse_movie_name(input);
 
 filename  = filename(1:end-3);
 
 hinfo=h5info([filename '.h5']);
-totalnum = hinfo.Datasets.Dataspace.Size(3);
+if nargin <4
+    totalnum = hinfo.Datasets.Dataspace.Size(3);
+end
 nx = hinfo.Datasets.Dataspace.Size(1);
 ny = hinfo.Datasets.Dataspace.Size(2);
 
@@ -33,7 +35,7 @@ for i=1:numFrame:totalnum
     toc
     
 end
-
+disp(sprintf('%s: Time downsampling finished ', datestr(now)))
 end
 
 
