@@ -19,7 +19,15 @@ numFrame = totalnum/blocks;
 
 outputfilename = [filename '_downsampled'];
 
+if isfile([outputfilename '.h5'])
+    delete([outputfilename '.h5']);
+end
+
+try
 h5create([outputfilename '.h5'],datasetname,[nx ny totalnum/dt],'Datatype','single','ChunkSize',[nx,ny,numFrame/dt]);
+catch
+h5create([outputfilename '.h5'],datasetname,[nx ny totalnum/dt],'Datatype','single','ChunkSize',[nx,ny,numFrame/(10*dt)]);
+end
 k=1;
 for i=1:numFrame:totalnum
     tic
