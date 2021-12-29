@@ -28,10 +28,13 @@ h5create([outputfilename '.h5'],datasetname,[nx ny totalnum/dt],'Datatype','sing
 catch
 h5create([outputfilename '.h5'],datasetname,[nx ny totalnum/dt],'Datatype','single','ChunkSize',[nx,ny,numFrame/(10*dt)]);
 end
+
+disp(sprintf('%s: Downsampling in time by a factor of %s, split into %s movies', datestr(now),num2str(dt),num2str(numel(startno)) ))
+
 k=1;
 for i=1:numFrame:totalnum
     tic
-    fprintf('Running %i out of %i parts \n',round(i/numFrame)+1,totalnum/numFrame);
+    fprintf('\t %s: Running %i out of %i parts \n',datestr(now),round(i/numFrame)+1,totalnum/numFrame);
     data = h5read([filename '.h5'],datasetname,[1,1,i],[nx,ny,numFrame]);
     
     [movie_out] = downsample_time(data,dt);
