@@ -29,7 +29,7 @@ catch
 h5create([outputfilename '.h5'],datasetname,[nx ny totalnum/dt],'Datatype','single','ChunkSize',[nx,ny,numFrame/(10*dt)]);
 end
 
-disp(sprintf('%s: Downsampling in time by a factor of %s, split into %s movies', datestr(now),num2str(dt),num2str(numel(startno)) ))
+disp(sprintf('%s: Downsampling in time by a factor of %s, split into %s movies', datestr(now),num2str(dt),num2str(numel(blocks)) ))
 
 k=1;
 for i=1:numFrame:totalnum
