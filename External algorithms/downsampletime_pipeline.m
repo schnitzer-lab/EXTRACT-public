@@ -33,7 +33,7 @@ disp(sprintf('%s: Downsampling in time by a factor of %s, split into %s movies',
 
 k=1;
 for i=1:numFrame:totalnum
-    tic
+    
     fprintf('\t %s: Running %i out of %i parts \n',datestr(now),round(i/numFrame)+1,totalnum/numFrame);
     data = h5read([filename '.h5'],datasetname,[1,1,i],[nx,ny,numFrame]);
     
@@ -43,7 +43,7 @@ for i=1:numFrame:totalnum
     
     h5write([outputfilename '.h5'],datasetname,single(movie_out),[1,1,k],[nx,ny,round(numFrame/dt)]);
     k=k+round(numFrame/dt);
-    toc
+    
     
 end
 disp(sprintf('%s: Time downsampling finished ', datestr(now)))
