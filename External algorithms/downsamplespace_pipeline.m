@@ -6,7 +6,7 @@ end
 
 switch file_type
     case 'h5'
-        [input_filename,input_datasetname] = parse_movie_name(input);
+        [filename,datasetname] = parse_movie_name(input);
         filename  = filename(1:end-3);
 
         hinfo=h5info([filename '.h5']);
