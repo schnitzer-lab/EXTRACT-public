@@ -66,12 +66,8 @@ if config.visualize_cellfinding
     if config.visualize_cellfinding_full_range
         imshow(max_im,[ ])
     else
-        min_movie_show = quantile(M,config.visualize_cellfinding_min,3);
-        min_movie_show = min(min_movie_show(:));
-
-        max_movie_show = quantile(M,config.visualize_cellfinding_max,3);
-        max_movie_show = max(max_movie_show(:));
-        imshow(max_im,[min_movie_show max_movie_show ])
+        clims = quantile(max_im(:), [config.visualize_cellfinding_min config.visualize_cellfinding_max]);
+        imshow(max_im,clims)
     end
     drawnow;
     subplot(222)

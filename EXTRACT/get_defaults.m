@@ -42,7 +42,7 @@ function config = get_defaults(config)
     if ~isfield(config, 'visualize_cellfinding_show_bad_cells'), config.visualize_cellfinding_show_bad_cells = 0; end
     if ~isfield(config, 'visualize_cellfinding_full_range'), config.visualize_cellfinding_full_range = 0; end
     if ~isfield(config, 'visualize_cellfinding_min'), config.visualize_cellfinding_min = 0.2; end
-    if ~isfield(config, 'visualize_cellfinding_max'), config.visualize_cellfinding_max = 0.99; end  
+    if ~isfield(config, 'visualize_cellfinding_max'), config.visualize_cellfinding_max = 0.9; end  
     
 
 

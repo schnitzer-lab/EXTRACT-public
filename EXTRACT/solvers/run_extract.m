@@ -384,7 +384,9 @@ for iter = 1:config.max_iter
             
             subplot(121)
             clf
-            imshow(max_image,[])
+            clims = quantile(max_image(:), [config.visualize_cellfinding_min config.visualize_cellfinding_max]);
+            imshow(max_image,clims)
+            
             plot_cells_overlay(reshape(gather(S),fov_size(1),fov_size(2),size(S,2)),[0,1,0],[])
             title(['Cell refinement step: ' num2str(iter) ' # Cells: ' num2str(size(T,1)) ' # Removed: 0'  ])
             drawnow;
@@ -432,7 +434,8 @@ for iter = 1:config.max_iter
             
             subplot(121)
             clf
-            imshow(max_image,[])
+            clims = quantile(max_image(:), [config.visualize_cellfinding_min config.visualize_cellfinding_max]);
+            imshow(max_image,clims)
             plot_cells_overlay(reshape(gather(S),fov_size(1),fov_size(2),size(S,2)),[0,1,0],[])
             title(['Cell refinement step: ' num2str(iter) ' # Cells: ' num2str(size(T,1)) ' # Removed: ' num2str(sum(is_bad)) ])
             drawnow;
