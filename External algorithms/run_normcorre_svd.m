@@ -73,6 +73,7 @@ end
 
 
 if isempty(template)
+    disp(sprintf('%s: Getting the template for motion correction from the first %s frames', datestr(now), num2str(nt_template) ))
     switch file_type
         case 'h5'
             im1 = single(h5read(input_filename, input_datasetname, [1, 1, 1], [nx, ny, nt_template]));   %Create downsampled reference image for motion correction
