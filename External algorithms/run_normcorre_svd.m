@@ -16,7 +16,22 @@ svd_flag        = config.svd_flag;
 switch file_type
     case 'h5'
         [input_filename,input_datasetname] = parse_movie_name(input);
+        movie_info = h5info(input_filename,input_datasetname);
+        movie_size = num2cell(movie_info.Dataspace.Size);
+        [nx, ny, totalnum] = deal(movie_size{:});
+    case 'tif'
+        tiff_info = imfinfo(input);
+        nx = tiff_info(1).Height;
+        ny = tiff_info(1).Width;
+        totalnum = size(tiff_info, 1);
+    case 'tiff'
+        tiff_info = imfinfo(input);
+        nx = tiff_info(1).Height;
+        ny = tiff_info(1).Width;
+        totalnum = size(tiff_info, 1);
 end
+
+
 
 [output_filename,output_datasetname] = parse_movie_name(output);
 
@@ -27,14 +42,10 @@ if isfile(output_filename)
 end
 
 
-movie_info = h5info(input_filename,input_datasetname);
-movie_size = num2cell(movie_info.Dataspace.Size);
-[nx, ny, totalnum] = deal(movie_size{:});
-
 try
 h5create(output_filename,output_datasetname,[nx ny totalnum],'Datatype','single','ChunkSize',[nx,ny,numFrame]);
 catch 
-h5create(output_filename,output_datasetname,[nx ny totalnum],'Datatype','single','ChunkSize',[nx,ny,round(numFrame/2)]);
+h5create(output_filename,output_datasetname,[nx ny totalnum],'Datatype','single','ChunkSize',[nx,ny,ceil(numFrame/10)]);
 end
 
 windowsize = min(totalnum, numFrame);
