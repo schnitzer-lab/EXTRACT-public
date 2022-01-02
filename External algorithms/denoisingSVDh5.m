@@ -28,16 +28,24 @@ windowsize = min(totalnum, numFrame);
 
 startno = [1:windowsize:totalnum];
 
+if numel(startno) >1 
+    % handling the irregular framenumbers 
+    perframes = ones(numel(startno),1)*numFrame;
 
-% handling the irregular framenumbers 
-perframes = ones(numel(startno),1)*numFrame;
+    lastframes = mod(totalnum,numFrame);
 
-lastframes = mod(totalnum,numFrame);
 
-if lastframes > 0
-    perframes(end-1) = perframes(end-1) + lastframes;
-    startno(end) = [];
+    if lastframes > 0
+        perframes(end-1) = perframes(end-1) + lastframes;
+        startno(end) = [];
+    end
+
+else
+
+    perframes = totalnum;
+
 end
+
 disp(sprintf('%s: Running SVD denoising split into %s movies', datestr(now),num2str(numel(startno)) ))
 
 for i=1:numel(startno)

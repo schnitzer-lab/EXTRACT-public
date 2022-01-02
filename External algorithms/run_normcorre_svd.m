@@ -52,17 +52,24 @@ windowsize = min(totalnum, numFrame);
 
 startno = [1:windowsize:totalnum];
 
+if numel(startno)>1
+    % handling the irregular framenumbers 
+    perframes = ones(numel(startno),1)*numFrame;
 
-% handling the irregular framenumbers 
-perframes = ones(numel(startno),1)*numFrame;
+    lastframes = mod(totalnum,numFrame);
 
-lastframes = mod(totalnum,numFrame);
+    if lastframes > 0
+        perframes(end-1) = perframes(end-1) + lastframes;
+        startno(end) = [];
+    end
 
-if lastframes > 0
-    perframes(end-1) = perframes(end-1) + lastframes;
-    startno(end) = [];
+else
+    perframes = totalnum;
 end
 
+if nt_template > totalnum
+    nt_template = totalnum;
+end
 
 
 if isempty(template)
