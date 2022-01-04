@@ -19,7 +19,7 @@ config_mc = get_defaults_mc(config_mc);
 
 % By default, nonrigid correction is off. You can turn it on like this
 config.nonrigid_mc=1;
-run_normcorre_svd('example.h5:/Data','example_mc.h5:/Data',config_mc);
+run_normcorre_pipeline('example.h5:/Data','example_mc.h5:/Data',config_mc);
 %% Denoise the movie
 
 

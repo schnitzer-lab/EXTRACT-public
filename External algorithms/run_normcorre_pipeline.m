@@ -1,4 +1,4 @@
-function run_normcorre_svd(input,output,config)
+function run_normcorre_pipeline(input,output,config)
 
 nt_template     = config.nt_template;
 temporal_ds     = config.temporal_ds;
