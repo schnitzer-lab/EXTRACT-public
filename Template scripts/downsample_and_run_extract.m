@@ -26,7 +26,7 @@ config.thresholds.T_min_snr=10;
 output=extractor(M,config);
 save('extract_downsampled_unsorted.mat','output','-v7.3');
 
-% While it is optional, it is beneficial to sort the cells at this stage before moving forward.cellfind_min_snr
+% While it is optional, it is beneficial to sort the cells at this stage before moving forward.
 
 %% run EXTRACT on the full movie 
 load('unsorted_extract.mat');
