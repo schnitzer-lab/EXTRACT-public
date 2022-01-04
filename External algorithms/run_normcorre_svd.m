@@ -10,7 +10,6 @@ bandpass        = config.bandpass;
 avg_cell_radius = config.avg_cell_radius;
 use_gpu         = config.use_gpu;
 file_type       = config.file_type;
-svd_flag        = config.svd_flag;
 
 
 switch file_type
@@ -87,9 +86,6 @@ if isempty(template)
         im1 = spatial_bandpass(im1,avg_cell_radius,10,2,use_gpu);
     end
 
-    if svd_flag
-        im1 = denoisingSVD(im1);
-    end
 
     %im_ds= single(max(im1,[],3));
     im_ds= single(mean(im1,3));
@@ -128,9 +124,7 @@ for i=1:numel(startno)
         M_block_ds = spatial_bandpass(M_block_ds,avg_cell_radius,10,2,use_gpu);
     end
     
-    if svd_flag
-        M_block_ds = denoisingSVD(M_block_ds);   %Run motion correction on denoised movie
-    end
+
     
     
     
@@ -175,10 +169,6 @@ for i=1:numel(startno)
 
         if bandpass
             M_block_ds = spatial_bandpass(M_block_ds,avg_cell_radius,10,2,use_gpu);
-        end
-        
-        if svd_flag
-            M_block_ds = denoisingSVD(M_block_ds);   %Run motion correction on denoised movie
         end
 
         
