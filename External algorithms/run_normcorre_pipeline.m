@@ -1,7 +1,6 @@
 function run_normcorre_pipeline(input,output,config)
 
 nt_template     = config.nt_template;
-temporal_ds     = config.temporal_ds;
 template        = config.template;
 numFrame        = config.numFrame;
 nonrigid_mc     = config.nonrigid_mc;
@@ -42,9 +41,9 @@ end
 
 
 try
-h5create(output_filename,output_datasetname,[nx ny totalnum],'Datatype','single','ChunkSize',[nx,ny,numFrame]);
+    h5create(output_filename,output_datasetname,[nx ny totalnum],'Datatype','single','ChunkSize',[nx,ny,numFrame]);
 catch 
-h5create(output_filename,output_datasetname,[nx ny totalnum],'Datatype','single','ChunkSize',[nx,ny,ceil(numFrame/10)]);
+    h5create(output_filename,output_datasetname,[nx ny totalnum],'Datatype','single','ChunkSize',[nx,ny,ceil(numFrame/10)]);
 end
 
 windowsize = min(totalnum, numFrame);
@@ -100,28 +99,25 @@ disp(sprintf('%s: Running motion correction split into %s movies', datestr(now),
 
 
 for i=1:numel(startno)
-    % parfor can even improve, but h5write is too slow thus missing data
+    
     disp(sprintf('\t %s: Processing %s/%s movies', datestr(now),num2str(i),num2str(numel(startno)) ))
 
     switch file_type
         case 'h5'
-            M_block = single(h5read(input_filename,input_datasetname,[1,1,startno(i)],[nx,ny,perframes(i)]));
+            M = single(h5read(input_filename,input_datasetname,[1,1,startno(i)],[nx,ny,perframes(i)]));
         case 'tif'
-            M_block = single(read_from_tif(input,startno(i),perframes(i)));
+            M = single(read_from_tif(input,startno(i),perframes(i)));
         case 'tiff'
-            M_block = single(read_from_tif(input,startno(i),perframes(i)));
+            M = single(read_from_tif(input,startno(i),perframes(i)));
     end
     
     
     
-    if temporal_ds > 1
-        M_block_ds = downsample_time(M_block,temporal_ds); %Run motion correction on downsampled movie
-    else
-        M_block_ds = M_block;
-    end
 
     if bandpass
-        M_block_ds = spatial_bandpass(M_block_ds,avg_cell_radius,10,2,use_gpu);
+        M_proc = spatial_bandpass(M,avg_cell_radius,10,2,use_gpu);
+    else
+        M_proc = M;
     end
     
 
@@ -130,29 +126,20 @@ for i=1:numel(startno)
     
     disp(sprintf('\t \t %s: Starting rigid motion correction ', datestr(now)))
     options_rigid = NoRMCorreSetParms('d1',nx,'d2',ny, ... 
-                                         'max_shift',30,'us_fac',30,'grid_size',[nx,ny],'print_msg',0);
-    [~,shifts2,template2,options_rigid] = normcorre_batch(M_block_ds,options_rigid,im_ds);
+                                    'max_shift',30,'us_fac',30,...
+                                    'grid_size',[nx,ny],'print_msg',0); % The grid size is full
+    [~,shifts_rigid,~,options_rigid] = normcorre_batch(M_proc,options_rigid,im_ds);
 
     
-    clear M_block_ds
+    clear M_proc
     
 
-    for n = 1:size(M_block,3)   %Upsample motion correction shifts and apply to full resolution block
-        if n/temporal_ds > length(shifts2)
-            shifts_us(n).shifts = shifts2(ceil(n/temporal_ds)-1).shifts;
-            shifts_us(n).shifts_up = shifts2(ceil(n/temporal_ds)-1).shifts_up;
-            shifts_us(n).diff = shifts2(ceil(n/temporal_ds)-1).diff;
-        else
-            shifts_us(n).shifts = shifts2(ceil(n/temporal_ds)).shifts;
-            shifts_us(n).shifts_up = shifts2(ceil(n/temporal_ds)).shifts_up;
-            shifts_us(n).diff = shifts2(ceil(n/temporal_ds)).diff;
-        end
-    end
-    M_block_rigid = zeros([nx, ny, perframes(i)],'single');
-    M_block_rigid = apply_shifts(M_block,shifts_us,options_rigid);
 
-    clear M_block
-    clear shifts_us
+    M_rigid = zeros([nx, ny, perframes(i)],'single');
+    M_rigid = apply_shifts(M,shifts_rigid,options_rigid);
+
+    clear M
+    clear shifts_rigid
 
 
     if nonrigid_mc
@@ -160,56 +147,45 @@ for i=1:numel(startno)
 
         disp(sprintf('\t \t %s: Starting non-rigid motion correction ', datestr(now)))
 
-        if temporal_ds > 1
-            M_block_ds = downsample_time(M_block_rigid,temporal_ds); %Run motion correction on downsampled movie
-        else
-            M_block_ds = M_block_rigid;
-        end
 
 
         if bandpass
-            M_block_ds = spatial_bandpass(M_block_ds,avg_cell_radius,10,2,use_gpu);
+            M_proc = spatial_bandpass(M_rigid,avg_cell_radius,10,2,use_gpu);
+        else
+            M_proc = M_rigid;
         end
 
         
         
         
         options_nonrigid = NoRMCorreSetParms('d1',nx,'d2',ny, ... 
-                                             'max_shift',30,'us_fac',30,'grid_size',[ns_nonrigid,ns_nonrigid],'print_msg',0);
-        [~,shifts2,template2,options_nonrigid] = normcorre_batch(M_block_ds,options_nonrigid,im_ds); 
+                                             'max_shift',30,'us_fac',30, ...
+                                             'grid_size',[ns_nonrigid,ns_nonrigid],'print_msg',0);
+        [~,shifts_nonrigid,~,options_nonrigid] = normcorre_batch(M_proc,options_nonrigid,im_ds); 
 
         
-        clear M_block_ds
+        clear M_proc
         
 
-        for n = 1:size(M_block_rigid,3)   %Upsample motion correction shifts and apply to full resolution block
-            if n/temporal_ds > length(shifts2)
-                shifts_us(n).shifts = shifts2(ceil(n/temporal_ds)-1).shifts;
-                shifts_us(n).shifts_up = shifts2(ceil(n/temporal_ds)-1).shifts_up;
-                shifts_us(n).diff = shifts2(ceil(n/temporal_ds)-1).diff;
-            else
-                shifts_us(n).shifts = shifts2(ceil(n/temporal_ds)).shifts;
-                shifts_us(n).shifts_up = shifts2(ceil(n/temporal_ds)).shifts_up;
-                shifts_us(n).diff = shifts2(ceil(n/temporal_ds)).diff;
-            end
-        end
+        M_final = zeros([nx, ny, perframes(i)],'single');
+        M_final = apply_shifts(M_rigid,shifts_nonrigid,options_nonrigid);
 
-        M_block_MC_us = zeros([nx, ny, perframes(i)],'single');
-        M_block_MC_us = apply_shifts(M_block_rigid,shifts_us,options_nonrigid);
-        clear shifts_us
+        clear shifts_nonrigid
+        clear M_rigid
     else
         disp(sprintf('\t \t %s: No non-rigid motion correction', datestr(now)))
 
-        M_block_MC_us = M_block_rigid;
+        M_final= M_rigid;
+        clear M_rigid
         
     end
 
 
     disp(sprintf('\t \t %s: Saving the motion corrected movie ', datestr(now)))
 
-    h5write(output_filename,output_datasetname,single(M_block_MC_us),[1,1,startno(i)],[nx,ny,size(M_block_MC_us,3)]);
+    h5write(output_filename,output_datasetname,single(M_final),[1,1,startno(i)],[nx,ny,perframes(i)]);
 
-    clear M_block_MC_us
+    clear M_final
     
 end
 disp(sprintf('%s: Motion correction finished', datestr(now)))
