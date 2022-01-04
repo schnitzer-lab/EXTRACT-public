@@ -22,16 +22,12 @@ config.nonrigid_mc=1;
 run_normcorre_svd('example.h5:/Data','example_mc.h5:/Data',config_mc);
 %% Denoise the movie
 
-% if the movie is too noisy, you can consider denoising it!
-%denoisingSVDh5('example_mc.h5:/Data');
 
-%% Downsample the original or the denoised movie
+%% Downsample the original movie
 downsampletime_pipeline('example_mc.h5:/Data',40,4,40000)
 % Downsamples the first 40000 frames of the movie by 4 using 40 blocks. You can downsample the movie down to 2Hz, maybe even more...
 
 % This concludes the preparation of the movie for cell extraction
-
-
 
 
 
