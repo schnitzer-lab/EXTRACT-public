@@ -126,8 +126,8 @@ for i=1:numel(startno)
     
     disp(sprintf('\t \t %s: Starting rigid motion correction ', datestr(now)))
 
-    options_rigid = NoRMCorreSetParms('d1',nx,'d2',ny,'max_shift',30,'us_fac',30,...
-        'grid_size',[nx,ny],'print_msg',0); % The grid size is full
+    options_rigid = NoRMCorreSetParms('d1',nx,'d2',ny,'max_shift',30,'us_fac',30,'grid_size',[nx,ny],'print_msg',0); 
+    % The grid size is full FOV
     [~,shifts_rigid,~,options_rigid] = normcorre_batch(M_proc,options_rigid,im_ds);
 
     
@@ -158,8 +158,7 @@ for i=1:numel(startno)
         
         
         
-        options_nonrigid = NoRMCorreSetParms('d1',nx,'d2',ny,'max_shift',30,'us_fac',30,...
-            'grid_size',[ns_nonrigid,ns_nonrigid],'print_msg',0);
+        options_nonrigid = NoRMCorreSetParms('d1',nx,'d2',ny,'max_shift',30,'us_fac',30,'grid_size',[ns_nonrigid,ns_nonrigid],'print_msg',0);
         [~,shifts_nonrigid,~,options_nonrigid] = normcorre_batch(M_proc,options_nonrigid,im_ds); 
 
         
