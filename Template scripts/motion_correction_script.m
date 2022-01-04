@@ -1,10 +1,8 @@
 %% Start the main pipeline
 
-
 movie_info = h5info('example.h5','/Data');
 movie_size = num2cell(movie_info.Dataspace.Size);
 [nx, ny, totalnum] = deal(movie_size{:});
-
 
 %% Downsample in space
 
