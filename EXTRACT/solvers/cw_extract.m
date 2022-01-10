@@ -194,8 +194,13 @@ for i = 1:max_steps
 
 
     % Robust cell finding
+    try
     [s, t, t_corr, s_corr, s_change, t_change] = ...
         alt_opt_single(Mt, s_2d_init, noise_std, max_num_pixels, use_gpu, kappa_t, kappa_s);
+    catch
+    [s, t, t_corr, s_corr, s_change, t_change] = ...
+        alt_opt_single(Mt, s_2d_init, noise_std, max_num_pixels, 0, kappa_t, kappa_s);
+    end
 
     S_change = [S_change; s_change];
     T_change = [T_change; t_change];
