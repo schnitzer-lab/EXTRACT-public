@@ -32,7 +32,7 @@ show_each_cell = 0;
 % Reduce noise in movie with a spatial filter
 switch config.cellfind_filter_type
     case 'butter'
-        M = spatial_bandpass(M, avg_radius, inf, ...
+        M = spatial_bandpass(M, avg_radius, config.cellfind_spatial_highpass_cutoff, ...
             config.spatial_lowpass_cutoff, use_gpu, config.smoothing_ratio_x2y);
     case 'gauss'
         M = spatial_gauss_lowpass(M, avg_radius, use_gpu);

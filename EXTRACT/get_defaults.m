@@ -30,6 +30,7 @@ function config = get_defaults(config)
 
     % Cell finding module parameters
     if ~isfield(config, 'cellfind_filter_type'), config.cellfind_filter_type = 'butter'; end
+    if ~isfield(config, 'cellfind_spatial_highpass_cutoff'), config.cellfind_spatial_highpass_cutoff = inf; end
     if ~isfield(config, 'spatial_lowpass_cutoff'), config.spatial_lowpass_cutoff = 2; end
     if ~isfield(config, 'moving_radius'), config.moving_radius = 3; end
     if ~isfield(config, 'cellfind_min_snr'), config.cellfind_min_snr = 1; end
