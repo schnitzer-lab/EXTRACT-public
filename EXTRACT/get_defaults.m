@@ -103,6 +103,7 @@ function config = get_defaults(config)
     if ~isfield(config, 'TOL_sub'), config.TOL_sub = 1e-6; end
     if ~isfield(config, 'TOL_main'), config.TOL_main = 1e-2; end
 
+
     % Do not change anything below, these are no longer hyper parameter definitions!
 
     % If dendrites are present then don't check eccentricity
@@ -111,6 +112,12 @@ function config = get_defaults(config)
         thresholds.size_lower_limit = 0;
         thresholds.size_upper_limit = inf;
     end
+
+    if config.max_iter == 0
+        config.max_iter_T = 1000;
+    end
+
+
 
     if config.skip_highpass
         config.spatial_highpass_cutoff=inf;
