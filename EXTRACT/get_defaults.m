@@ -113,10 +113,6 @@ function config = get_defaults(config)
         thresholds.size_upper_limit = inf;
     end
 
-    if config.max_iter == 0
-        config.max_iter_T = max(1000,config.max_iter_T);
-    end
-
 
 
     if config.skip_highpass
