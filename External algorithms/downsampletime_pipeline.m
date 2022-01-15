@@ -35,7 +35,7 @@ k=1;
 for i=1:numFrame:totalnum
     
     fprintf('\t %s: Running %i out of %i parts \n',datestr(now),round(i/numFrame)+1,totalnum/numFrame);
-    data = h5read([filename '.h5'],datasetname,[1,1,i],[nx,ny,numFrame]);
+    data = single(h5read([filename '.h5'],datasetname,[1,1,i],[nx,ny,numFrame]));
     
     [movie_out] = downsample_time(data,dt);
     
