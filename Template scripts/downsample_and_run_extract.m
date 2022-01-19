@@ -1,6 +1,6 @@
 %% Start the main pipeline
 
-movie_info = h5info('example.h5');
+hinfo = h5info('example.h5');
 nx = hinfo.Datasets.Dataspace.Size(1);
 ny = hinfo.Datasets.Dataspace.Size(2);
 totalnum = hinfo.Datasets.Dataspace.Size(3);
