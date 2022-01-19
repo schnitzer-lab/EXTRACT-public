@@ -1,8 +1,18 @@
-function downsamplespace_pipeline(input,blocks,dt,file_type,totalnum)
+function downsamplespace_pipeline(input,dt,file_type,numFrame,totalnum)
 
-if nargin <4
+if nargin <2
+    dt = 2;
+end
+
+if nargin <3
     file_type = 'h5';
 end
+
+if nargin <4
+    numFrame = 1000;
+end
+
+
 
 switch file_type
     case 'h5'
@@ -39,8 +49,25 @@ switch file_type
 end
 
 
+windowsize = min(totalnum, numFrame);
 
-numFrame = totalnum/blocks;
+startno = [1:windowsize:totalnum];
+
+if numel(startno)>1
+    % handling the irregular framenumbers 
+    perframes = ones(numel(startno),1)*numFrame;
+
+    lastframes = mod(totalnum,numFrame);
+
+    if lastframes > 0
+        perframes(end-1) = perframes(end-1) + lastframes;
+        startno(end) = [];
+    end
+
+else
+    perframes = totalnum;
+end
+
 
 outputfilename = [filename '_space_ds'];
 
@@ -54,24 +81,24 @@ catch
 h5create([outputfilename '.h5'],datasetname,[nx/dt ny/dt totalnum],'Datatype','single','ChunkSize',[nx/dt,ny/dt,round(numFrame/10)]);
 end
 
-disp(sprintf('%s: Downsampling in space by a factor of %s, split into %s movies', datestr(now),num2str(dt),num2str(blocks) ))
+disp(sprintf('%s: Downsampling in space by a factor of %s, split into %s movies', datestr(now),num2str(dt),num2str(numel(startno)) ))
 
 
-for i=1:numFrame:totalnum
+for i=1:numel(startno)
     
-    fprintf('\t %s: Running %i out of %i parts \n',datestr(now),round(i/numFrame)+1,totalnum/numFrame);
+    fprintf('\t %s: Running %i out of %i parts \n',datestr(now),i,numel(startno));
     switch file_type
         case 'h5'
-            data = single(h5read([filename '.h5'],datasetname,[1,1,i],[nx,ny,numFrame]));
+            data = single(h5read([filename '.h5'],datasetname,[1,1,startno(i)],[nx,ny,perframes(i)]));
         case 'tif'
-            data = single(read_from_tif(input,i,numFrame));
+            data = single(read_from_tif(input,startno(i),perframes(i)));
         case 'tiff'
-            data = single(read_from_tif(input,i,numFrame));
+            data = single(read_from_tif(input,startno(i),perframes(i)));
     end
     
     [movie_out] = downsample_space(data,dt);
     
-    h5write([outputfilename '.h5'],datasetname,single(movie_out),[1,1,i],[nx/dt,ny/dt,round(numFrame)]);
+    h5write([outputfilename '.h5'],datasetname,single(movie_out),[1,1,startno(i)],[nx/dt,ny/dt,perframes(i)]);
    
     
 end

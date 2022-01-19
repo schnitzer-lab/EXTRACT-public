@@ -1,8 +1,9 @@
 %% Start the main pipeline
 
-movie_info = h5info('example.h5','/Data');
-movie_size = num2cell(movie_info.Dataspace.Size);
-[nx, ny, totalnum] = deal(movie_size{:});
+movie_info = h5info('example.h5');
+nx = hinfo.Datasets.Dataspace.Size(1);
+ny = hinfo.Datasets.Dataspace.Size(2);
+totalnum = hinfo.Datasets.Dataspace.Size(3);
 
 %% Downsample the movie
 downsampletime_pipeline('example.h5:/Data',40,4,40000)
@@ -26,10 +27,13 @@ config.thresholds.T_min_snr=10;
 output=extractor(M,config);
 save('extract_downsampled_unsorted.mat','output','-v7.3');
 
+%% Cell sorting
+
 % While it is optional, it is beneficial to sort the cells at this stage before moving forward.
+%cell_check(output, M)
 
 %% run EXTRACT on the full movie 
-load('unsorted_extract.mat');
+load('extract_downsampled_unsorted.mat');
 M = 'example.h5:/Data';
 config = output.config;
 
@@ -41,7 +45,7 @@ config.num_partitions_y=2;
 
 config.max_iter=0;
 
-% If you sorted, make sure that S_in is the sorted cell filters!
+% If you sorted, make sure that S_in is the sorted cell filters coming from cell check above!
 S_in=output.spatial_weights;
 config.S_init=full(reshape(S_in, size(S_in, 1) * size(S_in, 2), size(S_in, 3)));
 
