@@ -1,5 +1,6 @@
 function downsampletime_pipeline(input,blocks,dt,totalnum)
 
+
 [filename,datasetname] = parse_movie_name(input);
 
 filename  = filename(1:end-3);
@@ -7,7 +8,17 @@ filename  = filename(1:end-3);
 hinfo=h5info([filename '.h5']);
 if nargin <4
     totalnum = hinfo.Datasets.Dataspace.Size(3);
+    totalnum = totalnum - mod(totalnum,1000);
 end
+
+if nargin < 3
+    dt = 4;
+end
+
+if nargin < 2
+    blocks = totalnum / 1000;
+end
+
 nx = hinfo.Datasets.Dataspace.Size(1);
 ny = hinfo.Datasets.Dataspace.Size(2);
 
