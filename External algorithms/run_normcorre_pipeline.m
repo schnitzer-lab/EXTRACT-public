@@ -87,6 +87,7 @@ if isempty(template)
         idx_2 = find(sum(mask,1)==0);
         idx_1 = find(sum(mask,2)==0);
         im1(idx_1(:),:,:)=[];
+        im1(:,idx_2(:),:)=[];
     end
     
 
