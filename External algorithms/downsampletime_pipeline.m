@@ -1,4 +1,4 @@
-function downsampletime_pipeline(input,blocks,dt,totalnum)
+function downsampletime_pipeline(input,dt,blocks,totalnum)
 
 
 [filename,datasetname] = parse_movie_name(input);
@@ -11,11 +11,11 @@ if nargin <4
     totalnum = totalnum - mod(totalnum,1000);
 end
 
-if nargin < 3
+if nargin < 2
     dt = 4;
 end
 
-if nargin < 2
+if nargin < 3
     blocks = totalnum / 1000;
 end
 
