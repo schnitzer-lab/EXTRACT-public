@@ -516,6 +516,32 @@ switch config.trace_output_option
                 config.plot_loss, fp_solve_func, config.use_gpu, 1);
 
         end
+
+    case 'least_squares'
+        str = sprintf('\t \t \t Providing least-squares traces. \n');
+        script_log = [script_log, str];
+        dispfun(str, config.verbose ==2);
+
+        S = normalize_to_one(S);
+        % Downsample if needed
+        if dss > 1
+            S = reshape(S, fov_y, fov_x, size(S, 2));
+            S = downsample_space(S, dss);
+            S = reshape(S, fov_size(1) * fov_size(2), size(S, 3));
+        end
+
+        % Do least-squares fit to find T
+        
+        M = reshape(M, fov_size(1) * fov_size(2), n);
+        num_chunks = compute_lin_part_size(M, 0, 3);
+        T = maybe_gpu(0, zeros(size(S, 2), n));
+        S_inv = pinv(S);
+        for k = 1:num_chunks
+            indices = select_indices(n, num_chunks, k);
+            M_small = maybe_gpu(0,M(:, indices));
+            T(:, indices) = S_inv * M_small;
+        end
+        clear S_inv M_small;
         
 end
 
