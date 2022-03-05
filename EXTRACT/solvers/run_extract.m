@@ -533,15 +533,9 @@ switch config.trace_output_option
         % Do least-squares fit to find T
         
         M = reshape(M, fov_size(1) * fov_size(2), n);
-        num_chunks = compute_lin_part_size(M, 0, 3);
-        T = maybe_gpu(0, zeros(size(S, 2), n));
         S_inv = pinv(S);
-        for k = 1:num_chunks
-            indices = select_indices(n, num_chunks, k);
-            M_small = maybe_gpu(0,M(:, indices));
-            T(:, indices) = S_inv * M_small;
-        end
-        clear S_inv M_small;
+        T= S_inv * M;
+        clear S_inv ;
         
 end
 
