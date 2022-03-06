@@ -10,6 +10,8 @@ avg_cell_radius = config.avg_cell_radius;
 use_gpu         = config.use_gpu;
 file_type       = config.file_type;
 mask            = config.mask;
+mc_template     = config.mc_template
+
 
 switch file_type
     case 'h5'
@@ -96,6 +98,23 @@ if isempty(template)
         im1_nonrig = spatial_bandpass(im1_nonrig,avg_cell_radius,10,2,use_gpu);
     end
 
+    if mc_template
+        options_template = NoRMCorreSetParms('d1',size(im1,1),'d2',size(im1,2),'max_shift',30,'us_fac',30,'grid_size',[size(im1,1),size(im1,2)],'print_msg',0); 
+        % The grid size is full FOV
+        [~,shifts_template,~,options_tempate] = normcorre_batch(im1,options_template,mean(im1(:,:,1:max(round(nt_template/10),1)),3)) ;
+        im1 = apply_shifts(im1,shifts_template,options_template);
+
+        if ~isempty(mask)
+            options_template.d1=size(im1_nonrig,1);
+            options_template.d2=size(im1_nonrig,2);
+            options_template.grid_size = [size(im1_nonrig,1),size(im1_nonrig,2),1];
+            im1_nonrig = apply_shifts(im1_nonrig,shifts_template,options_template);
+        else
+            im1_nonrig = im1;
+        end
+        clear options_template
+        clear shifts_template
+    end
 
     %im_ds= single(max(im1,[],3));
     im_ds= single(mean(im1,3));
