@@ -10,7 +10,7 @@ avg_cell_radius = config.avg_cell_radius;
 use_gpu         = config.use_gpu;
 file_type       = config.file_type;
 mask            = config.mask;
-mc_template     = config.mc_template
+mc_template     = config.mc_template;
 
 
 switch file_type
