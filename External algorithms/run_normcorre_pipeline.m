@@ -101,7 +101,7 @@ if isempty(template)
     if mc_template
         options_template = NoRMCorreSetParms('d1',size(im1,1),'d2',size(im1,2),'max_shift',30,'us_fac',30,'grid_size',[size(im1,1),size(im1,2)],'print_msg',0); 
         % The grid size is full FOV
-        [~,shifts_template,~,options_tempate] = normcorre_batch(im1,options_template,mean(im1(:,:,1:max(round(nt_template/10),1)),3)) ;
+        [~,shifts_template,~,options_tempate] = normcorre_batch(im1,options_template,mean(im1(:,:,1:max(round(nt_template/10),2)),3)) ;
         im1 = apply_shifts(im1,shifts_template,options_template);
 
         if ~isempty(mask)
