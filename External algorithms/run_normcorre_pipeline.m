@@ -48,7 +48,7 @@ while count == 0
         h5create(output_filename,output_datasetname,[nx ny totalnum],'Datatype','single','ChunkSize',[nx,ny,chunk_time_size]);
         count = 1;
     catch 
-        chunk_time_size = chunk_time_size/2;
+        chunk_time_size = round(chunk_time_size/2);
     end
 end
 
