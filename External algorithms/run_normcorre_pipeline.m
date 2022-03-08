@@ -41,11 +41,15 @@ if isfile(output_filename)
     delete(output_filename);
 end
 
-
-try
-    h5create(output_filename,output_datasetname,[nx ny totalnum],'Datatype','single','ChunkSize',[nx,ny,numFrame]);
-catch 
-    h5create(output_filename,output_datasetname,[nx ny totalnum],'Datatype','single','ChunkSize',[nx,ny,ceil(numFrame/10)]);
+count = 0
+chunk_time_size = numFrame;
+while count == 0
+    try
+        h5create(output_filename,output_datasetname,[nx ny totalnum],'Datatype','single','ChunkSize',[nx,ny,chunk_time_size]);
+        count = 1;
+    catch 
+        chunk_time_size = chunk_time_size/2;
+    end
 end
 
 windowsize = min(totalnum, numFrame);
