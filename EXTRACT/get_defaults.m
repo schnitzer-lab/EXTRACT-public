@@ -113,7 +113,9 @@ function config = get_defaults(config)
         thresholds.size_upper_limit = inf;
     end
 
-
+    if config.hyperparameter_tuning_flag
+        config.trace_output_option = 'None'
+    end
 
     if config.skip_highpass
         config.spatial_highpass_cutoff=inf;
