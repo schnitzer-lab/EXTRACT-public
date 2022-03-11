@@ -1,7 +1,7 @@
 function [] = plot_hyperparameter_curves(output)
     [fmap, ~] = get_quality_metric_map;
     thresholds  = output.config.thresholds;
-    metrics = output.info.summary.classification(1).metrics;
+    metrics = output.info.summary(1).classification.metrics;
     avg_cell_area = pi * output.config.avg_cell_radius ^ 2;
     figure
     subplot(2,3,1)
