@@ -14,7 +14,7 @@ elim_size_thresh = config.cellfind_numpix_threshold;
 avg_cell_area = pi * avg_radius ^ 2;
 min_num_pixels = avg_cell_area *config.thresholds.size_lower_limit;
 max_num_pixels = avg_cell_area * config.thresholds.size_upper_limit;
-avg_yield_threshold = 0.1;
+avg_yield_threshold = config.avg_yield_threshold;
 yield_averaging_window = round(1/avg_yield_threshold);
 
 show_each_cell = 0;
