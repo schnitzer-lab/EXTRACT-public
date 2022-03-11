@@ -47,34 +47,36 @@ if config.use_gpu && ~config.use_default_gpu
     min_mem = inf;
     idx_max_mem = 0;
     c = gpuDeviceCount;
-    gpuDevice([]);
-    for idx_gpu = 1:c
-        d = gpuDevice(idx_gpu);
-        mem = d.AvailableMemory;
-        dispfun(sprintf(...
-            '\t \t \t GPU Device %d - %s: Available Memory: %.1f Gb\n', ...
-            idx_gpu, d.Name, mem / 2^30), config.verbose ~= 0);
-        min_mem = min(mem, min_mem);
-        if mem > max_mem
-            max_mem = mem;
-            idx_max_mem = idx_gpu;
-        end
-    end
-    if config.multi_gpu && c > 1
-        avail_mem = min_mem;
-        num_workers = c;
-        % De-select last selected GPU
-        gpuDevice([]);
-        parpool('local', num_workers);
-    else
-        avail_mem = max_mem;
-        gpuDevice(idx_max_mem);
-        dispfun(sprintf('\t \t \t - Selecting GPU device %d \n', ...
-            idx_max_mem), config.verbose ~= 0);
-    end
     if c == 0
         warning('No GPU device was detected -- Setting use_gpu = 0 ');
         config.use_gpu = 0;
+    else
+    
+        gpuDevice([]);
+        for idx_gpu = 1:c
+            d = gpuDevice(idx_gpu);
+            mem = d.AvailableMemory;
+            dispfun(sprintf(...
+                '\t \t \t GPU Device %d - %s: Available Memory: %.1f Gb\n', ...
+                idx_gpu, d.Name, mem / 2^30), config.verbose ~= 0);
+            min_mem = min(mem, min_mem);
+            if mem > max_mem
+                max_mem = mem;
+                idx_max_mem = idx_gpu;
+            end
+        end
+        if config.multi_gpu && c > 1
+            avail_mem = min_mem;
+            num_workers = c;
+            % De-select last selected GPU
+            gpuDevice([]);
+            parpool('local', num_workers);
+        else
+            avail_mem = max_mem;
+            gpuDevice(idx_max_mem);
+            dispfun(sprintf('\t \t \t - Selecting GPU device %d \n', ...
+                idx_max_mem), config.verbose ~= 0);
+        end
     end
 end
 
