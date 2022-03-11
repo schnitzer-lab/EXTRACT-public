@@ -51,7 +51,6 @@ if config.use_gpu && ~config.use_default_gpu
         warning('No GPU device was detected -- Setting use_gpu = 0 ');
         config.use_gpu = 0;
     else
-    
         gpuDevice([]);
         for idx_gpu = 1:c
             d = gpuDevice(idx_gpu);
