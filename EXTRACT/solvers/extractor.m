@@ -110,6 +110,7 @@ end
 % Prevent plots when in parallel mode
 if num_workers > 1
     config.plot_loss = 0;
+    config.visualize_cellfinding = 0;
 end
 
 [h, w, ~] = get_movie_size(M);
