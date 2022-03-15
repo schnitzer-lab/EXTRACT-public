@@ -208,6 +208,7 @@ if config.parallel_cpu
 
         % Correct the F_per_pixel if it exists
         if isfield(config, 'F_per_pixel')
+            [h_this, w_this, ~] = size(M_small);
             config_this.F_per_pixel = config_this.F_per_pixel(fov_occupation(:));
             config_this.F_per_pixel = reshape(config_this.F_per_pixel, h_this, w_this);
         end
