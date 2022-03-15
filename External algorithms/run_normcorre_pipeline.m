@@ -41,7 +41,7 @@ if isfile(output_filename)
     delete(output_filename);
 end
 
-count = 0
+count = 0;
 chunk_time_size = numFrame;
 while count == 0
     try
