@@ -172,12 +172,12 @@ T = {};
 % parfor (idx_partition = 1:num_partitions, num_workers)
 
 if config.parallel_cpu
-    dispfun(sprintf('%s: Signal extraction on %d partitions with %d parallel workers', ...
+    dispfun(sprintf('%s: Signal extraction on %d partitions with %d parallel workers \n', ...
             datestr(now), num_partitions,num_workers), config.verbose ~= 0);
 
     config.verbose = 0;
     
-     parfor idx_partition = num_partitions:-1:1
+     parfor (idx_partition = 1:num_partitions, num_workers)
         dispfun(sprintf('%s: Signal extraction on partition %d (of %d):\n', ...
             datestr(now), idx_partition, num_partitions), config.verbose ~= 0);
         
