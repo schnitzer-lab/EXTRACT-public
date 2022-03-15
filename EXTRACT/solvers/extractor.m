@@ -170,7 +170,7 @@ T = {};
 % Divide movie into blocks and run EXTRACT
 % parfor (idx_partition = 1:num_partitions, num_workers)
 
-if parallel_cpu
+if config.parallel_cpu
     dispfun(sprintf('%s: Signal extraction on %d partitions with %d parallel workers', ...
             datestr(now), num_partitions,num_workers), config.verbose ~= 0);
 
@@ -226,15 +226,15 @@ if parallel_cpu
         S_temp(fov_occupation(:), :) = S_this;
         S_this = S_temp;
 
-        % Update FOV-wide arrays
-        if isfield(summary_this, 'summary_image')
-            F_per_pixel(fov_occupation(:)) = summary_this.config.F_per_pixel(:);
-            summary_image(fov_occupation(:)) = summary_this.summary_image;
-            max_image(fov_occupation(:)) = summary_this.max_image;
-        else
-            summary_image(fov_occupation(:)) = max(M_small, [], 3);
-            max_image(fov_occupation(:)) = max(M_small, [], 3);
-        end
+        % Update FOV-wide arrays, not possible for parallel cpu!
+        #if isfield(summary_this, 'summary_image')
+        #    F_per_pixel(fov_occupation(:)) = summary_this.config.F_per_pixel(:);
+        #    summary_image(fov_occupation(:)) = summary_this.summary_image;
+        #    max_image(fov_occupation(:)) = summary_this.max_image;
+        #else
+        #    summary_image(fov_occupation(:)) = max(M_small, [], 3);
+        #    max_image(fov_occupation(:)) = max(M_small, [], 3);
+        #end
         summary_this.fov_occupation = fov_occupation;
         summary{idx_partition} = summary_this;
         if ~isempty(S_this)
