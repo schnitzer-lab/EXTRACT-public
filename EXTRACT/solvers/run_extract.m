@@ -17,22 +17,24 @@ fov_size = [];
 [fov_size(1), fov_size(2), n] = size(M);
 script_log = '';
 
-% Estimate time constant of a calcium event
-str = sprintf('\t \t \t Estimating the average time constant...\n');
-script_log = [script_log, str];
-dispfun(str, config.verbose ==2);
-tau = estimate_tau(reshape(M, fov_size(1) * fov_size(2), n));
+% We use the user defined average time constant
+#str = sprintf('\t \t \t Estimating the average time constant...\n');
+#script_log = [script_log, str];
+#dispfun(str, config.verbose ==2);
+#tau = estimate_tau(reshape(M, fov_size(1) * fov_size(2), n));
 % Quit if no activity is found
-if tau == 0
-    str = sprintf('\t \t \t No signal detected, terminating...\n');
-    script_log = [script_log, str];
-    dispfun(str, config.verbose ==2);
-    S = [];
-    T = [];
-    summary.log = script_log;
-    return;
-end
-config.avg_event_tau = tau;
+#if tau == 0
+#    str = sprintf('\t \t \t No signal detected, terminating...\n');
+#    script_log = [script_log, str];
+#    dispfun(str, config.verbose ==2);
+#    S = [];
+#    T = [];
+#    summary.log = script_log;
+#    return;
+#end
+#config.avg_event_tau = tau;
+
+tau = config.avg_event_tau;
 
 % Space downsampling
 dss = config.downsample_space_by;
@@ -49,11 +51,25 @@ end
 
 config.avg_cell_radius = config.avg_cell_radius / dss;
 
-% Preprocess movie
-str = sprintf('\t \t \t Preprocessing movie...\n');
-script_log = [script_log, str];
-dispfun(str, config.verbose ==2);
-[M, config] = preprocess_movie(M, config);
+
+if ((config.previously_preprocessed) && (~isfield(config, 'F_per_pixel'))) 
+    error(['The baseline values for the pre-processed movie are missing, please provide the F_0 values in config.F_per_pixel.']);
+end
+
+if config.previously_preprocessed
+    str = sprintf('\t \t \t Using the provided pre-processed movie...\n');
+    script_log = [script_log, str]; 
+    dispfun(str, config.verbose ==2);
+
+else
+
+    % Preprocess movie
+    str = sprintf('\t \t \t Preprocessing movie...\n');
+    script_log = [script_log, str];
+    dispfun(str, config.verbose ==2);
+    [M, config] = preprocess_movie(M, config);
+end
+
 max_image = max(M, [], 3);
 clims_visualize = quantile(max_image(:), [config.visualize_cellfinding_min config.visualize_cellfinding_max]);
 

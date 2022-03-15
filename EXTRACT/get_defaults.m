@@ -19,6 +19,7 @@ function config = get_defaults(config)
     % Preprocessing module parameters
 
     if ~isfield(config, 'preprocess'), config.preprocess = true; end
+    if ~isfield(config, 'previously_preprocessed'), config.previously_preprocessed = 0; end
     if ~isfield(config, 'fix_zero_FOV_strips'), config.fix_zero_FOV_strips = false; end
     if ~isfield(config, 'medfilt_outlier_pixels'), config.medfilt_outlier_pixels = false; end
     if ~isfield(config, 'skip_dff'), config.skip_dff = false; end
@@ -97,6 +98,7 @@ function config = get_defaults(config)
     if ~isfield(config, 'T_lower_snr_threshold'), config.T_lower_snr_threshold = 10; end
     if ~isfield(config, 'smooth_T'), config.smooth_T = false; end
     if ~isfield(config, 'smooth_S'), config.smooth_S = true; end
+    if ~isfield(config, 'avg_event_tau'), config.avg_event_tau = 10; end
 
     % Optimizer parameters (will not change for 99.9% of time, no urgent need to know about them)
     if ~isfield(config, 'max_iter_S'), config.max_iter_S = 100; end

@@ -169,65 +169,151 @@ T = {};
 
 % Divide movie into blocks and run EXTRACT
 % parfor (idx_partition = 1:num_partitions, num_workers)
-for idx_partition = num_partitions:-1:1
-    dispfun(sprintf('%s: Signal extraction on partition %d (of %d):\n', ...
-        datestr(now), idx_partition, num_partitions), config.verbose ~= 0);
+
+if parallel_cpu
+    dispfun(sprintf('%s: Signal extraction on %d partitions with %d parallel workers', ...
+            datestr(now), num_partitions,num_workers), config.verbose ~= 0);
+
+    config.verbose = 0;
     
-    tic;
-    % Get current movie partition from full movie
-    [M_small, fov_occupation] = get_current_partition(...
-        M, npx, npy, npt, partition_overlap, idx_partition);
-    io_time = io_time + toc;
+     parfor idx_partition = num_partitions:-1:1
+        dispfun(sprintf('%s: Signal extraction on partition %d (of %d):\n', ...
+            datestr(now), idx_partition, num_partitions), config.verbose ~= 0);
+        
+        tic;
+        % Get current movie partition from full movie
+        [M_small, fov_occupation] = get_current_partition(...
+            M, npx, npy, npt, partition_overlap, idx_partition);
+        io_time = io_time + toc;
 
-    % Sometimes partitions contain no signal. Terminate in that case
-    std_M = nanstd(M_small(:));
-    if std_M < SIGNAL_LOWER_THRESHOLD
-        dispfun('\t \t \t No signal detected, terminating...\n', ...
-            config.verbose ==2);
-    end
-    config_this = config;
-    % If S_init is given, feed only part of it consistent with partition
-    if ~isempty(config_this.S_init)
-        S_init = config.S_init(fov_occupation(:), :);
-        S_init(:, sum(S_init, 1)<=ABS_TOL) = [];
-        config_this.S_init = S_init;
-    end
-    % Distribute mask to partitions
-    if ~isempty(config_this.movie_mask)
-        [h_this, w_this, ~] = size(M_small);
-        config_this.movie_mask = config_this.movie_mask(fov_occupation(:));
-        config_this.movie_mask = reshape(config_this.movie_mask, h_this, w_this);
-    end
-    % Run EXTRACT for current partition
-    [S_this, T_this, summary_this] = run_extract(M_small, config_this);
-    dispfun(sprintf('\t \t \t Count: %d cells.\n', ...
-        size(S_this, 2)), config.verbose ~= 0);
+        % Sometimes partitions contain no signal. Terminate in that case
+        std_M = nanstd(M_small(:));
+        if std_M < SIGNAL_LOWER_THRESHOLD
+            dispfun('\t \t \t No signal detected, terminating...\n', ...
+                config.verbose ==2);
+        end
+        config_this = config;
+        % If S_init is given, feed only part of it consistent with partition
+        if ~isempty(config_this.S_init)
+            S_init = config.S_init(fov_occupation(:), :);
+            S_init(:, sum(S_init, 1)<=ABS_TOL) = [];
+            config_this.S_init = S_init;
+        end
+        % Distribute mask to partitions
+        if ~isempty(config_this.movie_mask)
+            [h_this, w_this, ~] = size(M_small);
+            config_this.movie_mask = config_this.movie_mask(fov_occupation(:));
+            config_this.movie_mask = reshape(config_this.movie_mask, h_this, w_this);
+        end
 
-    % Un-trim the pixels
-    if config.use_sparse_arrays
-        S_temp = sparse(h * w, size(S_this, 2));
+        % Correct the F_per_pixel if it exists
+        if isfield(config, 'F_per_pixel')
+            config_this.F_per_pixel = config_this.F_per_pixel(fov_occupation(:));
+            config_this.F_per_pixel = reshape(config_this.F_per_pixel, h_this, w_this);
+        end
+
+        % Run EXTRACT for current partition
+        [S_this, T_this, summary_this] = run_extract(M_small, config_this);
+        dispfun(sprintf('\t \t \t Count: %d cells.\n', ...
+            size(S_this, 2)), config.verbose ~= 0);
+
+        % Un-trim the pixels
+        if config.use_sparse_arrays
+            S_temp = sparse(h * w, size(S_this, 2));
+        else
+            S_temp = zeros(h * w, size(S_this, 2), 'single');
+        end
+        S_temp(fov_occupation(:), :) = S_this;
+        S_this = S_temp;
+
+        % Update FOV-wide arrays
+        if isfield(summary_this, 'summary_image')
+            F_per_pixel(fov_occupation(:)) = summary_this.config.F_per_pixel(:);
+            summary_image(fov_occupation(:)) = summary_this.summary_image;
+            max_image(fov_occupation(:)) = summary_this.max_image;
+        else
+            summary_image(fov_occupation(:)) = max(M_small, [], 3);
+            max_image(fov_occupation(:)) = max(M_small, [], 3);
+        end
+        summary_this.fov_occupation = fov_occupation;
+        summary{idx_partition} = summary_this;
+        if ~isempty(S_this)
+            S{idx_partition} = S_this;
+            T{idx_partition} = T_this';
+        end
+        fov_occupation_total = fov_occupation_total + fov_occupation;
+    end
+
     else
-        S_temp = zeros(h * w, size(S_this, 2), 'single');
-    end
-    S_temp(fov_occupation(:), :) = S_this;
-    S_this = S_temp;
 
-    % Update FOV-wide arrays
-    if isfield(summary_this, 'summary_image')
-        F_per_pixel(fov_occupation(:)) = summary_this.config.F_per_pixel(:);
-        summary_image(fov_occupation(:)) = summary_this.summary_image;
-        max_image(fov_occupation(:)) = summary_this.max_image;
-    else
-        summary_image(fov_occupation(:)) = max(M_small, [], 3);
-        max_image(fov_occupation(:)) = max(M_small, [], 3);
+    for idx_partition = num_partitions:-1:1
+        dispfun(sprintf('%s: Signal extraction on partition %d (of %d):\n', ...
+            datestr(now), idx_partition, num_partitions), config.verbose ~= 0);
+        
+        tic;
+        % Get current movie partition from full movie
+        [M_small, fov_occupation] = get_current_partition(...
+            M, npx, npy, npt, partition_overlap, idx_partition);
+        io_time = io_time + toc;
+
+        % Sometimes partitions contain no signal. Terminate in that case
+        std_M = nanstd(M_small(:));
+        if std_M < SIGNAL_LOWER_THRESHOLD
+            dispfun('\t \t \t No signal detected, terminating...\n', ...
+                config.verbose ==2);
+        end
+        config_this = config;
+        % If S_init is given, feed only part of it consistent with partition
+        if ~isempty(config_this.S_init)
+            S_init = config.S_init(fov_occupation(:), :);
+            S_init(:, sum(S_init, 1)<=ABS_TOL) = [];
+            config_this.S_init = S_init;
+        end
+        % Distribute mask to partitions
+        if ~isempty(config_this.movie_mask)
+            [h_this, w_this, ~] = size(M_small);
+            config_this.movie_mask = config_this.movie_mask(fov_occupation(:));
+            config_this.movie_mask = reshape(config_this.movie_mask, h_this, w_this);
+        end
+
+        % Correct the F_per_pixel if it exists
+        if isfield(config, 'F_per_pixel')
+            config_this.F_per_pixel = config_this.F_per_pixel(fov_occupation(:));
+            config_this.F_per_pixel = reshape(config_this.F_per_pixel, h_this, w_this);
+        end
+
+        % Run EXTRACT for current partition
+        [S_this, T_this, summary_this] = run_extract(M_small, config_this);
+        dispfun(sprintf('\t \t \t Count: %d cells.\n', ...
+            size(S_this, 2)), config.verbose ~= 0);
+
+        % Un-trim the pixels
+        if config.use_sparse_arrays
+            S_temp = sparse(h * w, size(S_this, 2));
+        else
+            S_temp = zeros(h * w, size(S_this, 2), 'single');
+        end
+        S_temp(fov_occupation(:), :) = S_this;
+        S_this = S_temp;
+
+        % Update FOV-wide arrays
+        if isfield(summary_this, 'summary_image')
+            F_per_pixel(fov_occupation(:)) = summary_this.config.F_per_pixel(:);
+            summary_image(fov_occupation(:)) = summary_this.summary_image;
+            max_image(fov_occupation(:)) = summary_this.max_image;
+        else
+            summary_image(fov_occupation(:)) = max(M_small, [], 3);
+            max_image(fov_occupation(:)) = max(M_small, [], 3);
+        end
+        summary_this.fov_occupation = fov_occupation;
+        summary{idx_partition} = summary_this;
+        if ~isempty(S_this)
+            S{idx_partition} = S_this;
+            T{idx_partition} = T_this';
+        end
+        fov_occupation_total = fov_occupation_total + fov_occupation;
     end
-    summary_this.fov_occupation = fov_occupation;
-    summary{idx_partition} = summary_this;
-    if ~isempty(S_this)
-        S{idx_partition} = S_this;
-        T{idx_partition} = T_this';
-    end
-    fov_occupation_total = fov_occupation_total + fov_occupation;
+
 end
 
 % Concatenate components from different partitions
