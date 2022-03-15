@@ -188,7 +188,7 @@ T = {};
 if config.parallel_cpu
     dispfun(sprintf('%s: Signal extraction on %d partitions with %d parallel workers \n', ...
             datestr(now), num_partitions,num_workers), config.verbose ~= 0);
-
+    verbose_old = config.verbose;
     config.verbose = 0;
     
      parfor (idx_partition = 1:num_partitions, num_workers)
@@ -259,6 +259,8 @@ if config.parallel_cpu
         end
         fov_occupation_total = fov_occupation_total + fov_occupation;
     end
+
+    config.verbose = verbose_old;
 
     else
 
@@ -395,7 +397,8 @@ output.spatial_weights = reshape(S, h, w, size(S, 2));
 output.temporal_weights = T;
 output.info = info;
 output.config = config;
-
-fprintf('%s: All done! \n', datestr(now));
+dispfun(sprintf(...
+        '%s: All done with EXTRACT! \n', ...
+        datestr(now)), config.verbose ~=0);
 
 end
