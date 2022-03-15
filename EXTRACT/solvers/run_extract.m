@@ -18,21 +18,21 @@ fov_size = [];
 script_log = '';
 
 % We use the user defined average time constant
-#str = sprintf('\t \t \t Estimating the average time constant...\n');
-#script_log = [script_log, str];
-#dispfun(str, config.verbose ==2);
-#tau = estimate_tau(reshape(M, fov_size(1) * fov_size(2), n));
+%str = sprintf('\t \t \t Estimating the average time constant...\n');
+%script_log = [script_log, str];
+%dispfun(str, config.verbose ==2);
+%tau = estimate_tau(reshape(M, fov_size(1) * fov_size(2), n));
 % Quit if no activity is found
-#if tau == 0
-#    str = sprintf('\t \t \t No signal detected, terminating...\n');
-#    script_log = [script_log, str];
-#    dispfun(str, config.verbose ==2);
-#    S = [];
-#    T = [];
-#    summary.log = script_log;
-#    return;
-#end
-#config.avg_event_tau = tau;
+%if tau == 0
+%    str = sprintf('\t \t \t No signal detected, terminating...\n');
+%    script_log = [script_log, str];
+%    dispfun(str, config.verbose ==2);
+%    S = [];
+%    T = [];
+%    summary.log = script_log;
+%    return;
+%end
+%config.avg_event_tau = tau;
 
 tau = config.avg_event_tau;
 
