@@ -85,9 +85,23 @@ if ~config.use_gpu && config.parallel_cpu == 1
     num_workers = feature('numCores') - 1;
     if isfield(config, 'num_parallel_cpu_workers')
         if config.num_parallel_cpu_workers > num_workers + 1
-            warning(['More parallel CPU workers than # of available ', ...
-                'cores requested -- Using max available = %d'], ...
-                num_workers + 1);
+            try
+            num_workers = config.num_parallel_cpu_workers;
+                p = gcp('nocreate');
+                if ~isempty(p)
+                    if p.NumWorkers ~=num_workers
+                        delete(p);
+                        parpool('local', num_workers);
+                    end
+                else
+                    parpool('local', num_workers);    
+                end
+            catch
+                warning(['More parallel CPU workers than # of available ', ...
+                    'cores requested -- Using max available = %d'], ...
+                    num_workers + 1);
+                num_workers = feature('numCores') - 1;
+            end
         else
             num_workers = config.num_parallel_cpu_workers;
             dispfun(sprintf(...
