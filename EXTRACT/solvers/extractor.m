@@ -99,7 +99,7 @@ if ~config.use_gpu && config.parallel_cpu == 1
             catch
                 warning(['More parallel CPU workers than # of available ', ...
                     'cores requested -- Using max available = %d'], ...
-                    num_workers + 1);
+                    feature('numCores'));
                 num_workers = feature('numCores') - 1;
             end
         else
