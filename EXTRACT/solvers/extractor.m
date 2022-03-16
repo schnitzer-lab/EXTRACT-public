@@ -265,6 +265,29 @@ if config.parallel_cpu
 
     config.verbose = verbose_old;
 
+    [h, w, full_t_movie] = get_movie_size(M);
+
+    try
+        dispfun(sprintf('%s: Estimating a summary image from first %d frames\n', ...
+                datestr(now),min(1000, full_t_movie)), config.verbose ~= 0);
+
+        if ischar(M)
+            [path, dataset] = parse_movie_name(M);
+            M_summary = h5read(path, dataset, [1,1,1], [h,w,min(1000,full_t_movie)]);
+        else
+            M_summary = M(:, :, 1:min(1000,full_t_movie));
+        end
+
+        [M_summary,~] = preprocess_movie(M_summary,config);
+
+        F_per_pixel = mean(M_summary,3);
+        summary_image = max(M_summary,[],3);
+        max_image = summary_image;
+    catch
+        dispfun(sprintf('%s: Summary image estimation failed. Moving on without one... \n', ...
+                datestr(now)), config.verbose ~= 0);
+    end
+
     else
 
     for idx_partition = num_partitions:-1:1
