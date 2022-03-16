@@ -1,5 +1,10 @@
 %% Start the main pipeline
 
+% To aid with motion correction, we have written a wrapper around the published 
+% NoRMCorre (https://github.com/flatironinstitute/NoRMCorre) motion correction algorithm. 
+% Please download the source files of NoRMCorre (https://github.com/flatironinstitute/NoRMCorre) 
+% and keep them in MATLAB path if you wish to utilize our motion correction wrapper.
+
 hinfo = h5info('example.h5');
 nx = hinfo.Datasets.Dataspace.Size(1);
 ny = hinfo.Datasets.Dataspace.Size(2);
