@@ -266,7 +266,7 @@ if config.parallel_cpu
     config.verbose = verbose_old;
     [h, w, full_t_movie] = get_movie_size(M);
 
-    if isempty(config.F_per_pixel)
+    if ~isfield(config, 'F_per_pixel')
         
 
         try
