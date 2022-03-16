@@ -53,8 +53,7 @@ config.avg_cell_radius = config.avg_cell_radius / dss;
 
 
 if ((~config.preprocess) && (~isfield(config, 'F_per_pixel'))) 
-    error(['The baseline values for the pre-processed movie are missing, ...
-        please provide the F_0 values in config.F_per_pixel as a 2D matrix.']);
+    error(['The baseline values for the pre-processed movie are missing, please provide the F_0 values in config.F_per_pixel as a 2D matrix.']);
 end
 
 if ~config.preprocess
