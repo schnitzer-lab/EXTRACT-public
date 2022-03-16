@@ -52,11 +52,12 @@ end
 config.avg_cell_radius = config.avg_cell_radius / dss;
 
 
-if ((config.previously_preprocessed) && (~isfield(config, 'F_per_pixel'))) 
-    error(['The baseline values for the pre-processed movie are missing, please provide the F_0 values in config.F_per_pixel.']);
+if ((~config.preprocess) && (~isfield(config, 'F_per_pixel'))) 
+    error(['The baseline values for the pre-processed movie are missing, ...
+        please provide the F_0 values in config.F_per_pixel as a 2D matrix.']);
 end
 
-if config.previously_preprocessed
+if ~config.preprocess
     str = sprintf('\t \t \t Using the provided pre-processed movie...\n');
     script_log = [script_log, str]; 
     dispfun(str, config.verbose ==2);
