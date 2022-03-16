@@ -383,7 +383,7 @@ if config.remove_duplicate_cells
 
     overlap_idx = find(fov_occupation_total - 1);
     if ~isempty(S)
-        idx_trash = find_duplicate_cells(S, T, overlap_idx);
+        idx_trash = find_duplicate_cells(S, T, overlap_idx,config.T_dup_thresh,config.T_corr_thresh,config.S_corr_thresh);
         S(:, idx_trash) = [];
         T(:, idx_trash) = [];
         try

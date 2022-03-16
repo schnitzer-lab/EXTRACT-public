@@ -1,8 +1,14 @@
-function idx_trash = find_duplicate_cells(S, Tt, overlap_idx)
+function idx_trash = find_duplicate_cells(S, Tt, overlap_idx,T_dup_thresh,T_corr_thresh,S_corr_thresh)
     
-    T_dup_thresh = 0.9;
-    T_corr_thresh = 0.8;
-    S_corr_thresh = 0.1;
+    if nargin < 4
+        T_dup_thresh = 0.9;
+    end
+    if nargin < 5
+        T_corr_thresh = 0.8;
+    end
+    if nargin < 6
+        S_corr_thresh = 0.1;
+    end
     
     % Select only cells in the overlap regions
     images_in_overlap = S(overlap_idx, :);
