@@ -280,9 +280,10 @@ if config.parallel_cpu
                 M_summary = M(:, :, 1:min(1000,full_t_movie));
             end
 
-            [M_summary,~] = preprocess_movie(M_summary,config);
+            [M_summary,conf_mean] = preprocess_movie(M_summary,config);
 
-            F_per_pixel = mean(M_summary,3);
+            F_per_pixel = conf_mean.F_per_pixel;
+            clear conf_mean
             summary_image = max(M_summary,[],3);
             max_image = summary_image;
         catch
