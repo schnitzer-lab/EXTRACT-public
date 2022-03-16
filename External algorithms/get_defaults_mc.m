@@ -11,4 +11,5 @@ function config = get_defaults_mc(config)
     if ~isfield(config, 'file_type'), config.file_type = 'h5'; end
     if ~isfield(config, 'mask'), config.mask = []; end
     if ~isfield(config, 'mc_template'), config.mc_template = 0; end
+    if ~isfield(config, 'get_mask'), config.get_mask = 0; end
 end

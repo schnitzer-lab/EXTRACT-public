@@ -11,7 +11,7 @@ use_gpu         = config.use_gpu;
 file_type       = config.file_type;
 mask            = config.mask;
 mc_template     = config.mc_template;
-
+get_mask        = config.get_mask;
 
 switch file_type
     case 'h5'
@@ -88,6 +88,18 @@ if isempty(template)
     end
     
     im1_nonrig = im1;
+
+    if get_mask
+        figure
+        imshow(mean(im1,3),[])
+        rect = getrect
+        y_min = round(rect(1))
+        x_min = round(rect(2))
+        y_max = round(rect(1)+rect(3))
+        x_max = round(rect(2)+rect(4))
+        mask = zeros(nx,ny);
+        mask(x_min:x_max,y_min:y_max) = 1;
+    end
     
     if ~isempty(mask)
         idx_2 = find(sum(mask,1)==0);
