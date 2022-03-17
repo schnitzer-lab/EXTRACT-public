@@ -5,6 +5,7 @@ h_trace = [];
 time_offset = 0;
 cellmap_overlay = 0;
 rescale_each_frame = false;
+pause_time = 0
 for k = 1:length(varargin)
     vararg = varargin{k};
     if ischar(vararg)
@@ -22,6 +23,8 @@ for k = 1:length(varargin)
                 time_offset = varargin{k+1};
             case 'ax'
                 ax = varargin{k+1};
+            case 'pause_time'
+                pause_time = varargin{k+1};
         end
     end
 end
@@ -87,6 +90,7 @@ for k = 1:num_frames
         set(h_dot, 'XData', (k + time_offset),...
             'YData', trace_data(k + time_offset));
     end
+    pause(pause_time)
     drawnow;
 end
 
