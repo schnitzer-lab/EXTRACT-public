@@ -5,7 +5,7 @@ h_trace = [];
 time_offset = 0;
 cellmap_overlay = 0;
 rescale_each_frame = false;
-pause_time = 0
+pause_time = 0;
 for k = 1:length(varargin)
     vararg = varargin{k};
     if ischar(vararg)
