@@ -17,22 +17,24 @@ fov_size = [];
 [fov_size(1), fov_size(2), n] = size(M);
 script_log = '';
 
-% Estimate time constant of a calcium event
-str = sprintf('\t \t \t Estimating the average time constant...\n');
-script_log = [script_log, str];
-dispfun(str, config.verbose ==2);
-tau = estimate_tau(reshape(M, fov_size(1) * fov_size(2), n));
+% We use the user defined average time constant
+%str = sprintf('\t \t \t Estimating the average time constant...\n');
+%script_log = [script_log, str];
+%dispfun(str, config.verbose ==2);
+%tau = estimate_tau(reshape(M, fov_size(1) * fov_size(2), n));
 % Quit if no activity is found
-if tau == 0
-    str = sprintf('\t \t \t No signal detected, terminating...\n');
-    script_log = [script_log, str];
-    dispfun(str, config.verbose ==2);
-    S = [];
-    T = [];
-    summary.log = script_log;
-    return;
-end
-config.avg_event_tau = tau;
+%if tau == 0
+%    str = sprintf('\t \t \t No signal detected, terminating...\n');
+%    script_log = [script_log, str];
+%    dispfun(str, config.verbose ==2);
+%    S = [];
+%    T = [];
+%    summary.log = script_log;
+%    return;
+%end
+%config.avg_event_tau = tau;
+
+tau = config.avg_event_tau;
 
 % Space downsampling
 dss = config.downsample_space_by;
@@ -49,12 +51,29 @@ end
 
 config.avg_cell_radius = config.avg_cell_radius / dss;
 
-% Preprocess movie
-str = sprintf('\t \t \t Preprocessing movie...\n');
-script_log = [script_log, str];
-dispfun(str, config.verbose ==2);
-[M, config] = preprocess_movie(M, config);
+
+if ((~config.preprocess) && (~isfield(config, 'F_per_pixel'))) 
+    error(['The baseline values for the pre-processed movie are missing, please provide the F_0 values in config.F_per_pixel as a 2D matrix.']);
+end
+
+if ~config.preprocess
+    str = sprintf('\t \t \t Using the provided pre-processed movie...\n');
+    script_log = [script_log, str]; 
+    dispfun(str, config.verbose ==2);
+
+else
+
+    % Preprocess movie
+    str = sprintf('\t \t \t Preprocessing movie...\n');
+    script_log = [script_log, str];
+    dispfun(str, config.verbose ==2);
+    [M, config] = preprocess_movie(M, config);
+end
+
 max_image = max(M, [], 3);
+clims_visualize = quantile(max_image(:), [config.visualize_cellfinding_min config.visualize_cellfinding_max]);
+
+
 
 % Time downsampling
 dst = config.downsample_time_by;
@@ -384,7 +403,9 @@ for iter = 1:config.max_iter
             
             subplot(121)
             clf
-            imshow(max_image,[])
+            
+            imshow(max_image,clims_visualize)
+            
             plot_cells_overlay(reshape(gather(S),fov_size(1),fov_size(2),size(S,2)),[0,1,0],[])
             title(['Cell refinement step: ' num2str(iter) ' # Cells: ' num2str(size(T,1)) ' # Removed: 0'  ])
             drawnow;
@@ -432,7 +453,7 @@ for iter = 1:config.max_iter
             
             subplot(121)
             clf
-            imshow(max_image,[])
+            imshow(max_image,clims_visualize)
             plot_cells_overlay(reshape(gather(S),fov_size(1),fov_size(2),size(S,2)),[0,1,0],[])
             title(['Cell refinement step: ' num2str(iter) ' # Cells: ' num2str(size(T,1)) ' # Removed: ' num2str(sum(is_bad)) ])
             drawnow;
@@ -511,6 +532,26 @@ switch config.trace_output_option
                 config.plot_loss, fp_solve_func, config.use_gpu, 1);
 
         end
+
+    case 'least_squares'
+        str = sprintf('\t \t \t Providing least-squares traces. \n');
+        script_log = [script_log, str];
+        dispfun(str, config.verbose ==2);
+
+        S = normalize_to_one(S);
+        % Downsample if needed
+        if dss > 1
+            S = reshape(S, fov_y, fov_x, size(S, 2));
+            S = downsample_space(S, dss);
+            S = reshape(S, fov_size(1) * fov_size(2), size(S, 3));
+        end
+
+        % Do least-squares fit to find T
+        
+        M = reshape(M, fov_size(1) * fov_size(2), n);
+        S_inv = pinv(S);
+        T= S_inv * M;
+        clear S_inv ;
         
 end
 

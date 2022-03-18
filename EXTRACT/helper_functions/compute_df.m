@@ -8,11 +8,22 @@ function [M,m] = compute_df(M, skip,baseline)
     % If mean activity is below ABS_THRESHOLD, it is considered 0
     ABS_THRESHOLD = 1e-2;
     
-    m = quantile(M,baseline, 3);
+    if isempty(baseline)
+        m = mean(M,3);
+    else
+        m = quantile(M,baseline, 3);
+    end
+
+
+
     % If movie is centered around 0, then skip
     % Compare mean of mean image to the center pixel std
     t = M(round(end/2),round(end/2),:);
-    median_val = quantile(m(:),baseline);
+    if isempty(baseline)
+        median_val = mean(m(:));
+    else
+        median_val = quantile(m(:),baseline);
+    end
     is_centered = (median_val < std(t)/ 10) || (median_val < ABS_THRESHOLD);
     if is_centered || skip
         m = max(m,ones(size(m)));

@@ -53,7 +53,7 @@ function [M_out, fov_occupation] = get_current_partition(...
     y_keep = y_keep(nz_top+1:end-nz_bottom);
     fov_occupation = false(h, w);
     fov_occupation(y_keep, x_keep) = true;
-    fprintf('\t \t \t Discarding a [%d px top, %d px bottom, %d px left, %d px right] inactive movie region. \n'...
-        ,nz_top, nz_bottom, nz_left, nz_right);
+    %fprintf('\t \t \t Discarding a [%d px top, %d px bottom, %d px left, %d px right] inactive movie region. \n'...
+    %    ,nz_top, nz_bottom, nz_left, nz_right);
     
 end

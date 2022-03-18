@@ -17,7 +17,7 @@ function [M, config] = preprocess_movie(M, config)
         end
     
     
-        % delta F/F
+        % delta F
         [M, m] = compute_df(M, config.skip_dff,config.baseline_quantile);
         config.F_per_pixel = m;
         
@@ -45,7 +45,9 @@ function [M, config] = preprocess_movie(M, config)
         end
 
         % One final df to make sure movie is median centered
-        [M, ~] = compute_df(M, 0, config.baseline_quantile);
+        if ~isempty(config.baseline_quantile)
+            [M, ~] = compute_df(M, 0, config.baseline_quantile);
+        end
     
     else
         % Set mean fluorescence per pixel to all ones

@@ -14,7 +14,7 @@ elim_size_thresh = config.cellfind_numpix_threshold;
 avg_cell_area = pi * avg_radius ^ 2;
 min_num_pixels = avg_cell_area *config.thresholds.size_lower_limit;
 max_num_pixels = avg_cell_area * config.thresholds.size_upper_limit;
-avg_yield_threshold = 0.1;
+avg_yield_threshold = config.avg_yield_threshold;
 yield_averaging_window = round(1/avg_yield_threshold);
 
 show_each_cell = 0;
@@ -32,7 +32,7 @@ show_each_cell = 0;
 % Reduce noise in movie with a spatial filter
 switch config.cellfind_filter_type
     case 'butter'
-        M = spatial_bandpass(M, avg_radius, inf, ...
+        M = spatial_bandpass(M, avg_radius, config.cellfind_spatial_highpass_cutoff, ...
             config.spatial_lowpass_cutoff, use_gpu, config.smoothing_ratio_x2y);
     case 'gauss'
         M = spatial_gauss_lowpass(M, avg_radius, use_gpu);
@@ -51,6 +51,7 @@ end
 
 
 if config.visualize_cellfinding
+    is_bad=1;
     
     str = sprintf('\t \t \t Using cell finding visualization tool...\n');
     dispfun(str, config.verbose ==2);
@@ -65,12 +66,8 @@ if config.visualize_cellfinding
     if config.visualize_cellfinding_full_range
         imshow(max_im,[ ])
     else
-        min_movie_show = quantile(M,config.visualize_cellfinding_min,3);
-        min_movie_show = min(min_movie_show(:));
-
-        max_movie_show = quantile(M,config.visualize_cellfinding_max,3);
-        max_movie_show = max(max_movie_show(:));
-        imshow(max_im,[min_movie_show max_movie_show ])
+        clims = quantile(max_im(:), [config.visualize_cellfinding_min config.visualize_cellfinding_max]);
+        imshow(max_im,clims)
     end
     drawnow;
     subplot(222)
@@ -162,6 +159,13 @@ end
 
 num_good_cells = 0;
 for i = 1:max_steps
+    if (config.visualize_cellfinding && i>1 && ~is_bad)
+        
+            subplot(121)
+            plot_cells_overlay(reshape(gather(s),h,w),[0,1,0],[])
+            drawnow;
+        
+    end
     % Select seed pixel for next init cell
     mod_im_summary = modify_summary_image(summary_stack(:, 1), h, w, ...
         min_magnitude, elim_size_thresh);
@@ -187,17 +191,17 @@ for i = 1:max_steps
     s_2d_init = maybe_gpu(use_gpu, s_2d_init);
 
     
-    if (config.visualize_cellfinding && i>1 && ~is_bad)
-        
-            subplot(121)
-            plot_cells_overlay(reshape(gather(s),h,w),[0,1,0],[])
-            drawnow;
-        
-    end
+
 
     % Robust cell finding
+    try
     [s, t, t_corr, s_corr, s_change, t_change] = ...
         alt_opt_single(Mt, s_2d_init, noise_std, max_num_pixels, use_gpu, kappa_t, kappa_s);
+    catch
+        s_2d_init = gather(s_2d_init);
+    [s, t, t_corr, s_corr, s_change, t_change] = ...
+        alt_opt_single(Mt, s_2d_init, noise_std, max_num_pixels, 0, kappa_t, kappa_s);
+    end
 
     S_change = [S_change; s_change];
     T_change = [T_change; t_change];
@@ -309,6 +313,13 @@ for i = 1:max_steps
     avg_yield = mean(is_good(max(1, i-n+1):i));
     if i > 2 * n && avg_yield <= avg_yield_threshold
         init_stop_reason = 'yield';
+        if (config.visualize_cellfinding && i>1 && ~is_bad)
+        
+            subplot(121)
+            plot_cells_overlay(reshape(gather(s),h,w),[0,1,0],[])
+            drawnow;
+        
+        end
         break;
     end
     

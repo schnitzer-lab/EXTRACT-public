@@ -22,7 +22,7 @@ function config = get_defaults(config)
     if ~isfield(config, 'fix_zero_FOV_strips'), config.fix_zero_FOV_strips = false; end
     if ~isfield(config, 'medfilt_outlier_pixels'), config.medfilt_outlier_pixels = false; end
     if ~isfield(config, 'skip_dff'), config.skip_dff = false; end
-    if ~isfield(config, 'baseline_quantile'), config.baseline_quantile = 0.3; end
+    if ~isfield(config, 'baseline_quantile'), config.baseline_quantile = []; end
     if ~isfield(config, 'skip_highpass'), config.skip_highpass = false; end
     if ~isfield(config, 'spatial_highpass_cutoff'), config.spatial_highpass_cutoff = 5; end
     if ~isfield(config, 'temporal_denoising'), config.temporal_denoising = false; end
@@ -30,19 +30,21 @@ function config = get_defaults(config)
 
     % Cell finding module parameters
     if ~isfield(config, 'cellfind_filter_type'), config.cellfind_filter_type = 'butter'; end
+    if ~isfield(config, 'cellfind_spatial_highpass_cutoff'), config.cellfind_spatial_highpass_cutoff = inf; end
     if ~isfield(config, 'spatial_lowpass_cutoff'), config.spatial_lowpass_cutoff = 2; end
     if ~isfield(config, 'moving_radius'), config.moving_radius = 3; end
     if ~isfield(config, 'cellfind_min_snr'), config.cellfind_min_snr = 1; end
     if ~isfield(config, 'cellfind_max_steps'), config.cellfind_max_steps = 1000; end
     if ~isfield(config, 'cellfind_kappa_std_ratio'), config.cellfind_kappa_std_ratio = 1; end
     if ~isfield(config, 'init_with_gaussian'), config.init_with_gaussian = false; end
+    if ~isfield(config, 'avg_yield_threshold'), config.avg_yield_threshold = 0.1; end
 
     % Visualizing cell finding module
     if ~isfield(config, 'visualize_cellfinding'), config.visualize_cellfinding = 0; end
     if ~isfield(config, 'visualize_cellfinding_show_bad_cells'), config.visualize_cellfinding_show_bad_cells = 0; end
     if ~isfield(config, 'visualize_cellfinding_full_range'), config.visualize_cellfinding_full_range = 0; end
     if ~isfield(config, 'visualize_cellfinding_min'), config.visualize_cellfinding_min = 0.2; end
-    if ~isfield(config, 'visualize_cellfinding_max'), config.visualize_cellfinding_max = 0.99; end  
+    if ~isfield(config, 'visualize_cellfinding_max'), config.visualize_cellfinding_max = 0.9; end  
     
 
 
@@ -95,12 +97,18 @@ function config = get_defaults(config)
     if ~isfield(config, 'T_lower_snr_threshold'), config.T_lower_snr_threshold = 10; end
     if ~isfield(config, 'smooth_T'), config.smooth_T = false; end
     if ~isfield(config, 'smooth_S'), config.smooth_S = true; end
+    if ~isfield(config, 'avg_event_tau'), config.avg_event_tau = 10; end
+    if ~isfield(config, 'T_dup_thresh'), config.T_dup_thresh = 0.9; end
+    if ~isfield(config, 'T_corr_thresh'), config.T_corr_thresh = 0.8; end
+    if ~isfield(config, 'S_corr_thresh'), config.S_corr_thresh = 0.1; end
 
     % Optimizer parameters (will not change for 99.9% of time, no urgent need to know about them)
     if ~isfield(config, 'max_iter_S'), config.max_iter_S = 100; end
     if ~isfield(config, 'max_iter_T'), config.max_iter_T = 100; end
     if ~isfield(config, 'TOL_sub'), config.TOL_sub = 1e-6; end
     if ~isfield(config, 'TOL_main'), config.TOL_main = 1e-2; end
+
+
 
     % Do not change anything below, these are no longer hyper parameter definitions!
 
@@ -109,6 +117,10 @@ function config = get_defaults(config)
         thresholds.eccent_thresh = inf;
         thresholds.size_lower_limit = 0;
         thresholds.size_upper_limit = inf;
+    end
+
+    if config.hyperparameter_tuning_flag
+        config.trace_output_option = 'None';
     end
 
     if config.skip_highpass
