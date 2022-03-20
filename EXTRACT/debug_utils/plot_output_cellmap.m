@@ -1,7 +1,7 @@
 function plot_output_cellmap(output, include_bad_cells, varargin)
 
 plot_init_locations = false;
-clim_scale = [0, 0.8];
+clim_scale = [0, 0.95];
 for k = 1:length(varargin)
     vararg = varargin{k};
     if ischar(vararg)
