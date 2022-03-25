@@ -43,6 +43,8 @@ function [x] = classification_hyperparameters(...
     
     % Make classification struct for this iter
     x(end+1).metrics = metrics;
+    x(end).is_attr_bad = false(9,num_cells_this_iter);
+    x(end).is_bad = false(1, num_cells_this_iter);
     
     
     
