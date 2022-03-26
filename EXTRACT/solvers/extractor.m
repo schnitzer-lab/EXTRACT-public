@@ -271,13 +271,13 @@ if config.parallel_cpu
 
         try
             dispfun(sprintf('%s: Estimating a summary image from first %d frames\n', ...
-                    datestr(now),min(1000, full_t_movie)), config.verbose ~= 0);
+                    datestr(now),min(100, full_t_movie)), config.verbose ~= 0);
 
             if ischar(M)
                 [path, dataset] = parse_movie_name(M);
-                M_summary = h5read(path, dataset, [1,1,1], [h,w,min(1000,full_t_movie)]);
+                M_summary = h5read(path, dataset, [1,1,1], [h,w,min(100,full_t_movie)]);
             else
-                M_summary = M(:, :, 1:min(1000,full_t_movie));
+                M_summary = M(:, :, 1:min(100,full_t_movie));
             end
 
             [M_summary,conf_mean] = preprocess_movie(M_summary,config);
@@ -295,13 +295,13 @@ if config.parallel_cpu
 
         try
             dispfun(sprintf('%s: Estimating a summary image from first %d frames\n', ...
-                    datestr(now),min(1000, full_t_movie)), config.verbose ~= 0);
+                    datestr(now),min(100, full_t_movie)), config.verbose ~= 0);
 
             if ischar(M)
                 [path, dataset] = parse_movie_name(M);
-                M_summary = h5read(path, dataset, [1,1,1], [h,w,min(1000,full_t_movie)]);
+                M_summary = h5read(path, dataset, [1,1,1], [h,w,min(100,full_t_movie)]);
             else
-                M_summary = M(:, :, 1:min(1000,full_t_movie));
+                M_summary = M(:, :, 1:min(100,full_t_movie));
             end
 
             F_per_pixel = config.F_per_pixel;
