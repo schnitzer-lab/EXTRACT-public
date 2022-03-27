@@ -2,7 +2,7 @@ function [S_out, l, np_x, np_y, T_corr_in, T_corr_out, S_surround] = solve_S(...
         S_in, T, Mt, mask, fov_size, avg_radius, ...
         lambda, kappa, max_iter, TOL, compute_loss, est_func, use_gpu)
     
-    GPU_SLACK_FACTOR = 20;
+    GPU_SLACK_FACTOR = 10;
     CPU_SPACE_SIDELEN = 10 * 2 * avg_radius; % ~10 cells wide
     % Work with transposed T variants for better indexing
     Tt_corr_in = zeros(fliplr(size(T)), 'single');
