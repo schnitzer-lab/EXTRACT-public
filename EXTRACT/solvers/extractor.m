@@ -182,9 +182,6 @@ S = {};
 T = {};
 
 
-% Divide movie into blocks and run EXTRACT
-% parfor (idx_partition = 1:num_partitions, num_workers)
-
 if config.parallel_cpu
     dispfun(sprintf('%s: Signal extraction on %d partitions with %d parallel workers \n', ...
             datestr(now), num_partitions,num_workers), config.verbose ~= 0);
