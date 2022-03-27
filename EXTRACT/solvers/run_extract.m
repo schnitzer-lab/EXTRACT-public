@@ -279,11 +279,11 @@ for iter = 1:config.max_iter
             kappa, config.max_iter_T, config.TOL_sub, ...
             config.plot_loss, fp_solve_func, config.use_gpu, 1);
     catch
-    
+    warning('GPU memory insufficient, will abord GPU utilization for this step.')
     [T, loss, np_x, np_y, np_time] = solve_T(T, S, Mt, fov_size, avg_radius, lambda, ...
             kappa, config.max_iter_T, config.TOL_sub, ...
             config.plot_loss, fp_solve_func, 0, 1);
-    warning('GPU memory insufficient, will abord GPU utilization for this step.')
+    
 
     end
 
@@ -343,11 +343,12 @@ for iter = 1:config.max_iter
 
     catch
     
+    warning('GPU memory insufficient, will abord GPU utilization for this step.')
     [S, loss, np_x, np_y, T_corr_in, T_corr_out, S_surround] = solve_S(...
         S, T, Mt, mask, fov_size, avg_radius, ...
             lambda, kappa, config.max_iter_S, config.TOL_sub, ...
             config.plot_loss, @fp_solve_admm, 0);
-    warning('GPU memory insufficient, will abord GPU utilization for this step.')
+    
 
     end
 
