@@ -70,7 +70,7 @@ if use_gpu
     d = gpuDevice();
     avail_size = d.AvailableMemory / 4 / slack_factor;
 else
-    slack_factor = 15;
+    slack_factor = 150;
     f = get_free_mem;
     avail_size = f / 4 / slack_factor; 
 end
