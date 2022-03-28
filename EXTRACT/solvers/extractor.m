@@ -258,7 +258,7 @@ if config.parallel_cpu
         end
         fov_occupation_total_temp(:,:,idx_partition) = fov_occupation;
     end
-    fov_occupation_total  = sum(fov_occputation_total_temp,3);
+    fov_occupation_total  = sum(fov_occupation_total_temp,3);
     config.verbose = verbose_old;
     [h, w, full_t_movie] = get_movie_size(M);
 
