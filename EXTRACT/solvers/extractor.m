@@ -195,11 +195,9 @@ if config.parallel_cpu
         
         dispfun(sprintf('\t \t \t Uploading the movie... \n'), config.verbose ~= 0);
 
-        tic;
         % Get current movie partition from full movie
         [M_small, fov_occupation] = get_current_partition(...
             M, npx, npy, npt, partition_overlap, idx_partition);
-        io_time = io_time + toc;
 
         % Sometimes partitions contain no signal. Terminate in that case
         std_M = nanstd(M_small(:));
