@@ -246,10 +246,17 @@ num_init_comp = size(S,2);
 S_change = zeros(num_init_comp, config.max_iter, 'single');
 T_change = zeros(num_init_comp, config.max_iter, 'single');
 
+if config.max_iter > 0
+    str = sprintf('\t \t \t Updating S and T with alternating estimation...\n');
+    script_log = [script_log, str];
+    dispfun(str, config.verbose ==2);
+else
+    str = sprintf('\t \t \t Skipping cell refinement module...\n');
+    script_log = [script_log, str];
+    dispfun(str, config.verbose ==2);
 
-str = sprintf('\t \t \t Updating S and T with alternating estimation...\n');
-script_log = [script_log, str];
-dispfun(str, config.verbose ==2);
+end
+
 
 for iter = 1:config.max_iter
 	%---
