@@ -583,9 +583,9 @@ if dst > 1
             T = Tt'
             switch config.trace_output_option
                 case 'raw'
-                    str = sprintf('\t \t \t Providing raw traces. \n');
-                    script_log = [script_log, str];
-                    dispfun(str, config.verbose ==2);
+                    %str = sprintf('\t \t \t Providing raw traces. \n');
+                    %script_log = [script_log, str];
+                    %dispfun(str, config.verbose ==2);
                     
                     if config.l1_penalty_factor > ABS_TOL
                         % Penalize according to temporal overlap with neighbors
@@ -601,9 +601,9 @@ if dst > 1
                         config.plot_loss, @fp_solve, config.use_gpu, 0);
 
                 case 'baseline_adjusted'
-                    str = sprintf('\t \t \t Providing baseline adjusted traces. \n');
-                    script_log = [script_log, str];
-                    dispfun(str, config.verbose ==2);
+                    %str = sprintf('\t \t \t Providing baseline adjusted traces. \n');
+                    %script_log = [script_log, str];
+                    %dispfun(str, config.verbose ==2);
                     
                     if config.l1_penalty_factor > ABS_TOL
                         % Penalize according to temporal overlap with neighbors
@@ -621,9 +621,9 @@ if dst > 1
                     T = T - min(T,[],2);
                         
                 case 'nonneg'
-                    str = sprintf('\t \t \t Providing non-negative traces. \n');
-                    script_log = [script_log, str];
-                    dispfun(str, config.verbose ==2);
+                    %str = sprintf('\t \t \t Providing non-negative traces. \n');
+                    %script_log = [script_log, str];
+                    %dispfun(str, config.verbose ==2);
                     if (config.max_iter == 0)
                         if config.l1_penalty_factor > ABS_TOL
                             % Penalize according to temporal overlap with neighbors
@@ -641,9 +641,9 @@ if dst > 1
                     end
 
                 case 'least_squares'
-                    str = sprintf('\t \t \t Providing least-squares traces. \n');
-                    script_log = [script_log, str];
-                    dispfun(str, config.verbose ==2);
+                    %str = sprintf('\t \t \t Providing least-squares traces. \n');
+                    %script_log = [script_log, str];
+                    %dispfun(str, config.verbose ==2);
 
                     S = normalize_to_one(S);
                     % Downsample if needed
