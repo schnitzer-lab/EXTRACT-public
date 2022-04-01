@@ -578,9 +578,94 @@ if dst > 1
         if config.reestimate_T_if_downsampled
             % Update kappa according to dst
             kappa = kappa * sqrt(dst);
-            [T, ~, ~, ~, ~] = solve_T(Tt', S, M_before_dst, fov_size, avg_radius, Tt(1,:) * 0, ...
-                    kappa, config.max_iter_T, config.TOL_sub, ...
-                    config.plot_loss, fp_solve_func, config.use_gpu, 0);
+
+            % Respect the final regression algorithm choice
+            T = Tt'
+            switch config.trace_output_option
+                case 'raw'
+                    str = sprintf('\t \t \t Providing raw traces. \n');
+                    script_log = [script_log, str];
+                    dispfun(str, config.verbose ==2);
+                    
+                    if config.l1_penalty_factor > ABS_TOL
+                        % Penalize according to temporal overlap with neighbors
+                        cor = get_comp_corr(S, T);
+                        lambda = max(cor, [], 1) .* sum(S_smooth, 1) ...
+                            * config.l1_penalty_factor;
+                    else
+                        lambda = T(:, 1)' * 0;
+                    end
+                    
+                    [T, ~, ~, ~, ~] = solve_T(T, S, M_before_dst, fov_size, avg_radius, lambda, ...
+                        kappa, config.max_iter_T, config.TOL_sub, ...
+                        config.plot_loss, @fp_solve, config.use_gpu, 0);
+
+                case 'baseline_adjusted'
+                    str = sprintf('\t \t \t Providing baseline adjusted traces. \n');
+                    script_log = [script_log, str];
+                    dispfun(str, config.verbose ==2);
+                    
+                    if config.l1_penalty_factor > ABS_TOL
+                        % Penalize according to temporal overlap with neighbors
+                        cor = get_comp_corr(S, T);
+                        lambda = max(cor, [], 1) .* sum(S_smooth, 1) ...
+                            * config.l1_penalty_factor;
+                    else
+                        lambda = T(:, 1)' * 0;
+                    end
+                    
+                    [T, ~, ~, ~, ~] = solve_T_robust(T, S, M_before_dst, fov_size, avg_radius, lambda, ...
+                        kappa, config.max_iter_T, config.TOL_sub, ...
+                        config.plot_loss, config.trace_quantile, config.use_gpu, 0);
+
+                    T = T - min(T,[],2);
+                        
+                case 'nonneg'
+                    str = sprintf('\t \t \t Providing non-negative traces. \n');
+                    script_log = [script_log, str];
+                    dispfun(str, config.verbose ==2);
+                    if (config.max_iter == 0)
+                        if config.l1_penalty_factor > ABS_TOL
+                            % Penalize according to temporal overlap with neighbors
+                            cor = get_comp_corr(S, T);
+                            lambda = max(cor, [], 1) .* sum(S_smooth, 1) ...
+                                * config.l1_penalty_factor;
+                        else
+                            lambda = T(:, 1)' * 0;
+                        end
+
+                        [T, loss, np_x, np_y, np_time] = solve_T(T, S, M_before_dst, fov_size, avg_radius, lambda, ...
+                            kappa, config.max_iter_T, config.TOL_sub, ...
+                            config.plot_loss, fp_solve_func, config.use_gpu, 0);
+
+                    end
+
+                case 'least_squares'
+                    str = sprintf('\t \t \t Providing least-squares traces. \n');
+                    script_log = [script_log, str];
+                    dispfun(str, config.verbose ==2);
+
+                    S = normalize_to_one(S);
+                    % Downsample if needed
+                    if dss > 1
+                        S = reshape(S, fov_y, fov_x, size(S, 2));
+                        S = downsample_space(S, dss);
+                        S = reshape(S, fov_size(1) * fov_size(2), size(S, 3));
+                    end
+
+                    % Do least-squares fit to find T
+                    
+                    M = reshape(M_before_dst, fov_size(1) * fov_size(2), n);
+                    S_inv = pinv(S);
+                    T= S_inv * M;
+                    clear S_inv ;
+                    
+            end
+
+            % The older code is below
+            %[T, ~, ~, ~, ~] = solve_T(T, S, M_before_dst, fov_size, avg_radius, Tt(1,:) * 0, ...
+            %        kappa, config.max_iter_T, config.TOL_sub, ...
+            %        config.plot_loss, fp_solve_func, config.use_gpu, 0);
             if config.smooth_T
                 T = medfilt1(gather(T), 3, [], 2);
             end
