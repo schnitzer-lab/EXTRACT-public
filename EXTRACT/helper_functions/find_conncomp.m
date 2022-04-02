@@ -1,6 +1,13 @@
 function [cc, A] = find_conncomp(X, threshold, A2)
 % Finds connected components of columns of A wrt a corr. threshold
 % A2 (optional) is an additional adjacency matrix as a multiplicative constraint
+    
+
+    try
+        warning('off','bioinfo:graphconncomp:FunctionToBeRemoved')
+    catch
+        % Todo: Re-write this function at some point
+    end
 
     tiny = 1e-6;
     XpX = full(X'*X);
