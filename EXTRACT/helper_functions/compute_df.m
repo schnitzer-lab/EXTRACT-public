@@ -26,6 +26,7 @@ function [M,m] = compute_df(M, skip,baseline)
     end
     is_centered = (abs(median_val) < std(t)/ 10) || (abs(median_val) < ABS_THRESHOLD);
     if is_centered || skip
+        M = bsxfun(@minus, M, m);
         m = max(m,ones(size(m)));
         return;
     end
