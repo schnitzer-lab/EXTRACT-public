@@ -44,8 +44,8 @@ function [M, config] = preprocess_movie(M, config)
                 config.remove_background, config.use_gpu);
         end
 
-        % One final df to make sure movie is median centered
-        if ~isempty(config.baseline_quantile)
+        % One final df to make sure movie is baseline_quantile centered
+        if ~isempty(config.baseline_quantile) && config.second_df
             m_temp = quantile(M,config.baseline_quantile, 3);
             M = bsxfun(@minus, M, m_temp);
             clear m_temp
