@@ -522,9 +522,6 @@ switch config.trace_output_option
         T = T - min(T,[],2);
             
     case 'nonneg'
-        str = sprintf('\t \t \t Providing non-negative traces... \n');
-        script_log = [script_log, str];
-        dispfun(str, config.verbose ==2);
         if (config.max_iter == 0)
             if config.l1_penalty_factor > ABS_TOL
                 % Penalize according to temporal overlap with neighbors
@@ -535,10 +532,16 @@ switch config.trace_output_option
                 lambda = T(:, 1)' * 0;
             end
             if config.adaptive_kappa > 1
+                str = sprintf('\t \t \t Providing non-negative traces with kappa %f... \n',kappa);
+                script_log = [script_log, str];
+                dispfun(str, config.verbose ==2);
                 [T, loss, np_x, np_y, np_time] = solve_T(T, S, Mt, fov_size, avg_radius, lambda, ...
                 kappa, config.max_iter_T, config.TOL_sub, ...
                 config.plot_loss, @fp_solve_adaptive, config.use_gpu, 1);
             else
+                str = sprintf('\t \t \t Providing non-negative traces with adaptive kappa... \n');
+                script_log = [script_log, str];
+                dispfun(str, config.verbose ==2);
                 [T, loss, np_x, np_y, np_time] = solve_T(T, S, Mt, fov_size, avg_radius, lambda, ...
                 kappa, config.max_iter_T, config.TOL_sub, ...
                 config.plot_loss, @fp_solve_admm, config.use_gpu, 1);  
