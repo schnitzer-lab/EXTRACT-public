@@ -532,7 +532,7 @@ switch config.trace_output_option
                 lambda = T(:, 1)' * 0;
             end
             if config.adaptive_kappa > 1
-                str = sprintf('\t \t \t Providing non-negative traces with kappa %f... \n',kappa);
+                str = sprintf('\t \t \t Providing non-negative traces with a fixed kappa of %f... \n',config.std_kappa_ratio);
                 script_log = [script_log, str];
                 dispfun(str, config.verbose ==2);
                 [T, loss, np_x, np_y, np_time] = solve_T(T, S, Mt, fov_size, avg_radius, lambda, ...
