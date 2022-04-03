@@ -502,9 +502,7 @@ switch config.trace_output_option
             config.plot_loss, @fp_solve, config.use_gpu, 1);
 
     case 'baseline_adjusted'
-        str = sprintf('\t \t \t Providing baseline adjusted traces... \n');
-        script_log = [script_log, str];
-        dispfun(str, config.verbose ==2);
+        
         
         if config.l1_penalty_factor > ABS_TOL
             % Penalize according to temporal overlap with neighbors
@@ -514,10 +512,21 @@ switch config.trace_output_option
         else
             lambda = T(:, 1)' * 0;
         end
-        
-        [T, ~, ~, ~, ~] = solve_T_robust(T, S, Mt, fov_size, avg_radius, lambda, ...
-            kappa, config.max_iter_T, config.TOL_sub, ...
-            config.plot_loss, config.trace_quantile, config.use_gpu, 1);
+        if config.adaptive_kappa > 1
+            str = sprintf('\t \t \t Providing baseline adjusted traces with adaptive kappa... \n');
+            script_log = [script_log, str];
+            dispfun(str, config.verbose ==2);
+            [T, ~, ~, ~, ~] = solve_T_robust(T, S, Mt, fov_size, avg_radius, lambda, ...
+                kappa, config.max_iter_T, config.TOL_sub, ...
+                config.plot_loss, config.trace_quantile, config.use_gpu, 1,@fp_solve_adaptive_baseline);
+        else
+            str = sprintf('\t \t \t Providing baseline adjusted traces with a fixed kappa of %.1f... \n',config.kappa_std_ratio);
+            script_log = [script_log, str];
+            dispfun(str, config.verbose ==2);
+            [T, ~, ~, ~, ~] = solve_T_robust(T, S, Mt, fov_size, avg_radius, lambda, ...
+                kappa, config.max_iter_T, config.TOL_sub, ...
+                config.plot_loss, config.trace_quantile, config.use_gpu, 1,@fp_solve_admm_baseline);
+        end
 
         T = T - min(T,[],2);
             

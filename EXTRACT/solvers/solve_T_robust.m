@@ -1,5 +1,5 @@
 function [T_out, l, np_x, np_y, np_time] = solve_T_robust(T_in, S, M, fov_size, avg_radius, lambda, ...
-        kappa, max_iter, TOL, compute_loss, baseline, use_gpu, is_M_transposed)
+        kappa, max_iter, TOL, compute_loss, baseline, use_gpu, is_M_transposed,fp_solve_func)
     
 
     min_vals = zeros(1,size(S,2))-100;
@@ -56,7 +56,7 @@ function [T_out, l, np_x, np_y, np_time] = solve_T_robust(T_in, S, M, fov_size, 
                     end
                     T_in_sub = T_in(idx_comp, idx_t);
                     % Solve regression
-                    [Tt_out_sub, l{end+1}] = fp_solve_admm_baseline(T_in_sub', S_sub', M_sub, ...
+                    [Tt_out_sub, l{end+1}] = fp_solve_func(T_in_sub', S_sub', M_sub, ...
                         [], lambda(idx_comp), kappa, max_iter, TOL, ...
                         compute_loss, use_gpu, transpose_M,baseline);
 
