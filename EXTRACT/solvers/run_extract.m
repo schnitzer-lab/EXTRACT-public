@@ -539,7 +539,7 @@ switch config.trace_output_option
                 kappa, config.max_iter_T, config.TOL_sub, ...
                 config.plot_loss, @fp_solve_adaptive, config.use_gpu, 1);
             else
-                str = sprintf('\t \t \t Providing non-negative traces with a fixed kappa of %f... \n',config.kappa_std_ratio);
+                str = sprintf('\t \t \t Providing non-negative traces with a fixed kappa of %.1f... \n',config.kappa_std_ratio);
                 script_log = [script_log, str];
                 dispfun(str, config.verbose ==2);
                 [T, loss, np_x, np_y, np_time] = solve_T(T, S, Mt, fov_size, avg_radius, lambda, ...
