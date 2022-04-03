@@ -562,7 +562,7 @@ switch config.trace_output_option
             
             [T, loss, np_x, np_y, np_time] = solve_T(T, S, Mt, fov_size, avg_radius, lambda, ...
             kappa * (100/config.kappa_std_ratio), config.max_iter_T, config.TOL_sub, ...
-            config.plot_loss, @fp_solve_adaptive, config.use_gpu, 1);
+            config.plot_loss, @fp_solve_admm, config.use_gpu, 1);
 
         end
     case 'least_squares'
