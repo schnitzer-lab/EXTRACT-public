@@ -484,7 +484,7 @@ end
 
 switch config.trace_output_option
     case 'raw'
-        str = sprintf('\t \t \t Providing raw traces. \n');
+        str = sprintf('\t \t \t Providing raw traces... \n');
         script_log = [script_log, str];
         dispfun(str, config.verbose ==2);
         
@@ -502,7 +502,7 @@ switch config.trace_output_option
             config.plot_loss, @fp_solve, config.use_gpu, 1);
 
     case 'baseline_adjusted'
-        str = sprintf('\t \t \t Providing baseline adjusted traces. \n');
+        str = sprintf('\t \t \t Providing baseline adjusted traces... \n');
         script_log = [script_log, str];
         dispfun(str, config.verbose ==2);
         
@@ -522,7 +522,7 @@ switch config.trace_output_option
         T = T - min(T,[],2);
             
     case 'nonneg'
-        str = sprintf('\t \t \t Providing non-negative traces. \n');
+        str = sprintf('\t \t \t Providing non-negative traces... \n');
         script_log = [script_log, str];
         dispfun(str, config.verbose ==2);
         if (config.max_iter == 0)
@@ -534,33 +534,55 @@ switch config.trace_output_option
             else
                 lambda = T(:, 1)' * 0;
             end
-
-            [T, loss, np_x, np_y, np_time] = solve_T(T, S, Mt, fov_size, avg_radius, lambda, ...
+            if config.adaptive_kappa == 3
+                [T, loss, np_x, np_y, np_time] = solve_T(T, S, Mt, fov_size, avg_radius, lambda, ...
                 kappa, config.max_iter_T, config.TOL_sub, ...
-                config.plot_loss, fp_solve_func, config.use_gpu, 1);
+                config.plot_loss, @fp_solve_adaptive, config.use_gpu, 1);
+            else
+                [T, loss, np_x, np_y, np_time] = solve_T(T, S, Mt, fov_size, avg_radius, lambda, ...
+                kappa, config.max_iter_T, config.TOL_sub, ...
+                config.plot_loss, @fp_solve_admm, config.use_gpu, 1);  
+            end
 
         end
 
-    case 'least_squares'
-        str = sprintf('\t \t \t Providing least-squares traces. \n');
+    case 'nonnegative_least_squares'
+        str = sprintf('\t \t \t Providing nonnegative least squares traces... \n');
         script_log = [script_log, str];
         dispfun(str, config.verbose ==2);
+        if (config.max_iter == 0)
+            if config.l1_penalty_factor > ABS_TOL
+                % Penalize according to temporal overlap with neighbors
+                cor = get_comp_corr(S, T);
+                lambda = max(cor, [], 1) .* sum(S_smooth, 1) ...
+                    * config.l1_penalty_factor;
+            else
+                lambda = T(:, 1)' * 0;
+            end
+            
+            [T, loss, np_x, np_y, np_time] = solve_T(T, S, Mt, fov_size, avg_radius, lambda, ...
+            kappa * (100/config.kappa_std_ratio), config.max_iter_T, config.TOL_sub, ...
+            config.plot_loss, @fp_solve_adaptive, config.use_gpu, 1);
 
-        S = normalize_to_one(S);
-        % Downsample if needed
-        if dss > 1
-            S = reshape(S, fov_y, fov_x, size(S, 2));
-            S = downsample_space(S, dss);
-            S = reshape(S, fov_size(1) * fov_size(2), size(S, 3));
         end
+    case 'least_squares'
+        str = sprintf('\t \t \t Providing least squares traces... \n');
+        script_log = [script_log, str];
+        dispfun(str, config.verbose ==2);
+        
+        if config.l1_penalty_factor > ABS_TOL
+            % Penalize according to temporal overlap with neighbors
+            cor = get_comp_corr(S, T);
+            lambda = max(cor, [], 1) .* sum(S_smooth, 1) ...
+                * config.l1_penalty_factor;
+        else
+            lambda = T(:, 1)' * 0;
+        end
+        
+        [T, ~, ~, ~, ~] = solve_T(T, S, Mt, fov_size, avg_radius, lambda, ...
+            kappa * (100/config.kappa_std_ratio), config.max_iter_T, config.TOL_sub, ...
+            config.plot_loss, @fp_solve, config.use_gpu, 1);
 
-        % Do least-squares fit to find T
-        
-        M = reshape(M, fov_size(1) * fov_size(2), n);
-        S_inv = pinv(S);
-        T= S_inv * M;
-        clear S_inv ;
-        
 end
 
 clear M Mt;
