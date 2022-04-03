@@ -534,7 +534,7 @@ switch config.trace_output_option
             else
                 lambda = T(:, 1)' * 0;
             end
-            if config.adaptive_kappa == 3
+            if config.adaptive_kappa > 1
                 [T, loss, np_x, np_y, np_time] = solve_T(T, S, Mt, fov_size, avg_radius, lambda, ...
                 kappa, config.max_iter_T, config.TOL_sub, ...
                 config.plot_loss, @fp_solve_adaptive, config.use_gpu, 1);
