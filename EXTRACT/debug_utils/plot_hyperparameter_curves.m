@@ -1,7 +1,20 @@
-function [] = plot_hyperparameter_curves(output)
+function [] = plot_hyperparameter_curves(output,num)
+
+    if nargin <2
+        num =1;
+    end
+
     [fmap, ~] = get_quality_metric_map;
     thresholds  = output.config.thresholds;
-    metrics = output.info.summary(1).classification.metrics;
+
+
+    if num ==1
+        metrics = output.info.summary.classification(1).metrics;
+    else
+        is_bad = output.info.summary.classification(num-1).is_bad;
+        metrics = output.info.summary.classification(num).metrics;
+        metrics = metrics(:,~is_bad);
+    end
     avg_cell_area = pi * output.config.avg_cell_radius ^ 2;
     figure
     subplot(2,3,1)
@@ -49,7 +62,3 @@ function [] = plot_hyperparameter_curves(output)
     xlabel('Lower and Upper Size limits');
 
 end
-
-
-
-
