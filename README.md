@@ -219,7 +219,7 @@ iopts.backgroundBad = [244,166,166]/255;
 iopts.backgroundNeutral = repmat(230,[1 3])/255;
 
 % Run the external cell checker
-[inputImagesSorted, inputSignalsSorted, choices] = signalSorter(output.spatial_weights, output.temporal_weights', 'options',iopts);
+[inputImagesSorted, inputSignalsSorted, choices] = ciapkg.classification.signalSorter(output.spatial_weights, output.temporal_weights', 'options',iopts);
 ```
 
 ### Dependencies
