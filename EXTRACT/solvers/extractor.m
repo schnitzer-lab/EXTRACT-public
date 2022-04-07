@@ -194,7 +194,7 @@ if config.parallel_cpu
             datestr(now), idx_partition, num_partitions), config.verbose ~= 0);
         
         
-        dispfun(sprintf('\t \t \t Uploading the movie... \n'), config.verbose ~= 0);
+        dispfun(sprintf('\t \t \t Uploading the movie... \n'), config.verbose == 2);
 
         % Get current movie partition from full movie
         [M_small, fov_occupation] = get_current_partition(...
