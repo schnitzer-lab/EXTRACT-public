@@ -267,7 +267,17 @@ else
 end
 
 if config.pre_mask_on
-    mask = S > 0;
+    if config.pre_mask_radius == 0
+        mask = S > 0;
+    else
+        try
+            mask = make_mask(maybe_gpu(config.use_gpu, single(S > 0)), ...
+                fov_size, config.pre_mask_radius);
+        catch
+            mask = make_mask(maybe_gpu(0, single(S > 0)), ...
+                fov_size, config.pre_mask_radius);
+        end
+    end
 end
 
 
