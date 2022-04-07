@@ -10,6 +10,8 @@ function [M,m] = compute_df(M, skip,baseline)
     
     if isempty(baseline)
         m = mean(M,3);
+    elseif (baseline == 0.5)
+        m = median(M,3)
     else
         m = quantile(M,baseline, 3);
     end

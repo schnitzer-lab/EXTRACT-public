@@ -46,7 +46,11 @@ function [M, config] = preprocess_movie(M, config)
 
         % One final df to make sure movie is baseline_quantile centered
         if ~isempty(config.baseline_quantile) && config.second_df
-            m_temp = quantile(M,config.baseline_quantile, 3);
+            if (config.baseline_quantile == 0.5)
+                m_temp = median(M, 3);
+            else
+                m_temp = quantile(M,config.baseline_quantile, 3);
+            end
             M = bsxfun(@minus, M, m_temp);
             clear m_temp
         end
