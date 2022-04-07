@@ -429,7 +429,7 @@ end
 end_time = posixtime(datetime);
 total_runtime = end_time - start_time - io_time;
 
-info.version = '1.0.2';
+info.version = '1.0.3';
 info.summary = summary;
 info.runtime = total_runtime;
 info.summary_image = summary_image;
