@@ -266,6 +266,10 @@ else
 
 end
 
+if config.pre_mask_on
+    mask = S > 0;
+end
+
 
 for iter = 1:config.max_iter
 	%---
@@ -338,12 +342,14 @@ for iter = 1:config.max_iter
         break;
     end
     % Update spatial binary mask
-    try
-    mask = make_mask(maybe_gpu(config.use_gpu, single(S_smooth > 0.1)), ...
-        fov_size, mask_extension_radius);
-    catch
-    mask = make_mask(maybe_gpu(0, single(S_smooth > 0.1)), ...
-        fov_size, mask_extension_radius);
+    if (~config.pre_mask_on)
+        try
+        mask = make_mask(maybe_gpu(config.use_gpu, single(S_smooth > 0.1)), ...
+            fov_size, mask_extension_radius);
+        catch
+        mask = make_mask(maybe_gpu(0, single(S_smooth > 0.1)), ...
+            fov_size, mask_extension_radius);
+        end
     end
     
     % Update S

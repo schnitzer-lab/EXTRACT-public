@@ -15,6 +15,7 @@ function config = get_defaults(config)
     if ~isfield(config, 'num_iter_stop_quality_checks'), config.num_iter_stop_quality_checks = []; end
     if ~isfield(config, 'S_init'), config.S_init = []; end
     if ~isfield(config, 'T_init'), config.T_init = []; end
+    if ~isfield(config, 'pre_mask_on'), config.pre_mask_on = 0; end
 
     % Preprocessing module parameters
 
