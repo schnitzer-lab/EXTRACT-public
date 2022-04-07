@@ -26,7 +26,7 @@ function [M_out, fov_occupation] = get_current_partition(...
     y_keep = y_begin:y_end;
     
     % Get the desired block out of the movie
-    if ischar(M)
+    if ischar(M) || iscell(M)
         [path, dataset] = parse_movie_name(M);
         idx_begin = [y_begin, x_begin, 1];
         num_elements = [y_end - y_begin + 1, x_end - x_begin + 1, npt];

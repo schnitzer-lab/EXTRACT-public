@@ -157,7 +157,7 @@ end
 
 % Get a circular mask (for movies with GRIN)
 if config.crop_circular
-    if ischar(M)
+    if ischar(M) || iscell(M)
         error('To use the circular cropping feature, load the movie onto memory before calling EXTRACT.');
     else
         circular_mask = get_circular_mask(M);
@@ -269,7 +269,7 @@ if config.parallel_cpu
             dispfun(sprintf('%s: Estimating a summary image from first %d frames\n', ...
                     datestr(now),min(100, full_t_movie)), config.verbose ~= 0);
 
-            if ischar(M)
+            if ischar(M) || iscell(M)
                 [path, dataset] = parse_movie_name(M);
                 M_summary = h5read(path, dataset, [1,1,1], [h,w,min(100,full_t_movie)]);
             else

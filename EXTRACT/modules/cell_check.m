@@ -925,7 +925,7 @@ function cell_check(output, M)
     end
 
     function M_out = get_movie(t_range)    
-        if ischar(M)
+        if ischar(M) || iscell(M)
             [path, dataset] = parse_movie_name(M);
             x_begin = x_current(1);
             x_end = x_current(end);
