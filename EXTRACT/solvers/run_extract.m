@@ -461,6 +461,9 @@ for iter = 1:config.max_iter
         % Delete bad cells
         S_bad = [S(:, is_bad), S_bad];
         T_bad = [T(is_bad, :); T_bad];
+        if config.pre_mask_on
+            mask(:,is_bad) = [];
+        end
 
         [S, S_smooth] = delete_columns(is_bad, S, S_smooth);
         [T, T_change, S_change] = delete_rows(is_bad, T, T_change, S_change);
