@@ -134,18 +134,22 @@ elseif isempty(config.T_init)
     % Do least-squares fit (truncated at 0) to find T
     % To do: Add a GPU implementation for least squares here!
     M = reshape(M, fov_size(1) * fov_size(2), n);
-    num_chunks = compute_lin_part_size(M, 0, 3);
-    T = maybe_gpu(0, zeros(size(S, 2), n));
-    S_inv = pinv(S);
-    for k = 1:num_chunks
-        indices = select_indices(n, num_chunks, k);
-        M_small = maybe_gpu(0,M(:, indices));
-        T(:, indices) = S_inv * M_small;
+    T = zeros(size(S, 2), n);
+
+    noise_ls_temp = estimate_noise_std(M,2);
+
+    try
+        [T, ~, ~, ~, ~] = solve_T(T, S, M, fov_size, config.avg_cell_radius, T(:, 1)' * 0, ...
+                noise_ls_temp*10, config.max_iter_T, config.TOL_sub, ...
+                config.plot_loss, @fp_solve_admm, config.use_gpu, 0);
+    catch
+        warning('GPU memory insufficient, will abord GPU utilization for this step.')
+        [T, ~, ~, ~, ~] = solve_T(T, S, M, fov_size, config.avg_cell_radius, T(:, 1)' * 0, ...
+                noise_ls_temp*10, config.max_iter_T, config.TOL_sub, ...
+                config.plot_loss, @fp_solve_admm, 0, 0);
     end
-    clear S_inv M_small;
-    T = max(T , 0);
-    S = gather(S);
-    T = gather(T);
+
+    
     init_summary = 'external init';
     M = reshape(M, fov_size(1), fov_size(2), n);
     summary_image = max(M, [], 3);
