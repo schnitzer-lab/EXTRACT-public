@@ -137,6 +137,10 @@ elseif isempty(config.T_init)
     T = zeros(size(S, 2), n);
 
     noise_ls_temp = estimate_noise_std(M,2);
+    if ~isempty(config.movie_mask)
+        noise_ls_temp = noise_ls_temp(config.movie_mask(:));
+    end
+    noise_ls_temp = median(noise_ls_temp);
 
     try
         [T, ~, ~, ~, ~] = solve_T(T, S, M, fov_size, config.avg_cell_radius, T(:, 1)' * 0, ...
