@@ -69,8 +69,8 @@ EXTRACT algorithm has two inputs, movie and configurations (a struct), and a sin
 In this quick start, we first describe the inputs, specifically the most important objects in the configuration struct (e.g. `config`). Then, we discuss the components of the output file that contain the single cell activities. Finally, we provide a code for initializing the configurations and performing extraction on an example movie.
 
 ### Inputs:
-`M`: either an existing 3-D movie matrix in the workspace, or a string that specifies an HDF5 path to a 3-D movie matrix.
-If M is a string, it must be in the following format: `filepath:dataset` (for example: `'example.h5:/data'`).
+`M`: either an existing 3-D movie matrix in the workspace, or a string/cell that specifies an HDF5 path to a 3-D movie matrix.
+If M is a string, it must be in the following format: `filepath:dataset` (for example: `'example.h5:/data'`), but the dataset cannot include the character `:`. Otherwise, if M is a cell, `M{1} = filepath` and `M{2} = dataset`. (for example: `M{1} = 'example.h5'` and `M{2}='/data'`)
 
 `config:` a struct whose fields define the various parameters used for signal extraction (See [Configurations](#configurations) for details on `config`). For a beginner, the most relevant fields are:
 
