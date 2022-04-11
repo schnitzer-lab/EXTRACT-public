@@ -87,6 +87,12 @@ if isempty(template)
             im1 = single(read_from_tif(input,1,nt_template));
     end
     
+    
+
+    if bandpass
+        im1 = spatial_bandpass(im1,avg_cell_radius,10,2,use_gpu);
+    end
+
     im1_nonrig = im1;
 
     if get_mask
@@ -108,11 +114,6 @@ if isempty(template)
         im1(:,idx_2(:),:)=[];
     end
     
-
-    if bandpass
-        im1 = spatial_bandpass(im1,avg_cell_radius,10,2,use_gpu);
-        im1_nonrig = spatial_bandpass(im1_nonrig,avg_cell_radius,10,2,use_gpu);
-    end
 
     if mc_template
         options_template = NoRMCorreSetParms('d1',size(im1,1),'d2',size(im1,2),'max_shift',30,'us_fac',30,'grid_size',[size(im1,1),size(im1,2)],'print_msg',0); 
@@ -170,15 +171,16 @@ for i=1:numel(startno)
     end
     
     M_proc = M;
+    if bandpass
+        M_proc = spatial_bandpass(M_proc,avg_cell_radius,10,2,use_gpu);
+    end
     if ~isempty(mask)
         M_proc(idx_1(:),:,:)=[];
         M_proc(:,idx_2(:),:)=[];
     end
     
 
-    if bandpass
-        M_proc = spatial_bandpass(M_proc,avg_cell_radius,10,2,use_gpu);
-    end
+
     
 
     
