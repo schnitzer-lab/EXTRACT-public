@@ -1,7 +1,10 @@
 function [T_out, l, np_x, np_y, np_time] = solve_T(T_in, S, M, fov_size, avg_radius, lambda, ...
-        kappa, max_iter, TOL, compute_loss, est_func, use_gpu, is_M_transposed)
+        kappa, max_iter, TOL, compute_loss, est_func, use_gpu, is_M_transposed,GPU_SLACK_FACTOR)
     
-    GPU_SLACK_FACTOR = 4;
+    if nargin < 14
+        GPU_SLACK_FACTOR = 4;
+    end
+
     CPU_SPACE_SIDELEN = 10 * 2 * avg_radius; % ~10 cells wide
     T_out = zeros(size(T_in), 'single');
     % For T-step, M must be passed to regression in transposed form
