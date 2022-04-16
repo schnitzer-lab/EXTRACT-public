@@ -351,10 +351,6 @@ function cell_check(output, M)
         colormap(ax_cellmap, default_colormap);
         axis(ax_cellmap, 'equal', 'off');
         hold(ax_cellmap, 'on');
-        % Set colors for cells
-        colors =label_to_color_mapping(labels);
-        h_cellmap = plot_cell_images(ax_cellmap, cellcheck.ims,...
-            colors, colors, 'callback_fn', @set_current_cell_from_cellmap,'display_thr', 0.05);
         if isfield(cellcheck, 'ims_surround')
             plot_cell_images(ax_cellmap, cellcheck.ims_surround,...
             [0,0,1], [0,0,1], 'callback_fn', [],'display_thr', 0.05);
@@ -363,6 +359,11 @@ function cell_check(output, M)
             plot_cell_images(ax_cellmap, cellcheck.ims_accepted,...
             [0,1,0], [0,1,0], 'callback_fn', [],'display_thr', 0.05);
         end
+        % Set colors for cells
+        colors =label_to_color_mapping(labels);
+        h_cellmap = plot_cell_images(ax_cellmap, cellcheck.ims,...
+            colors, colors, 'callback_fn', @set_current_cell_from_cellmap,'display_thr', 0.05);
+
 
         
         hold(ax_cellmap, 'off');
