@@ -57,6 +57,10 @@ function cell_check(output, M)
     cellcheck = struct('ims', ims,...
         'traces', traces,...
         'is_attr_bad', is_attr_bad);
+
+    if isfield(output, 'already_accepted')
+        cellcheck.ims_old = output.already_accepted;
+    end
     
     % Train initial scores
     extract_scores = zeros(num_cells, 1);
@@ -218,8 +222,8 @@ function cell_check(output, M)
     plot_cellmap;
 
     % Get neighbors for each cell
-    cellcheck.neighbors = get_all_neighbors(cellcheck);
     
+    cellcheck.neighbors = get_all_neighbors(cellcheck);
     set_score_thresholds;
     
     if checkbox_autolabel.Value == 1
@@ -347,6 +351,10 @@ function cell_check(output, M)
         colors =label_to_color_mapping(labels);
         h_cellmap = plot_cell_images(ax_cellmap, cellcheck.ims,...
             colors, colors, 'callback_fn', @set_current_cell_from_cellmap,'display_thr', 0.05);
+        if isfield(cellcheck, 'ims_old')
+            plot_cell_images(ax_cellmap, cellcheck.ims_old,...
+            [0,1,0], [0,1,0], 'callback_fn', [],'display_thr', 0.05);
+        end
         hold(ax_cellmap, 'off');
         % Set visibility of bad cells according to uicheckbox
         toggle_bad_cell_display;
