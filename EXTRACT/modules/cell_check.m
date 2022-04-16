@@ -1,6 +1,11 @@
 function cell_check(output, M)
-
-
+    
+    
+    if ~isfield(config, 'fast_cellcheck') 
+        fast_cellcheck = 0;
+    else
+        fast_cellcheck = 1;
+    end
     % Settings
     active_learning = true;
     default_n_active_frames = 10;
@@ -338,7 +343,7 @@ function cell_check(output, M)
         % Set colors for cells
         colors =label_to_color_mapping(labels);
         h_cellmap = plot_cell_images(ax_cellmap, cellcheck.ims,...
-            colors, colors, 'callback_fn', @set_current_cell_from_cellmap);
+            colors, colors, 'callback_fn', @set_current_cell_from_cellmap,'display_thr', 0.05);
         hold(ax_cellmap, 'off');
         % Set visibility of bad cells according to uicheckbox
         toggle_bad_cell_display;
@@ -485,9 +490,11 @@ function cell_check(output, M)
             ml_labels(idx_current_cell) = 1;
             update_scoring_model;
         end
-        update_extract_labels;
         update_labels;
-        update_stats_all;
+        if fast_cellcheck == 0
+            update_extract_labels;        
+            update_stats_all;
+        end
         set_current_cell_from_button_next;
     end
 
@@ -500,9 +507,11 @@ function cell_check(output, M)
             ml_labels(idx_current_cell) = -1;
             update_scoring_model;
         end
-        update_extract_labels;
         update_labels;
-        update_stats_all;
+        if fast_cellcheck == 0
+            update_extract_labels;        
+            update_stats_all;
+        end
         set_current_cell_from_button_next;
     end
 
@@ -514,9 +523,11 @@ function cell_check(output, M)
         if active_learning
             update_scoring_model;
         end
-        update_extract_labels;
-        update_labels;       
-        update_stats_all;
+        update_labels;
+        if fast_cellcheck == 0
+            update_extract_labels;        
+            update_stats_all;
+        end
         set_current_cell_from_button_next;
     end
 
@@ -707,7 +718,7 @@ function cell_check(output, M)
         end
         hold(ax, 'on');
         h_neighbor_outlines = plot_cell_images(ax, ims_local,  colors, colors,...
-            'face_alpha', 0, 'display_thr', 0.2);
+            'face_alpha', 0, 'display_thr', 0.05);
          hold(ax, 'off');
         % Edit properties of the current cell
         set(h_neighbor_outlines{1}, 'edgealpha', 0.7, 'linewidth', 3);
@@ -732,7 +743,7 @@ function cell_check(output, M)
         hold(ax_snippet, 'on');
         M_current = get_movie(time_range);
         view_movie(M_current, 'time_offset', time_begin-1, ...
-            'h_trace', h_trace, 'ax', ax_snippet);
+            'h_trace', h_trace, 'ax', ax_snippet,'contour_thresh',0.05);
         hold(ax_snippet, 'off');
 
     end
