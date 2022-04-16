@@ -59,7 +59,11 @@ function cell_check(output, M)
         'is_attr_bad', is_attr_bad);
 
     if isfield(output, 'already_accepted')
-        cellcheck.ims_old = output.already_accepted;
+        cellcheck.ims_accepted = output.already_accepted;
+    end
+
+    if isfield(output, 'neighbor_cells')
+        cellcheck.ims_surround = output.neighbor_cells;
     end
     
     % Train initial scores
@@ -351,10 +355,15 @@ function cell_check(output, M)
         colors =label_to_color_mapping(labels);
         h_cellmap = plot_cell_images(ax_cellmap, cellcheck.ims,...
             colors, colors, 'callback_fn', @set_current_cell_from_cellmap,'display_thr', 0.05);
-        if isfield(cellcheck, 'ims_old')
-            plot_cell_images(ax_cellmap, cellcheck.ims_old,...
+        if isfield(cellcheck, 'ims_accepted')
+            plot_cell_images(ax_cellmap, cellcheck.ims_accepted,...
             [0,1,0], [0,1,0], 'callback_fn', [],'display_thr', 0.05);
         end
+        if isfield(cellcheck, 'ims_surround')
+            plot_cell_images(ax_cellmap, cellcheck.ims_surround,...
+            [0,0,1], [0,0,1], 'callback_fn', [],'display_thr', 0.05);
+        end
+        
         hold(ax_cellmap, 'off');
         % Set visibility of bad cells according to uicheckbox
         toggle_bad_cell_display;
