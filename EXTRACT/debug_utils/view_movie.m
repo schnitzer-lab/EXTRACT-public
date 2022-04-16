@@ -26,6 +26,8 @@ for k = 1:length(varargin)
                 ax = varargin{k+1};
             case 'pause_time'
                 pause_time = varargin{k+1};
+            case 'contour_thresh'
+                contour_thresh = varargin{k+1};
         end
     end
 end
@@ -65,7 +67,7 @@ colormap(ax, color_map);
 if cellmap_overlay
     hold(ax, 'on');
     %plot_cell_images(ax, ims, colors, colors);
-    plot_cells_overlay(ims,colors,[]);
+    plot_cells_overlay(ims,colors,[],contour_thresh);
     hold(ax, 'off');
 end
 
