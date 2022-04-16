@@ -30,6 +30,7 @@ function cell_check(output, M)
     % Get cellcheck struct
     
     [is_attr_bad,metrics,is_elim]=get_cellcheck_features(output);
+    output.config = get_defaults(output.config);
     
     
     
