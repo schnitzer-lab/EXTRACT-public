@@ -1,7 +1,7 @@
 function cell_check(output, M)
     
     
-    if ~isfield(config, 'fast_cellcheck') 
+    if ~isfield(output.config, 'fast_cellcheck') 
         fast_cellcheck = 0;
     else
         fast_cellcheck = 1;
