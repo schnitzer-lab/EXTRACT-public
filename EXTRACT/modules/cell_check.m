@@ -1,13 +1,16 @@
 function cell_check(output, M)
     
-    
+    active_learning = true;
     if ~isfield(output.config, 'fast_cellcheck') 
         fast_cellcheck = 0;
     else
-        fast_cellcheck = 1;
+        fast_cellcheck = output.config.fast_cellcheck;
+        if fast_cellcheck == 1
+            active_learning = 0;
+        end
     end
     % Settings
-    active_learning = true;
+    
     default_n_active_frames = 10;
 
     h_trace = [];
@@ -489,8 +492,9 @@ function cell_check(output, M)
         if active_learning
             ml_labels(idx_current_cell) = 1;
             update_scoring_model;
+            update_labels;
         end
-        update_labels;
+        
         if fast_cellcheck == 0
             update_extract_labels;        
             update_stats_all;
@@ -506,8 +510,9 @@ function cell_check(output, M)
         if active_learning
             ml_labels(idx_current_cell) = -1;
             update_scoring_model;
+            update_labels;
         end
-        update_labels;
+        
         if fast_cellcheck == 0
             update_extract_labels;        
             update_stats_all;
@@ -522,8 +527,9 @@ function cell_check(output, M)
         % If active lerning is on, then update predictive model
         if active_learning
             update_scoring_model;
+            update_labels;
         end
-        update_labels;
+        
         if fast_cellcheck == 0
             update_extract_labels;        
             update_stats_all;
