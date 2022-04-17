@@ -1,7 +1,6 @@
 function view_movie(M, varargin)
 % Displays the frames of a movie matrix M [height x row x num_frames]
-max_im = max(M,[],3);
-movie_clim = quantile(max_im(:),[0 0.90]);
+movie_clim = [];
 h_trace = [];
 time_offset = 0;
 cellmap_overlay = 0;
