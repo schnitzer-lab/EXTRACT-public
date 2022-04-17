@@ -515,9 +515,9 @@ function cell_check(output, M)
         end
         
         if fast_cellcheck == 0
-            update_extract_labels;        
-            update_stats_all;
+            update_extract_labels;            
         end
+        update_stats_all;
         set_current_cell_from_button_next;
     end
 
@@ -534,8 +534,8 @@ function cell_check(output, M)
         
         if fast_cellcheck == 0
             update_extract_labels;        
-            update_stats_all;
         end
+        update_stats_all;
         set_current_cell_from_button_next;
     end
 
@@ -551,8 +551,8 @@ function cell_check(output, M)
         
         if fast_cellcheck == 0
             update_extract_labels;        
-            update_stats_all;
         end
+        update_stats_all;
         set_current_cell_from_button_next;
     end
 
