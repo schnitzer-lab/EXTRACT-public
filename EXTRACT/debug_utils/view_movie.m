@@ -27,6 +27,9 @@ for k = 1:length(varargin)
                 pause_time = varargin{k+1};
             case 'contour_thresh'
                 contour_thresh = varargin{k+1};
+            case 'movie_clim'
+                max_im = max(M,[],3);
+                movie_clim = quantile(max_im(:),varargin{k+1});
         end
     end
 end
