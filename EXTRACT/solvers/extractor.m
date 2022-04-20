@@ -216,8 +216,9 @@ if config.parallel_cpu
 
         % If T_init is given, feed only part of it consistent with partition
         if ~isempty(config_this.T_init) && ~isempty(config_this.S_init)
+            S_init_temp = config.S_init(fov_occupation(:), :);
             T_init = config.T_init;
-            T_init(sum(S_init, 1)<=ABS_TOL,:) = [];
+            T_init(sum(S_init_temp, 1)<=ABS_TOL,:) = [];
             config_this.T_init = T_init;
         end
 
@@ -348,8 +349,9 @@ else
         end
         % If T_init is given, feed only part of it consistent with partition
         if ~isempty(config_this.T_init) && ~isempty(config_this.S_init)
+            S_init_temp = config.S_init(fov_occupation(:), :);
             T_init = config.T_init;
-            T_init(sum(S_init, 1)<=ABS_TOL,:) = [];
+            T_init(sum(S_init_temp, 1)<=ABS_TOL,:) = [];
             config_this.T_init = T_init;
         end
         % Distribute mask to partitions
