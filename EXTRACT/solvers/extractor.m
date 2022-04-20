@@ -213,6 +213,14 @@ if config.parallel_cpu
             S_init(:, sum(S_init, 1)<=ABS_TOL) = [];
             config_this.S_init = S_init;
         end
+
+        % If T_init is given, feed only part of it consistent with partition
+        if ~isempty(config_this.T_init) && ~isempty(config_this.S_init)
+            T_init = config.T_init;
+            T_init(sum(S_init, 1)<=ABS_TOL,:) = [];
+            config_this.T_init = T_init;
+        end
+
         % Distribute mask to partitions
         if ~isempty(config_this.movie_mask)
             [h_this, w_this, ~] = size(M_small);
@@ -337,6 +345,12 @@ else
             S_init = config.S_init(fov_occupation(:), :);
             S_init(:, sum(S_init, 1)<=ABS_TOL) = [];
             config_this.S_init = S_init;
+        end
+        % If T_init is given, feed only part of it consistent with partition
+        if ~isempty(config_this.T_init) && ~isempty(config_this.S_init)
+            T_init = config.T_init;
+            T_init(sum(S_init, 1)<=ABS_TOL,:) = [];
+            config_this.T_init = T_init;
         end
         % Distribute mask to partitions
         if ~isempty(config_this.movie_mask)
