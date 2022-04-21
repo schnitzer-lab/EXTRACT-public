@@ -50,13 +50,33 @@ switch config.cellfind_filter_type
 end
 
 
+
+
+% Flatten for subsequent processing
+M = reshape(M, h * w, n);
+
+% More efficient to use M transposed (cheaper to index in space this way)
+Mt = M';
+noise_per_pixel = estimate_noise_std(Mt, 1, use_gpu);
+% Apply movie mask to noise if it exists
+if ~isempty(config.movie_mask)
+    noise_per_pixel = noise_per_pixel(config.movie_mask(:));
+end
+noise_std = median(noise_per_pixel);
+
+
+% Get a stack of 2 ims (max im + im of max idx) -- used to get seed pixels
+summary_stack = get_summary_stack(Mt, [h, w], max_spread, []);
+summary.summary_im = reshape(summary_stack(:, 1), h, w);
+
 if config.visualize_cellfinding
     is_bad=1;
     
     str = sprintf('\t \t \t Using cell finding visualization tool...\n');
     dispfun(str, config.verbose ==2);
     
-    max_im = max(M,[],3);
+    %max_im = max(M,[],3);
+    max_im = summary.summary_im;
 
 
     trace_snr_all = [];
@@ -82,23 +102,6 @@ if config.visualize_cellfinding
     drawnow;
     
 end
-
-% Flatten for subsequent processing
-M = reshape(M, h * w, n);
-
-% More efficient to use M transposed (cheaper to index in space this way)
-Mt = M';
-noise_per_pixel = estimate_noise_std(Mt, 1, use_gpu);
-% Apply movie mask to noise if it exists
-if ~isempty(config.movie_mask)
-    noise_per_pixel = noise_per_pixel(config.movie_mask(:));
-end
-noise_std = median(noise_per_pixel);
-
-
-% Get a stack of 2 ims (max im + im of max idx) -- used to get seed pixels
-summary_stack = get_summary_stack(Mt, [h, w], max_spread, []);
-summary.summary_im = reshape(summary_stack(:, 1), h, w);
 
 % Stop finding cells if signal maximum is below a certain value
 % Bias func is the underestimating bias of mis-specified robust estimation under no
