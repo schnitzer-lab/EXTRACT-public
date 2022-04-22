@@ -66,7 +66,7 @@ bpf = maybe_gpu(use_gpu, bpf);
 
 % Chunk data in time so that we don't run out of memory
 if use_gpu
-    slack_factor = 10;
+    slack_factor = 30;
     d = gpuDevice();
     avail_size = d.AvailableMemory / 4 / slack_factor;
 else
