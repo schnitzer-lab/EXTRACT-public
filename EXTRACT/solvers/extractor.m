@@ -182,7 +182,7 @@ S = {};
 T = {};
 
 
-if config.parallel_cpu
+if config.parallel_cpu || config.multi_gpu
     dispfun(sprintf('%s: Signal extraction on %d partitions with %d parallel workers \n', ...
             datestr(now), num_partitions,num_workers), config.verbose ~= 0);
     verbose_old = config.verbose;
