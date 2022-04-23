@@ -75,6 +75,7 @@ if config.use_gpu && ~config.use_default_gpu
             gpuDevice(idx_max_mem);
             dispfun(sprintf('\t \t \t - Selecting GPU device %d \n', ...
                 idx_max_mem), config.verbose ~= 0);
+            config.multi_gpu = 0;
         end
     end
 end
