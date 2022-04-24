@@ -269,17 +269,15 @@ if config.parallel_cpu || config.multi_gpu
     end
     fov_occupation_total  = sum(fov_occupation_total_temp,3);
     config.verbose = verbose_old;
-    [h, w, full_t_movie] = get_movie_size(M);
 
     if ~isfield(config, 'F_per_pixel')
-        
 
         try
             dispfun(sprintf('%s: Estimating a summary image\n', ...
                     datestr(now)), config.verbose ~= 0);
 
             for idx_partition_temp = 1:num_partitions
-                summary_temp = summary{idx_partition_temp}
+                summary_temp = summary{idx_partition_temp};
                 fov_occupation_temp = summary_temp.fov_occupation;
                 F_per_pixel(fov_occupation_temp(:)) = summary_temp.config.F_per_pixel(:);
                 summary_image(fov_occupation_temp(:)) = summary_temp.summary_image;
@@ -298,7 +296,7 @@ if config.parallel_cpu || config.multi_gpu
 
             F_per_pixel = config.F_per_pixel;
             for idx_partition_temp = 1:num_partitions
-                summary_temp = summary{idx_partition_temp}
+                summary_temp = summary{idx_partition_temp};
                 fov_occupation_temp = summary_temp.fov_occupation;
                 summary_image(fov_occupation_temp(:)) = summary_temp.summary_image;
                 max_image(fov_occupation_temp(:)) = summary_temp.max_image;
