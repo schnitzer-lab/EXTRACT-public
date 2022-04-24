@@ -266,6 +266,8 @@ if config.parallel_cpu || config.multi_gpu
             T{idx_partition} = T_this';
         end
         fov_occupation_total_temp(:,:,idx_partition) = fov_occupation;
+        dispfun(sprintf('%s: Partition %d finished... \n', datestr(now),idx_partition),...
+        verbose_old ~= 0);
     end
     fov_occupation_total  = sum(fov_occupation_total_temp,3);
     config.verbose = verbose_old;
