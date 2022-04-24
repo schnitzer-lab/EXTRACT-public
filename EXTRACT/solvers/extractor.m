@@ -266,7 +266,7 @@ if config.parallel_cpu || config.multi_gpu
             T{idx_partition} = T_this';
         end
         fov_occupation_total_temp(:,:,idx_partition) = fov_occupation;
-        dispfun(sprintf('%s: Partition %d finished... \n', datestr(now),idx_partition),...
+        dispfun(sprintf('\t \t \t %s: Partition %d finished... \n', datestr(now),idx_partition),...
         verbose_old ~= 0);
     end
     fov_occupation_total  = sum(fov_occupation_total_temp,3);
@@ -275,9 +275,6 @@ if config.parallel_cpu || config.multi_gpu
     if ~isfield(config, 'F_per_pixel')
 
         try
-            dispfun(sprintf('%s: Estimating a summary image\n', ...
-                    datestr(now)), config.verbose ~= 0);
-
             for idx_partition_temp = 1:num_partitions
                 summary_temp = summary{idx_partition_temp};
                 fov_occupation_temp = summary_temp.fov_occupation;
@@ -293,8 +290,6 @@ if config.parallel_cpu || config.multi_gpu
     else
 
         try
-            dispfun(sprintf('%s: Estimating a summary image\n', ...
-                    datestr(now)), config.verbose ~= 0);
 
             F_per_pixel = config.F_per_pixel;
             for idx_partition_temp = 1:num_partitions
