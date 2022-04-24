@@ -276,22 +276,16 @@ if config.parallel_cpu || config.multi_gpu
         
 
         try
-            dispfun(sprintf('%s: Estimating a summary image from first %d frames\n', ...
-                    datestr(now),min(100, full_t_movie)), config.verbose ~= 0);
+            dispfun(sprintf('%s: Estimating a summary image\n', ...
+                    datestr(now)), config.verbose ~= 0);
 
-            if ischar(M) || iscell(M)
-                [path, dataset] = parse_movie_name(M);
-                M_summary = h5read(path, dataset, [1,1,1], [h,w,min(100,full_t_movie)]);
-            else
-                M_summary = M(:, :, 1:min(100,full_t_movie));
+            for idx_partition_temp = 1:num_partitions
+                summary_temp = summary{idx_partition_temp}
+                fov_occupation_temp = summary_temp.fov_occupation;
+                F_per_pixel(fov_occupation_temp(:)) = summary_temp.config.F_per_pixel(:);
+                summary_image(fov_occupation_temp(:)) = summary_temp.summary_image;
+                max_image(fov_occupation_temp(:)) = summary_temp.max_image;
             end
-
-            [M_summary,conf_mean] = preprocess_movie(M_summary,config);
-
-            F_per_pixel = conf_mean.F_per_pixel;
-            clear conf_mean
-            summary_image = max(M_summary,[],3);
-            max_image = summary_image;
         catch
             dispfun(sprintf('%s: Summary image estimation failed. Moving on without one... \n', ...
                     datestr(now)), config.verbose ~= 0);
@@ -300,19 +294,16 @@ if config.parallel_cpu || config.multi_gpu
     else
 
         try
-            dispfun(sprintf('%s: Estimating a summary image from first %d frames\n', ...
-                    datestr(now),min(100, full_t_movie)), config.verbose ~= 0);
-
-            if ischar(M)
-                [path, dataset] = parse_movie_name(M);
-                M_summary = h5read(path, dataset, [1,1,1], [h,w,min(100,full_t_movie)]);
-            else
-                M_summary = M(:, :, 1:min(100,full_t_movie));
-            end
+            dispfun(sprintf('%s: Estimating a summary image\n', ...
+                    datestr(now)), config.verbose ~= 0);
 
             F_per_pixel = config.F_per_pixel;
-            summary_image = max(M_summary,[],3);
-            max_image = summary_image;
+            for idx_partition_temp = 1:num_partitions
+                summary_temp = summary{idx_partition_temp}
+                fov_occupation_temp = summary_temp.fov_occupation;
+                summary_image(fov_occupation_temp(:)) = summary_temp.summary_image;
+                max_image(fov_occupation_temp(:)) = summary_temp.max_image;
+            end
         catch
             dispfun(sprintf('%s: Summary image estimation failed. Moving on without one... \n', ...
                     datestr(now)), config.verbose ~= 0);
