@@ -74,8 +74,8 @@ if config.use_gpu && ~config.use_default_gpu
             % De-select last selected GPU
             gpuDevice([]);
             parpool('local', num_workers);
-            dispfun(sprintf('\t \t \t - Using %d GPUs \n', ...
-                num_workers), config.verbose ~= 0);
+            dispfun(sprintf('%s: Using %d GPUs \n', ...
+                datestr(now),num_workers), config.verbose ~= 0);
         else
             avail_mem = max_mem;
             gpuDevice(idx_max_mem);
