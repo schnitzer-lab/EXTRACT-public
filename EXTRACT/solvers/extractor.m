@@ -266,7 +266,7 @@ if config.parallel_cpu || config.multi_gpu
             T{idx_partition} = T_this';
         end
         fov_occupation_total_temp(:,:,idx_partition) = fov_occupation;
-        dispfun(sprintf('\t \t \t %s: Partition %d finished... \n', datestr(now),idx_partition),...
+        dispfun(sprintf('\t \t %s: Partition %d finished... \n', datestr(now),idx_partition),...
         verbose_old ~= 0);
     end
     fov_occupation_total  = sum(fov_occupation_total_temp,3);
@@ -405,7 +405,7 @@ dispfun(sprintf('%s: Total of %d cells are found.\n', ...
 
 if config.remove_duplicate_cells
     dispfun(sprintf('%s: Removing duplicate cells...\n', ...
-    datestr(now), size(S, 2)), config.verbose ~= 0);
+    datestr(now)), config.verbose ~= 0);
 
     overlap_idx = find(fov_occupation_total - 1);
     if ~isempty(S)
