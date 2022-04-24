@@ -105,9 +105,8 @@ if ~config.use_gpu && config.parallel_cpu == 1
             end
         else
             num_workers = config.num_parallel_cpu_workers;
-            dispfun(sprintf(...
-                '\t \t \t Setting up a pool with %d CPU workers \n', ...
-                num_workers), config.verbose ~= 0);
+            dispfun(sprintf('%s: Setting up a pool with %d CPU workers... \n', datestr(now),num_workers),...
+            config.verbose ~= 0);
         end
     end
     % Delete existing parpool if specs are different
