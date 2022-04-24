@@ -66,10 +66,16 @@ if config.use_gpu && ~config.use_default_gpu
         end
         if config.multi_gpu && c > 1
             avail_mem = min_mem;
-            num_workers = c;
+            if isfield(config, 'num_parallel_gpu_workers')
+                num_workers = min(c,config.num_parallel_gpu_workers);
+            else
+                num_workers = c;
+            end
             % De-select last selected GPU
             gpuDevice([]);
             parpool('local', num_workers);
+            dispfun(sprintf('\t \t \t - Using %d GPUs \n', ...
+                num_workers), config.verbose ~= 0);
         else
             avail_mem = max_mem;
             gpuDevice(idx_max_mem);
