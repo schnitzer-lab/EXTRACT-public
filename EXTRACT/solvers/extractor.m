@@ -318,7 +318,7 @@ else
         dispfun(sprintf('%s: Signal extraction on partition %d (of %d):\n', ...
             datestr(now), idx_partition, num_partitions), config.verbose ~= 0);
         
-        dispfun(sprintf('\t \t \t Uploading the movie... \n'), config.verbose ~= 0);
+        dispfun(sprintf('\t \t \t Uploading the movie... \n'), config.verbose == 2);
 
         tic;
         % Get current movie partition from full movie
