@@ -245,7 +245,7 @@ if config.parallel_cpu || config.multi_gpu
         % Run EXTRACT for current partition
         [S_this, T_this, summary_this] = run_extract(M_small, config_this);
         dispfun(sprintf('\t \t \t Count: %d cells.\n', ...
-            size(S_this, 2)), config.verbose ~= 0);
+            size(S_this, 2)), config.verbose == 2);
 
         % Un-trim the pixels
         if config.use_sparse_arrays
@@ -407,11 +407,11 @@ end
 
 
 dispfun(sprintf('%s: Total of %d cells are found.\n', ...
-    datestr(now),size(S,2)),config.verbose~=0);
+    datestr(now),size(S,2)),config.verbose==2);
 
 if config.remove_duplicate_cells
     dispfun(sprintf('%s: Removing duplicate cells...\n', ...
-    datestr(now)), config.verbose ~= 0);
+    datestr(now)), config.verbose == 2);
 
     overlap_idx = find(fov_occupation_total - 1);
     if ~isempty(S)
