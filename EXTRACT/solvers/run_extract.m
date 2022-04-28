@@ -110,9 +110,6 @@ if isempty(config.S_init)
         summary.T_found = T;
     end
 elseif isempty(config.T_init)
-    str = sprintf('\t \t \t Initializing using provided images...\n');
-    script_log = [script_log, str];
-    dispfun(str, config.verbose ==2);
     % Use given S -- ensure nonnegativity & correct scale
     if dss > 1
         [fov_y, fov_x, ~] = size(M_before_dss);
@@ -125,6 +122,9 @@ elseif isempty(config.T_init)
     end
     S = full(max(config.S_init, 0));
     S = normalize_to_one(S);
+    str = sprintf('\t \t \t Initializing using provided images (%d cells)...\n',size(S,2));
+    script_log = [script_log, str];
+    dispfun(str, config.verbose ==2);
     % Downsample if needed
     if dss > 1
         S = reshape(S, fov_y, fov_x, size(S, 2));
@@ -157,10 +157,6 @@ elseif isempty(config.T_init)
     M = reshape(M, fov_size(1), fov_size(2), n);
     summary_image = max(M, [], 3);
 else
-    str = sprintf('\t \t \t Initializing using provided images and traces...\n');
-    script_log = [script_log, str];
-    dispfun(str, config.verbose ==2);
-    % Use given S -- ensure nonnegativity & correct scale
     if dss > 1
         [fov_y, fov_x, fov_z] = size(M_before_dss);
     else
@@ -172,6 +168,10 @@ else
     end
     S = full(max(config.S_init, 0));
     S = normalize_to_one(S);
+    str = sprintf('\t \t \t Initializing using provided images and traces (%d cells)...\n',size(S,2));
+    script_log = [script_log, str];
+    dispfun(str, config.verbose ==2);
+    % Use given S -- ensure nonnegativity & correct scale
     % Downsample if needed
     if dss > 1
         S = reshape(S, fov_y, fov_x, size(S, 2));
