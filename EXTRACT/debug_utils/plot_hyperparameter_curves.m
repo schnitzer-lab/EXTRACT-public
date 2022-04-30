@@ -33,7 +33,7 @@ function [] = plot_hyperparameter_curves(output,num)
     metric(isnan(metric))=10;
     metric(metric>10) = 10;
     histogram(metric, edges);
-    xline(0.7,'--g','LineWidth',4);
+    xline(1.5,'--g','LineWidth',4);
     xlabel('Spatial corrupt thresh');
 
     subplot(2,3,3)
