@@ -17,6 +17,7 @@ function config = get_defaults(config)
     if ~isfield(config, 'T_init'), config.T_init = []; end
     if ~isfield(config, 'pre_mask_on'), config.pre_mask_on = 0; end
     if ~isfield(config, 'pre_mask_radius'), config.pre_mask_radius = 0; end
+    if ~isfield(config, 'minimal_checks'), config.minimal_checks = 0; end
 
     % Preprocessing module parameters
 
@@ -129,6 +130,14 @@ function config = get_defaults(config)
 
     if config.skip_highpass
         config.spatial_highpass_cutoff=inf;
+    end
+
+    if config.minimal_checks
+        thresholds.T_min_snr = 3;
+        thresholds.size_upper_limit = inf;
+        thresholds.eccent_thresh = inf;
+        thresholds.spatial_corrupt_thresh = inf;
+        thresholds.low_ST_index_thresh = -1;
     end
 
     config.thresholds = thresholds;
