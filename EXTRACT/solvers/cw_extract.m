@@ -39,8 +39,9 @@ switch config.cellfind_filter_type
     case 'wiener'
         M = imwiener(M, use_gpu);
     case 'movavg'
-        moving_rad=max(floor(config.moving_radius),2);
-        X=ones(moving_rad,moving_rad,3)/(3*moving_rad^2); 
+        moving_rad_spatial=max(floor(config.moving_radius_spatial),2);
+        moving_rad_temporal=max(floor(config.moving_radius_temporal),1);
+        X=ones(moving_rad_spatial,moving_rad_spatial,moving_rad_temporal)/(moving_rad_temporal*moving_rad_spatial^2); 
         M=convn(M,X,'same');
     case 'median'
         M= medfilt3(M);
