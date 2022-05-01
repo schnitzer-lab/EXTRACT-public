@@ -87,6 +87,7 @@ function config = get_defaults(config)
     if ~isfield(config, 'reestimate_S_if_downsampled'), config.reestimate_S_if_downsampled = false; end
     if ~isfield(config, 'reestimate_T_if_downsampled'), config.reestimate_T_if_downsampled = true; end
     if ~isfield(config, 'verbose'), config.verbose = 2; end
+    if ~isfield(config, 'low_cell_area_flag'), config.low_cell_area_flag = 0; end
     if ~isfield(config, 'crop_circular'), config.crop_circular = false; end
     if ~isfield(config, 'movie_mask'), config.movie_mask = []; end
     if ~isfield(config, 'smoothing_ratio_x2y'), config.smoothing_ratio_x2y = 1; end

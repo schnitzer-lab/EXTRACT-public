@@ -380,9 +380,13 @@ for iter = 1:config.max_iter
     
 
     end
-
-    S_smooth = smooth_images(S, fov_size,...
-        round(avg_radius / 2), config.use_gpu, true);
+    if config.low_cell_area_flag
+        S_smooth = smooth_images(S, fov_size,...
+            round(avg_radius / 3), config.use_gpu, false);
+    else
+        S_smooth = smooth_images(S, fov_size,...
+            round(avg_radius / 2), config.use_gpu, true);
+    end
     S_smooth = normalize_to_one(S_smooth);
     S_loss = [S_loss, loss];
     % Compute the mean absolute change from last iteration
