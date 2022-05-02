@@ -15,7 +15,7 @@ totalnum = hinfo.Datasets.Dataspace.Size(3);
 %% Downsample in space
 
 % If the cells are relatively large (say larger than 6 pixel radius), you can downsample in space to decrease runtimes later on. Otherwise, skip!
-downsamplespace_pipeline('example.h5:/Data');
+%downsamplespace_pipeline('example.h5:/Data');
 % Downsamples the movie in space by 2 in both directions
 
 %% Run motion correction
