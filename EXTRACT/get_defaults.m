@@ -7,7 +7,7 @@ function config = get_defaults(config)
     if ~isfield(config, 'use_gpu'), config.use_gpu = true; end
     if ~isfield(config, 'parallel_cpu'), config.parallel_cpu = false; end
     if ~isfield(config, 'dendrite_aware'), config.dendrite_aware = false; end
-    if ~isfield(config, 'adaptive_kappa'), config.adaptive_kappa = false; end
+    if ~isfield(config, 'adaptive_kappa'), config.adaptive_kappa = 2; end
     if ~isfield(config, 'use_sparse_arrays'), config.use_sparse_arrays = false; end
     if ~isfield(config, 'hyperparameter_tuning_flag'), config.hyperparameter_tuning_flag = false; end
     if ~isfield(config, 'remove_duplicate_cells'), config.remove_duplicate_cells = true; end
@@ -30,7 +30,7 @@ function config = get_defaults(config)
     if ~isfield(config, 'spatial_highpass_cutoff'), config.spatial_highpass_cutoff = 5; end
     if ~isfield(config, 'temporal_denoising'), config.temporal_denoising = false; end
     if ~isfield(config, 'remove_background'), config.remove_background = true; end
-    if ~isfield(config, 'second_df'), config.second_df = []; end
+    if ~isfield(config, 'second_df'), config.second_df = 0.5; end
 
     % Cell finding module parameters
     if ~isfield(config, 'cellfind_filter_type'), config.cellfind_filter_type = 'butter'; end
@@ -40,7 +40,7 @@ function config = get_defaults(config)
     if ~isfield(config, 'moving_radius_temporal'), config.moving_radius_temporal= 3; end
     if ~isfield(config, 'cellfind_min_snr'), config.cellfind_min_snr = 1; end
     if ~isfield(config, 'cellfind_max_steps'), config.cellfind_max_steps = 1000; end
-    if ~isfield(config, 'cellfind_kappa_std_ratio'), config.cellfind_kappa_std_ratio = 1; end
+    if ~isfield(config, 'cellfind_kappa_std_ratio'), config.cellfind_kappa_std_ratio = 0.7; end
     if ~isfield(config, 'init_with_gaussian'), config.init_with_gaussian = false; end
     if ~isfield(config, 'avg_yield_threshold'), config.avg_yield_threshold = 0.1; end
 
@@ -54,14 +54,14 @@ function config = get_defaults(config)
 
 
     % Cell refinement module parameters
-    if ~isfield(config, 'kappa_std_ratio'), config.kappa_std_ratio = 1; end
+    if ~isfield(config, 'kappa_std_ratio'), config.kappa_std_ratio = 0.7; end
     if ~isfield(config, 'thresholds')
         thresholds = [];
     else
         thresholds = config.thresholds;
     end
     
-    if ~isfield(thresholds, 'T_min_snr'), thresholds.T_min_snr = 10; end % multiply with noise_std
+    if ~isfield(thresholds, 'T_min_snr'), thresholds.T_min_snr = 7; end % multiply with noise_std
     if ~isfield(thresholds, 'size_lower_limit'), thresholds.size_lower_limit = 1/10; end  % to be multipled with avg_cell_area
     if ~isfield(thresholds, 'size_upper_limit'), thresholds.size_upper_limit = 10; end  % to be multiplied with avg_cell_area
     if ~isfield(thresholds, 'temporal_corrupt_thresh'), thresholds.temporal_corrupt_thresh = 0.7; end
@@ -92,7 +92,7 @@ function config = get_defaults(config)
     if ~isfield(config, 'crop_circular'), config.crop_circular = false; end
     if ~isfield(config, 'movie_mask'), config.movie_mask = []; end
     if ~isfield(config, 'smoothing_ratio_x2y'), config.smoothing_ratio_x2y = 1; end
-    if ~isfield(config, 'compact_output'), config.compact_output = true; end
+    if ~isfield(config, 'compact_output'), config.compact_output = 0; end
     if ~isfield(config, 'num_frames'), config.num_frames = []; end
     if ~isfield(config, 'is_pixel_valid'), config.is_pixel_valid = []; end
     if ~isfield(config, 'save_all_found'), config.save_all_found = false; end
