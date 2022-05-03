@@ -78,7 +78,11 @@ if config.use_gpu && ~config.use_default_gpu
                 datestr(now),num_workers), config.verbose ~= 0);
         else
             avail_mem = max_mem;
-            gpuDevice(idx_max_mem);
+            if isempty(config.pick_gpu)
+                gpuDevice(idx_max_mem);
+            else
+                gpuDevice(config.pick_gpu)
+            end
             dispfun(sprintf('\t \t \t - Selecting GPU device %d \n', ...
                 idx_max_mem), config.verbose ~= 0);
             config.multi_gpu = 0;

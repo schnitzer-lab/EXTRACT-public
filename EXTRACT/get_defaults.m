@@ -83,6 +83,7 @@ function config = get_defaults(config)
     if ~isfield(config, 'downsample_space_by'), config.downsample_space_by = 1; end
     if ~isfield(config, 'use_default_gpu'), config.use_default_gpu = false; end
     if ~isfield(config, 'multi_gpu'), config.multi_gpu = false; end
+    if ~isfield(config, 'pick_gpu'), config.pick_gpu = []; end
     if ~isfield(config, 'min_radius_after_downsampling'), config.min_radius_after_downsampling = 5; end
     if ~isfield(config, 'min_tau_after_downsampling'), config.min_tau_after_downsampling = 5; end
     if ~isfield(config, 'reestimate_S_if_downsampled'), config.reestimate_S_if_downsampled = false; end
