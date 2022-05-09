@@ -124,7 +124,6 @@ function config = get_defaults(config)
         thresholds.eccent_thresh = inf;
         thresholds.size_lower_limit = 0;
         thresholds.size_upper_limit = inf;
-        config.spatial_highpass_cutoff = inf;
     end
 
     if config.hyperparameter_tuning_flag
