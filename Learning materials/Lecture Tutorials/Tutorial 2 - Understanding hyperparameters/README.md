@@ -4,6 +4,8 @@ This tutorial is about getting to know the hyperparameters of EXTRACT. For the p
 
 The movie: https://drive.google.com/file/d/1FGkpTDXgspXddR1GDpgm1ludbIQHFwlS/view?usp=sharing
 
+For more movies, see: https://drive.google.com/drive/folders/1S7TJjDubL9KfRZxHzL0AxAS-WCjIC4YY?usp=sharing
+
 
 ## Understanding the main modules before diving into hyperparameters
 
