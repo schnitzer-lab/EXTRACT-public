@@ -131,8 +131,7 @@ elseif isempty(config.T_init)
         S = downsample_space(S, dss);
         S = reshape(S, fov_size(1) * fov_size(2), size(S, 3));
     end
-    % Do least-squares fit (truncated at 0) to find T
-    % To do: Add a GPU implementation for least squares here!
+    % Do nonnegative least-squares fit to find T
     M = reshape(M, fov_size(1) * fov_size(2), n);
     T = zeros(size(S, 2), n);
 
