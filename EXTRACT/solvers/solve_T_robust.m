@@ -1,10 +1,13 @@
 function [T_out, l, np_x, np_y, np_time] = solve_T_robust(T_in, S, M, fov_size, avg_radius, lambda, ...
-        kappa, max_iter, TOL, compute_loss, baseline, use_gpu, is_M_transposed,fp_solve_func)
+        kappa, max_iter, TOL, compute_loss, baseline, use_gpu, is_M_transposed,fp_solve_func,GPU_SLACK_FACTOR)
     
+        
+    if nargin < 15
+        GPU_SLACK_FACTOR = 4;
+    end
 
     min_vals = zeros(1,size(S,2))-100;
 
-    GPU_SLACK_FACTOR = 4;
     CPU_SPACE_SIDELEN = 10 * 2 * avg_radius; % ~10 cells wide
     T_out = zeros(size(T_in), 'single');
     % For T-step, M must be passed to regression in transposed form
