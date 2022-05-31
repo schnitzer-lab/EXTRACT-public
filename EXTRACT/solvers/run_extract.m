@@ -278,7 +278,6 @@ if config.pre_mask_on
     end
 end
 
-
 for iter = 1:config.max_iter
 	%---
     % Update T
@@ -514,6 +513,12 @@ for iter = 1:config.max_iter
         config.reestimate_T_if_downsampled = 0;
         break;
     end
+end
+
+% A final check before final robust regression
+if isempty(T)
+    config.trace_output_option = 'none';
+    config.reestimate_T_if_downsampled = 0;
 end
 
 switch config.trace_output_option
