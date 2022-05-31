@@ -54,7 +54,7 @@ config.avg_cell_radius = config.avg_cell_radius / dss;
 
 if ((~config.preprocess) && (~isfield(config, 'F_per_pixel'))) 
     warning(['The baseline values for the pre-processed movie are missing, assuming the movie is dfofed...']);
-    config.F_per_pixel = ones(size(M,1));
+    config.F_per_pixel = ones(fov_size(1),fov_size(2));
 end
 
 if ~config.preprocess
