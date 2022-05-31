@@ -576,44 +576,42 @@ switch config.trace_output_option
         T = T - min(T,[],2);
             
     case 'nonneg'
-        if (config.max_iter == 0)
-            if config.l1_penalty_factor > ABS_TOL
-                % Penalize according to temporal overlap with neighbors
-                cor = get_comp_corr(S, T);
-                lambda = max(cor, [], 1) .* sum(S_smooth, 1) ...
-                    * config.l1_penalty_factor;
-            else
-                lambda = T(:, 1)' * 0;
-            end
-            if config.adaptive_kappa > 1
-                str = sprintf('\t \t \t Providing non-negative traces with adaptive kappa... \n');
-                script_log = [script_log, str];
-                dispfun(str, config.verbose ==2);
-                try
-                    [T, loss, np_x, np_y, np_time] = solve_T(T, S, Mt, fov_size, avg_radius, lambda, ...
-                    kappa, config.max_iter_T, config.TOL_sub, ...
-                    config.plot_loss, @fp_solve_adaptive, config.use_gpu, 1);
-                catch
-                    [T, loss, np_x, np_y, np_time] = solve_T(T, S, Mt, fov_size, avg_radius, lambda, ...
-                    kappa, config.max_iter_T, config.TOL_sub, ...
-                    config.plot_loss, @fp_solve_adaptive, config.use_gpu, 1,30);
-                end
-            else
-                str = sprintf('\t \t \t Providing non-negative traces with a fixed kappa of %.1f... \n',config.kappa_std_ratio);
-                script_log = [script_log, str];
-                dispfun(str, config.verbose ==2);
-                try
-                    [T, loss, np_x, np_y, np_time] = solve_T(T, S, Mt, fov_size, avg_radius, lambda, ...
-                    kappa, config.max_iter_T, config.TOL_sub, ...
-                    config.plot_loss, @fp_solve_admm, config.use_gpu, 1);
-                catch
-                    [T, loss, np_x, np_y, np_time] = solve_T(T, S, Mt, fov_size, avg_radius, lambda, ...
-                    kappa, config.max_iter_T, config.TOL_sub, ...
-                    config.plot_loss, @fp_solve_admm, config.use_gpu, 1,30);  
-                end  
-            end
-
+        if config.l1_penalty_factor > ABS_TOL
+            % Penalize according to temporal overlap with neighbors
+            cor = get_comp_corr(S, T);
+            lambda = max(cor, [], 1) .* sum(S_smooth, 1) ...
+                * config.l1_penalty_factor;
+        else
+            lambda = T(:, 1)' * 0;
         end
+        if config.adaptive_kappa > 1
+            str = sprintf('\t \t \t Providing non-negative traces with adaptive kappa... \n');
+            script_log = [script_log, str];
+            dispfun(str, config.verbose ==2);
+            try
+                [T, loss, np_x, np_y, np_time] = solve_T(T, S, Mt, fov_size, avg_radius, lambda, ...
+                kappa, config.max_iter_T, config.TOL_sub, ...
+                config.plot_loss, @fp_solve_adaptive, config.use_gpu, 1);
+            catch
+                [T, loss, np_x, np_y, np_time] = solve_T(T, S, Mt, fov_size, avg_radius, lambda, ...
+                kappa, config.max_iter_T, config.TOL_sub, ...
+                config.plot_loss, @fp_solve_adaptive, config.use_gpu, 1,30);
+            end
+        else
+            str = sprintf('\t \t \t Providing non-negative traces with a fixed kappa of %.1f... \n',config.kappa_std_ratio);
+            script_log = [script_log, str];
+            dispfun(str, config.verbose ==2);
+            try
+                [T, loss, np_x, np_y, np_time] = solve_T(T, S, Mt, fov_size, avg_radius, lambda, ...
+                kappa, config.max_iter_T, config.TOL_sub, ...
+                config.plot_loss, @fp_solve_admm, config.use_gpu, 1);
+            catch
+                [T, loss, np_x, np_y, np_time] = solve_T(T, S, Mt, fov_size, avg_radius, lambda, ...
+                kappa, config.max_iter_T, config.TOL_sub, ...
+                config.plot_loss, @fp_solve_admm, config.use_gpu, 1,30);  
+            end  
+        end
+
 
     case 'nonnegative_least_squares'
         str = sprintf('\t \t \t Providing nonnegative least squares traces... \n');
