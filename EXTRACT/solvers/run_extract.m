@@ -348,6 +348,8 @@ for iter = 1:config.max_iter
         str = sprintf('\t \t \t Zero cells, stopping. \n');
         script_log = [script_log, str];
         dispfun(str, config.verbose ==2);
+        config.trace_output_option = 'none';
+        config.reestimate_T_if_downsampled = 0;
         break;
     end
     % Update spatial binary mask
@@ -508,6 +510,8 @@ for iter = 1:config.max_iter
         str = sprintf('\t \t \t Stopping due to early convergence. \n');
         script_log = [script_log, str];
         dispfun(str, config.verbose ==2);
+        config.trace_output_option = 'none';
+        config.reestimate_T_if_downsampled = 0;
         break;
     end
 end
