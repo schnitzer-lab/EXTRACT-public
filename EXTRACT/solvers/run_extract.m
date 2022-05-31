@@ -288,6 +288,8 @@ for iter = 1:config.max_iter
         str = sprintf('\t \t \t Zero cells, stopping. \n');
         script_log = [script_log, str];
         dispfun(str, config.verbose ==2);
+        config.trace_output_option = 'none';
+        config.reestimate_T_if_downsampled = 0;
         break;
     end
     T_before = T;
