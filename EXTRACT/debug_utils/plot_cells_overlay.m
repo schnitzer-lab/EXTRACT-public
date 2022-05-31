@@ -8,7 +8,7 @@ if nargin < 3 || isempty(lw)
     lw = 1;
 end
 
-if nargin < 3 || isempty(c)
+if nargin < 2 || isempty(c)
     auto_color = 1;
 else
     auto_color = 0;
