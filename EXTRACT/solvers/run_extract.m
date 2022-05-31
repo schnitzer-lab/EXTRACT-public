@@ -848,16 +848,21 @@ if dst > 1
 end
 
 
-
-% Divide temporal activity by mean fluorescence (for dF/F)
-S_prob = bsxfun(@rdivide, S, sum(S, 1));
-F_per_cell = S_prob' * config.F_per_pixel(:);
-T = bsxfun(@rdivide, T, F_per_cell);
-% Same for bad cells
-if ~isempty(T_bad)
-    S_bad_prob = bsxfun(@rdivide, S_bad, sum(S_bad, 1));
-    F_per_bad_cell = S_bad_prob' * config.F_per_pixel(:);
-    T_bad = bsxfun(@rdivide, T_bad, F_per_bad_cell);
+try
+    % Divide temporal activity by mean fluorescence (for dF/F)
+    S_prob = bsxfun(@rdivide, S, sum(S, 1));
+    F_per_cell = S_prob' * config.F_per_pixel(:);
+    T = bsxfun(@rdivide, T, F_per_cell);
+    % Same for bad cells
+    if ~isempty(T_bad)
+        S_bad_prob = bsxfun(@rdivide, S_bad, sum(S_bad, 1));
+        F_per_bad_cell = S_bad_prob' * config.F_per_pixel(:);
+        T_bad = bsxfun(@rdivide, T_bad, F_per_bad_cell);
+    end
+catch
+    if ~isempty(T)
+        warning('Unknown error when normalizing traces')
+    end
 end
 
 % Interpolate S if space was downsampled
