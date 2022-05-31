@@ -41,6 +41,5 @@ for idx = 1:size(cell_images, 3)
         end
         plot((b(:,2)), (b(:,1)),'Color', c, 'LineWidth', lw) 
         hold off
-        drawnow;
     end
 end
