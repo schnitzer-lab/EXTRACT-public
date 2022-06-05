@@ -135,7 +135,7 @@ function config = get_defaults(config)
     end
 
     if config.minimal_checks
-        thresholds.T_min_snr = 3;
+        %thresholds.T_min_snr = 3.5; It is a better idea to pick T_min_snr externally!
         thresholds.size_upper_limit = inf;
         thresholds.eccent_thresh = inf;
         thresholds.spatial_corrupt_thresh = inf;
