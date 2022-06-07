@@ -29,7 +29,7 @@ function config = get_defaults(config)
     if ~isfield(config, 'skip_highpass'), config.skip_highpass = false; end
     if ~isfield(config, 'spatial_highpass_cutoff'), config.spatial_highpass_cutoff = 5; end
     if ~isfield(config, 'temporal_denoising'), config.temporal_denoising = false; end
-    if ~isfield(config, 'remove_background'), config.remove_background = true; end
+    if ~isfield(config, 'remove_background'), config.remove_background = false; end
     if ~isfield(config, 'second_df'), config.second_df = 0.5; end
 
     % Cell finding module parameters
