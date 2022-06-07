@@ -180,6 +180,10 @@ if config.crop_circular
     end
 end
 
+if config.arbitrary_mask
+    config.movie_mask = get_arbitrary_mask(M);
+end
+
 
 num_partitions = npx * npy;
 fov_occupation_total = zeros(h, w);

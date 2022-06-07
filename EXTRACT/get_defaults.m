@@ -91,6 +91,7 @@ function config = get_defaults(config)
     if ~isfield(config, 'verbose'), config.verbose = 2; end
     if ~isfield(config, 'low_cell_area_flag'), config.low_cell_area_flag = 0; end
     if ~isfield(config, 'crop_circular'), config.crop_circular = false; end
+    if ~isfield(config, 'arbitrary_mask'), config.arbitrary_mask = false; end
     if ~isfield(config, 'movie_mask'), config.movie_mask = []; end
     if ~isfield(config, 'smoothing_ratio_x2y'), config.smoothing_ratio_x2y = 1; end
     if ~isfield(config, 'compact_output'), config.compact_output = 0; end

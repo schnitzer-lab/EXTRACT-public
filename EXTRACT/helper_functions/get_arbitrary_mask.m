@@ -9,8 +9,9 @@ function mask = get_arbitrary_mask(M)
         im = max(M, [], 3);
     end
     
-    c_lim = quantile(im(:),[0 0.9])
-    imshow(im,c_lim)
-    mask = createMask(roi)
+    c_lim = quantile(im(:),[0 0.9]);
+    imshow(im,c_lim);
+    roi = drawassisted();
+    mask = createMask(roi);
 
 end
