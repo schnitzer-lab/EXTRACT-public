@@ -14,6 +14,11 @@ else
     auto_color = 0;
 end
 
+if auto_color
+    c = max(rand(1, 3), 0.2);
+    c = c / max(c);
+end
+
 is_ndSparse = isa(cell_images, 'ndSparse');
 % Smooth images
 [h, w, k] = size(cell_images);
@@ -35,10 +40,6 @@ for idx = 1:size(cell_images, 3)
     if ~isempty(lens)
         b = b{find(lens == max(lens), 1)};
         hold on;
-        if auto_color
-            c = max(rand(1, 3), 0.2);
-            c = c / max(c);
-        end
         plot((b(:,2)), (b(:,1)),'Color', c, 'LineWidth', lw) 
         hold off
     end
