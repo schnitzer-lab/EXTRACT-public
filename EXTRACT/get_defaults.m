@@ -43,6 +43,7 @@ function config = get_defaults(config)
     if ~isfield(config, 'cellfind_kappa_std_ratio'), config.cellfind_kappa_std_ratio = 0.7; end
     if ~isfield(config, 'init_with_gaussian'), config.init_with_gaussian = false; end
     if ~isfield(config, 'avg_yield_threshold'), config.avg_yield_threshold = 0.1; end
+    if ~isfield(config, 'cellfind_adaptive_kappa'), config.cellfind_adaptive_kappa = 1; end
 
     % Visualizing cell finding module
     if ~isfield(config, 'visualize_cellfinding'), config.visualize_cellfinding = 0; end

@@ -155,7 +155,7 @@ vals_max = [];
 
 kappa_s = config.cellfind_kappa_std_ratio;
 % Adaptive kappa for t if asked
-if config.adaptive_kappa
+if config.cellfind_adaptive_kappa
     kappa_t = @(d, k, v, alpha) kappa_of_epsilon(eps_func(d, k, v, alpha));
 else
     kappa_t = kappa_s;

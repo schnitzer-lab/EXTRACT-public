@@ -556,7 +556,7 @@ switch config.trace_output_option
         else
             lambda = T(:, 1)' * 0;
         end
-        if config.adaptive_kappa > 1
+        if config.adaptive_kappa > 0
             str = sprintf('\t \t \t Providing baseline adjusted traces with adaptive kappa... \n');
             script_log = [script_log, str];
             dispfun(str, config.verbose ==2);
@@ -595,7 +595,7 @@ switch config.trace_output_option
         else
             lambda = T(:, 1)' * 0;
         end
-        if config.adaptive_kappa > 1
+        if config.adaptive_kappa > 0
             str = sprintf('\t \t \t Providing non-negative traces with adaptive kappa... \n');
             script_log = [script_log, str];
             dispfun(str, config.verbose ==2);
@@ -729,7 +729,7 @@ if dst > 1
                         lambda = T(:, 1)' * 0;
                     end
                     
-                    if config.adaptive_kappa > 1
+                    if config.adaptive_kappa > 0
                         try
                             [T, ~, ~, ~, ~] = solve_T_robust(T, S, M_before_dst, fov_size, avg_radius, lambda, ...
                                 kappa, config.max_iter_T, config.TOL_sub, ...
@@ -767,7 +767,7 @@ if dst > 1
                             lambda = T(:, 1)' * 0;
                         end
 
-                        if config.adaptive_kappa > 1
+                        if config.adaptive_kappa > 0
                             try
                                 [T, loss, np_x, np_y, np_time] = solve_T(T, S, M_before_dst, fov_size, avg_radius, lambda, ...
                                 kappa, config.max_iter_T, config.TOL_sub, ...
