@@ -167,7 +167,6 @@ else
             ' don''t match the size of the FOV.']);
     end
     S = full(max(config.S_init, 0));
-    S(:,sum(S,1)==0)=[];
     S = normalize_to_one(S);
     str = sprintf('\t \t \t Initializing using provided images and traces (%d cells)...\n',size(S,2));
     script_log = [script_log, str];
