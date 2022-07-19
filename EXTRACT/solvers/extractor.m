@@ -34,10 +34,10 @@ partition_overlap = ceil(config.avg_cell_radius * 2);
 num_workers = 0;
 
 % Delete existing parpool if using multi-gpu
-if config.multi_gpu
-    p = gcp('nocreate');
-    delete(p);
-end
+%if config.multi_gpu
+%    p = gcp('nocreate');
+%    delete(p);
+%end
 
 % Override the gpu flag if necessary + handle multi-gpu case
 if config.use_gpu && ~config.use_default_gpu
@@ -73,7 +73,15 @@ if config.use_gpu && ~config.use_default_gpu
             end
             % De-select last selected GPU
             gpuDevice([]);
-            parpool('local', num_workers);
+            p = gcp('nocreate');
+            if ~isempty(p)
+                if p.NumWorkers ~=num_workers
+                    delete(p);
+                    parpool('local', num_workers);
+                end
+            else
+                parpool('local', num_workers);    
+            end
             dispfun(sprintf('%s: Using %d GPUs \n', ...
                 datestr(now),num_workers), config.verbose ~= 0);
         else
