@@ -564,11 +564,11 @@ switch config.trace_output_option
             try 
                 [T, ~, ~, ~, ~] = solve_T_robust(T, S, Mt, fov_size, avg_radius, lambda, ...
                     kappa, config.max_iter_T, config.TOL_sub, ...
-                    config.plot_loss, config.trace_quantile, config.use_gpu, 1,@fp_solve_adaptive_baseline);
+                    config.plot_loss, config.trace_quantile, config.use_gpu, 1,@fp_solve_adaptive_baseline,4,config.kappa_iter_nums);
             catch
                 [T, ~, ~, ~, ~] = solve_T_robust(T, S, Mt, fov_size, avg_radius, lambda, ...
                 kappa, config.max_iter_T, config.TOL_sub, ...
-                config.plot_loss, config.trace_quantile, config.use_gpu, 1,@fp_solve_adaptive_baseline,30);
+                config.plot_loss, config.trace_quantile, config.use_gpu, 1,@fp_solve_adaptive_baseline,30,config.kappa_iter_nums);
             end
         else
             str = sprintf('\t \t \t Providing baseline adjusted traces with a fixed kappa of %.1f... \n',config.kappa_std_ratio);
@@ -734,11 +734,11 @@ if dst > 1
                         try
                             [T, ~, ~, ~, ~] = solve_T_robust(T, S, M_before_dst, fov_size, avg_radius, lambda, ...
                                 kappa, config.max_iter_T, config.TOL_sub, ...
-                                config.plot_loss, config.trace_quantile, config.use_gpu, 0,@fp_solve_adaptive_baseline);
+                                config.plot_loss, config.trace_quantile, config.use_gpu, 0,@fp_solve_adaptive_baseline,4,config.kappa_iter_nums);
                         catch
                                 [T, ~, ~, ~, ~] = solve_T_robust(T, S, M_before_dst, fov_size, avg_radius, lambda, ...
                                 kappa, config.max_iter_T, config.TOL_sub, ...
-                                config.plot_loss, config.trace_quantile, config.use_gpu, 0,@fp_solve_adaptive_baseline,30);   
+                                config.plot_loss, config.trace_quantile, config.use_gpu, 0,@fp_solve_adaptive_baseline,30,config.kappa_iter_nums);   
                         end                         
                     else
                         try
