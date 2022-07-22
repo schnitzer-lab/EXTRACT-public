@@ -43,7 +43,6 @@ function config = get_defaults(config)
     if ~isfield(config, 'cellfind_kappa_std_ratio'), config.cellfind_kappa_std_ratio = 0.7; end
     if ~isfield(config, 'init_with_gaussian'), config.init_with_gaussian = false; end
     if ~isfield(config, 'avg_yield_threshold'), config.avg_yield_threshold = 0.1; end
-    if ~isfield(config, 'cellfind_adaptive_kappa'), config.cellfind_adaptive_kappa = 1; end
 
     % Visualizing cell finding module
     if ~isfield(config, 'visualize_cellfinding'), config.visualize_cellfinding = 0; end
@@ -116,7 +115,7 @@ function config = get_defaults(config)
     if ~isfield(config, 'max_iter_T'), config.max_iter_T = 100; end
     if ~isfield(config, 'TOL_sub'), config.TOL_sub = 1e-6; end
     if ~isfield(config, 'TOL_main'), config.TOL_main = 1e-2; end
-
+    if ~isfield(config, 'kappa_iter_nums'), config.kappa_iter_nums = []; end
 
 
     % Do not change anything below, these are no longer hyper parameter definitions!
