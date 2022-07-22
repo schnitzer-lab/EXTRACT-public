@@ -1,8 +1,10 @@
 function [X2,loss] = fp_solve_adaptive_baseline(X, A, B, mask, lambda, noise_std,...
-        nIter, tol, compute_loss, use_gpu, transpose_B,baseline)
+        nIter, tol, compute_loss, use_gpu, transpose_B,baseline,kappa_iter_nums)
 % Solve for X using fixed point algorithm inside ADMM routine
 % This function is gpu-aware.
-
+if nargin<13 || isempty(kappa_iter_nums)
+    kappa_iter_nums = [0.5, 0.7, 0.9];
+end
 
 RHO_UPDATE_FREQ = inf;
 EPS_REL = 1e-3;
@@ -55,7 +57,7 @@ kappa = maybe_gpu(use_gpu, kappa);
 pre_kappa = maybe_gpu(use_gpu, 0.6361*ones(size(X,1), size(A, 1), 'single'));
 
 % Estimate kappa at below iteration indices
-idx_estimate_kappa = round(nIter*[0.5, 0.7, 0.9]);
+idx_estimate_kappa = round(nIter*kappa_iter_nums);
 
 k = 0;
 acc = 0;
