@@ -112,6 +112,7 @@ function config = get_defaults(config)
     if ~isfield(config, 'S_corr_thresh'), config.S_corr_thresh = 0.1; end
 
     % Optimizer parameters (will not change for 99.9% of time, no urgent need to know about them)
+    if ~isfield(config, 'cellfind_max_iter'), config.cellfind_max_iter = 10; end
     if ~isfield(config, 'max_iter_S'), config.max_iter_S = 100; end
     if ~isfield(config, 'max_iter_T'), config.max_iter_T = 100; end
     if ~isfield(config, 'TOL_sub'), config.TOL_sub = 1e-6; end
