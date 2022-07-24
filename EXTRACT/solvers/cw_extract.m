@@ -200,11 +200,11 @@ for i = 1:max_steps
     % Robust cell finding
     try
     [s, t, t_corr, s_corr, s_change, t_change] = ...
-        alt_opt_single(Mt, s_2d_init, noise_std, max_num_pixels, use_gpu, kappa_t, kappa_s);
+        alt_opt_single(Mt, s_2d_init, noise_std, max_num_pixels, use_gpu, kappa_t, kappa_s,config.cellfinding_max_iter);
     catch
         s_2d_init = gather(s_2d_init);
     [s, t, t_corr, s_corr, s_change, t_change] = ...
-        alt_opt_single(Mt, s_2d_init, noise_std, max_num_pixels, 0, kappa_t, kappa_s);
+        alt_opt_single(Mt, s_2d_init, noise_std, max_num_pixels, 0, kappa_t, kappa_s,config.cellfinding_max_iter);
     end
 
     S_change = [S_change; s_change];

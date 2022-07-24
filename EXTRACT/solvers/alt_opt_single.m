@@ -1,12 +1,16 @@
 function [s, t, t_corr, s_corr, s_change, t_change] = ...
-        alt_opt_single(Mt ,f_2d_init, noise_std, size_limit, use_gpu, kappa_t, kappa_s)
+        alt_opt_single(Mt ,f_2d_init, noise_std, size_limit, use_gpu, kappa_t, kappa_s,max_iter)
+
+if nargin <8
+    max_iter = 10;
+end
 
 [h, w] = size(f_2d_init);
 
 s_blank = maybe_gpu(use_gpu, zeros(h * w, 1, 'single'));
 
-n_iter_in = 10;
-n_iter_out =10;
+n_iter_in = max_iter;
+n_iter_out =max_iter;
 TOL = 1e-1;
 scale_lambda = 0;
 extend_radius_low = 3;
