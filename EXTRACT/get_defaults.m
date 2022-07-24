@@ -115,6 +115,7 @@ function config = get_defaults(config)
     if ~isfield(config, 'cellfind_max_iter'), config.cellfind_max_iter = 10; end
     if ~isfield(config, 'max_iter_S'), config.max_iter_S = 100; end
     if ~isfield(config, 'max_iter_T'), config.max_iter_T = 100; end
+    if ~isfield(config, 'max_iter_T_final'), config.max_iter_T_final = 100; end
     if ~isfield(config, 'TOL_sub'), config.TOL_sub = 1e-6; end
     if ~isfield(config, 'TOL_main'), config.TOL_main = 1e-2; end
     if ~isfield(config, 'kappa_iter_nums'), config.kappa_iter_nums = []; end
