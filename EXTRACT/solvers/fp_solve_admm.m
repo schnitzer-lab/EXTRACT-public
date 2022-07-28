@@ -8,7 +8,7 @@ et2 = 1 / kappa / 2;
 RHO_UPDATE_FREQ = inf;
 EPS_REL = 1e-3;
 EPS_ABS = 1e-6;
-iter_check_convergence = 50;
+iter_check_convergence = round(nIter/2);
 
 % Params for adaptive rho
 eta = 3;
