@@ -173,8 +173,6 @@ else
         datestr(now), npx * npy, npy, npx), config.verbose ~= 0);
 end
 
-config.cellfind_max_steps = round(config.cellfind_max_steps / (npx*npy));
-
 
 % Get a circular mask (for movies with GRIN)
 if config.crop_circular
