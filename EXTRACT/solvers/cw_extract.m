@@ -259,8 +259,7 @@ for i = 1:max_steps
     try
         Mt(idx_t, idx_s) = Mt(idx_t, idx_s) - gather(1.0 * t_corr(idx_t)' * s_corr(idx_s)');
     catch
-        init_stop_reason = 'cell with no activity';
-        break;
+        Mt = Mt - max(gather(1.0 * t_corr' * s_corr'),0);
     end
 
     summary_stack = get_summary_stack(...
