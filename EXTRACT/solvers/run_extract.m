@@ -385,7 +385,7 @@ for iter = 1:config.max_iter
     end
     if config.low_cell_area_flag
         S_smooth = smooth_images(S, fov_size,...
-            round(avg_radius / 3), config.use_gpu, false);
+            round(avg_radius / 6), config.use_gpu, false);
     else
         S_smooth = smooth_images(S, fov_size,...
             round(avg_radius / 2), config.use_gpu, true);
