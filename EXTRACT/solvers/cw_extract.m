@@ -256,7 +256,11 @@ for i = 1:max_steps
     % Subtract s * t
     idx_s = find(s_corr > 0);
     idx_t = find(t_corr > 0);
-    Mt(idx_t, idx_s) = Mt(idx_t, idx_s) - gather(1.0 * t_corr(idx_t)' * s_corr(idx_s)');
+    try
+        Mt(idx_t, idx_s) = Mt(idx_t, idx_s) - gather(1.0 * t_corr(idx_t)' * s_corr(idx_s)');
+    catch
+        Mt = Mt - max(gather(1.0 * t_corr' * s_corr'),0);
+    end
 
     summary_stack = get_summary_stack(...
         Mt, [h, w], max_spread, summary_stack, idx_s);

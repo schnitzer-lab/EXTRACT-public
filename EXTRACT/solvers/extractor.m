@@ -13,7 +13,10 @@ ABS_TOL = 1e-6;
 SIGNAL_LOWER_THRESHOLD = 1e-6;
 PARTITION_SIDE_LEN = 250;
 
-if ~exist('config', 'var') || ~isfield(config, 'avg_cell_radius')
+% Update config with defaults
+config = get_defaults(config);
+
+if ~exist('config', 'var') || ~isfield(config, 'avg_cell_radius') || ~isnumeric(config.avg_cell_radius)
     error('"config.avg_cell_radius" must be specified.');
 end
 
@@ -21,8 +24,6 @@ end
 %    error('"config.trace_output_option" must be specified. Pick "nonneg" for nonnegative output, pick "raw" for raw output.');
 %end
 
-% Update config with defaults
-config = get_defaults(config);
 
 do_auto_partition=1;
 if isfield(config, 'num_partitions_x') && ...
@@ -172,6 +173,7 @@ else
         '%s: Signal extraction will run on %d partitions (%dx%d) \n', ...
         datestr(now), npx * npy, npy, npx), config.verbose ~= 0);
 end
+
 
 % Get a circular mask (for movies with GRIN)
 if config.crop_circular
@@ -453,7 +455,7 @@ end
 end_time = posixtime(datetime);
 total_runtime = end_time - start_time - io_time;
 
-info.version = '1.1.1';
+info.version = '1.2.0';
 info.summary = summary;
 info.runtime = total_runtime;
 info.summary_image = summary_image;
