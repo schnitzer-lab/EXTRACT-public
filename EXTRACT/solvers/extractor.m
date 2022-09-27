@@ -13,6 +13,9 @@ ABS_TOL = 1e-6;
 SIGNAL_LOWER_THRESHOLD = 1e-6;
 PARTITION_SIDE_LEN = 250;
 
+% Update config with defaults
+config = get_defaults(config);
+
 if ~exist('config', 'var') || ~isfield(config, 'avg_cell_radius') || ~isnumeric(config.avg_cell_radius)
     error('"config.avg_cell_radius" must be specified.');
 end
@@ -21,8 +24,6 @@ end
 %    error('"config.trace_output_option" must be specified. Pick "nonneg" for nonnegative output, pick "raw" for raw output.');
 %end
 
-% Update config with defaults
-config = get_defaults(config);
 
 do_auto_partition=1;
 if isfield(config, 'num_partitions_x') && ...
