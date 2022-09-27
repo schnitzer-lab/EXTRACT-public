@@ -13,7 +13,7 @@ ABS_TOL = 1e-6;
 SIGNAL_LOWER_THRESHOLD = 1e-6;
 PARTITION_SIDE_LEN = 250;
 
-if ~exist('config', 'var') || ~isfield(config, 'avg_cell_radius')
+if ~exist('config', 'var') || ~isfield(config, 'avg_cell_radius') || ~isnumeric(config.avg_cell_radius)
     error('"config.avg_cell_radius" must be specified.');
 end
 
