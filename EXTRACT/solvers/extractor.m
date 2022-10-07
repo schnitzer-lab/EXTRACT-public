@@ -41,7 +41,7 @@ num_workers = 0;
 %end
 
 % Override the gpu flag if necessary + handle multi-gpu case
-if config.use_gpu && ~config.use_default_gpu
+if config.use_gpu && ~config.use_default_gpu && ~config.skip_parpool_calculations
     dispfun(sprintf('%s: Getting GPU information... \n', datestr(now)),...
         config.verbose ~= 0);
     max_mem = 0;
@@ -100,7 +100,7 @@ if config.use_gpu && ~config.use_default_gpu
 end
 
 % Set num_workers for parallel computation on CPUs
-if ~config.use_gpu && config.parallel_cpu == 1
+if ~config.use_gpu && config.parallel_cpu == 1 && ~config.skip_parpool_calculations
     % Default # of parallel workers is # cores -1
     num_workers = feature('numCores') - 1;
     if isfield(config, 'num_parallel_cpu_workers')
@@ -218,12 +218,12 @@ if config.parallel_cpu || config.multi_gpu
             datestr(now), idx_partition, num_partitions), config.verbose ~= 0);
         
         
-        dispfun(sprintf('\t \t \t Uploading the movie and removing zero/nan edges ... \n'), config.verbose == 2);
+        dispfun(sprintf('\t \t \t Uploading the movie ... \n'), config.verbose == 2);
 
         % Get current movie partition from full movie
         [M_small, fov_occupation] = get_current_partition(...
             M, npx, npy, npt, partition_overlap, idx_partition);
-
+        
         % Sometimes partitions contain no signal. Terminate in that case
         std_M = nanstd(M_small(:));
         if std_M < SIGNAL_LOWER_THRESHOLD
@@ -338,11 +338,13 @@ else
         
         dispfun(sprintf('\t \t \t Uploading the movie... \n'), config.verbose == 2);
 
-        tic;
+        start_upload = posixtime(datetime);
         % Get current movie partition from full movie
         [M_small, fov_occupation] = get_current_partition(...
             M, npx, npy, npt, partition_overlap, idx_partition);
-        io_time = io_time + toc;
+        time_upload = posixtime(datetime) - start_upload;
+        dispfun(sprintf('\t \t \t Upload finished in %.1f minutes ... \n'), time_upload/60,config.verbose == 2);
+        io_time = io_time + time_upload;
 
         % Sometimes partitions contain no signal. Terminate in that case
         std_M = nanstd(M_small(:));
