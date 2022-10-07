@@ -220,9 +220,11 @@ if config.parallel_cpu || config.multi_gpu
         
         dispfun(sprintf('\t \t \t Uploading the movie ... \n'), config.verbose == 2);
 
+        start_upload = posixtime(datetime);
         % Get current movie partition from full movie
         [M_small, fov_occupation] = get_current_partition(...
             M, npx, npy, npt, partition_overlap, idx_partition);
+        time_upload = posixtime(datetime) - start_upload;
         
         % Sometimes partitions contain no signal. Terminate in that case
         std_M = nanstd(M_small(:));
@@ -290,7 +292,8 @@ if config.parallel_cpu || config.multi_gpu
             T{idx_partition} = T_this';
         end
         fov_occupation_total_temp(:,:,idx_partition) = fov_occupation;
-        dispfun(sprintf('\t \t %s: Partition %d finished... \n', datestr(now),idx_partition),...
+        time_run = posixtime(datetime) - start_upload;
+        dispfun(sprintf('\t \t %s: Partition %d finished. Upload time: %.1f mins. Run time: %.1f mins. ... \n', datestr(now),idx_partition,time_upload/60,time_run/60),...
         verbose_old ~= 0);
     end
     fov_occupation_total  = sum(fov_occupation_total_temp,3);
