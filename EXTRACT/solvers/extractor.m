@@ -293,7 +293,7 @@ if config.parallel_cpu || config.multi_gpu
         end
         fov_occupation_total_temp(:,:,idx_partition) = fov_occupation;
         time_run = posixtime(datetime) - start_upload;
-        dispfun(sprintf('\t \t %s: Partition %d finished. Upload time: %.1f mins. Run time: %.1f mins. ... \n', datestr(now),idx_partition,time_upload/60,time_run/60),...
+        dispfun(sprintf('\t \t %s: Partition %d finished. Upload time: %.1f mins. Run time: %.1f mins. \n', datestr(now),idx_partition,time_upload/60,time_run/60),...
         verbose_old ~= 0);
     end
     fov_occupation_total  = sum(fov_occupation_total_temp,3);
