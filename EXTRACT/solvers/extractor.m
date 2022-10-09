@@ -334,13 +334,13 @@ if config.parallel_cpu || config.multi_gpu
     end
 
 else
-    verbose_old = config.verbose;
     dispfun(sprintf('%s: Signal extraction will run on %d partitions serially... \n', ...
             datestr(now), num_partitions), config.verbose ~= 0);
-    if verbose_old == 3
-        config.verbose = 0;
-    end
     for idx_partition = num_partitions:-1:1
+        verbose_old = config.verbose;
+        if verbose_old == 3
+            config.verbose = 0;
+        end
         dispfun(sprintf('%s: Signal extraction on partition %d (of %d):\n', ...
             datestr(now), idx_partition, num_partitions), config.verbose ~= 0);
         
