@@ -41,7 +41,7 @@ num_workers = 0;
 %end
 
 % Override the gpu flag if necessary + handle multi-gpu case
-if config.use_gpu && ~config.use_default_gpu
+if config.use_gpu && ~config.use_default_gpu && ~config.skip_parpool_calculations
     dispfun(sprintf('%s: Getting GPU information... \n', datestr(now)),...
         config.verbose ~= 0);
     max_mem = 0;
@@ -100,7 +100,7 @@ if config.use_gpu && ~config.use_default_gpu
 end
 
 % Set num_workers for parallel computation on CPUs
-if ~config.use_gpu && config.parallel_cpu == 1
+if ~config.use_gpu && config.parallel_cpu == 1 && ~config.skip_parpool_calculations
     % Default # of parallel workers is # cores -1
     num_workers = feature('numCores') - 1;
     if isfield(config, 'num_parallel_cpu_workers')
@@ -169,9 +169,6 @@ else
     w_adjusted = w / dss;
     npx = max(round(w_adjusted / PARTITION_SIDE_LEN), 1);
     npy = max(round(h_adjusted / PARTITION_SIDE_LEN), 1);
-    dispfun(sprintf(...
-        '%s: Signal extraction will run on %d partitions (%dx%d) \n', ...
-        datestr(now), npx * npy, npy, npx), config.verbose ~= 0);
 end
 
 
@@ -205,9 +202,11 @@ summary = {};
 S = {};
 T = {};
 
+time_upload = zeros(1,num_partitions);
+time_run = zeros(1,num_partitions);
 
 if config.parallel_cpu || config.multi_gpu
-    dispfun(sprintf('%s: Signal extraction on %d partitions with %d parallel workers \n', ...
+    dispfun(sprintf('%s: Signal extraction will run on %d partitions with %d parallel workers... \n', ...
             datestr(now), num_partitions,num_workers), config.verbose ~= 0);
     verbose_old = config.verbose;
     config.verbose = 0;
@@ -218,12 +217,14 @@ if config.parallel_cpu || config.multi_gpu
             datestr(now), idx_partition, num_partitions), config.verbose ~= 0);
         
         
-        dispfun(sprintf('\t \t \t Uploading the movie and removing zero/nan edges ... \n'), config.verbose == 2);
+        dispfun(sprintf('\t \t \t Uploading the movie ... \n'), config.verbose == 2);
 
+        start_upload = posixtime(datetime);
         % Get current movie partition from full movie
         [M_small, fov_occupation] = get_current_partition(...
             M, npx, npy, npt, partition_overlap, idx_partition);
-
+        time_upload(idx_partition) = posixtime(datetime) - start_upload;
+        
         % Sometimes partitions contain no signal. Terminate in that case
         std_M = nanstd(M_small(:));
         if std_M < SIGNAL_LOWER_THRESHOLD
@@ -290,8 +291,10 @@ if config.parallel_cpu || config.multi_gpu
             T{idx_partition} = T_this';
         end
         fov_occupation_total_temp(:,:,idx_partition) = fov_occupation;
-        dispfun(sprintf('\t \t %s: Partition %d finished... \n', datestr(now),idx_partition),...
-        verbose_old ~= 0);
+        time_run(idx_partition) = posixtime(datetime) - start_upload;
+        dispfun(sprintf('\t \t %s: Partition %d finished. Upload time: %.1f mins. Run time: %.1f mins. \n', datestr(now),...
+            idx_partition,time_upload(idx_partition)/60,time_run(idx_partition)/60),...
+            verbose_old ~= 0);
     end
     fov_occupation_total  = sum(fov_occupation_total_temp,3);
     config.verbose = verbose_old;
@@ -331,18 +334,25 @@ if config.parallel_cpu || config.multi_gpu
     end
 
 else
-
+    dispfun(sprintf('%s: Signal extraction will run on %d partitions serially... \n', ...
+            datestr(now), num_partitions), config.verbose ~= 0);
     for idx_partition = num_partitions:-1:1
+        verbose_old = config.verbose;
+        if verbose_old == 3
+            config.verbose = 0;
+        end
         dispfun(sprintf('%s: Signal extraction on partition %d (of %d):\n', ...
             datestr(now), idx_partition, num_partitions), config.verbose ~= 0);
         
         dispfun(sprintf('\t \t \t Uploading the movie... \n'), config.verbose == 2);
 
-        tic;
+        start_upload = posixtime(datetime);
         % Get current movie partition from full movie
         [M_small, fov_occupation] = get_current_partition(...
             M, npx, npy, npt, partition_overlap, idx_partition);
-        io_time = io_time + toc;
+        time_upload(idx_partition) = posixtime(datetime) - start_upload;
+        dispfun(sprintf('\t \t \t Upload finished in %.1f minutes ... \n', time_upload/60),config.verbose == 2);
+        io_time = io_time + time_upload(idx_partition);
 
         % Sometimes partitions contain no signal. Terminate in that case
         std_M = nanstd(M_small(:));
@@ -408,6 +418,15 @@ else
             T{idx_partition} = T_this';
         end
         fov_occupation_total = fov_occupation_total + fov_occupation;
+
+
+        time_run(idx_partition) = posixtime(datetime) - start_upload;
+        if verbose_old == 3
+            fprintf('\t \t %s: Partition %d finished. Upload time: %.1f mins. Run time: %.1f mins. \n', ...
+                datestr(now),idx_partition,time_upload(idx_partition)/60,time_run(idx_partition)/60);
+            config.verbose = 3;
+        end
+        
     end
 
 end
@@ -455,12 +474,14 @@ end
 end_time = posixtime(datetime);
 total_runtime = end_time - start_time - io_time;
 
-info.version = '1.2.0';
+info.version = '1.2.1';
 info.summary = summary;
 info.runtime = total_runtime;
 info.summary_image = summary_image;
 info.F_per_pixel = F_per_pixel;
 info.max_image = max_image;
+info.upload_time = time_upload;
+info.runtime_partition = time_run;
 try
     info.cellcheck=cellcheck;
 catch

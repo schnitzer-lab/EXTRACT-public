@@ -120,6 +120,7 @@ function config = get_defaults(config)
     if ~isfield(config, 'TOL_sub'), config.TOL_sub = 1e-6; end
     if ~isfield(config, 'TOL_main'), config.TOL_main = 1e-2; end
     if ~isfield(config, 'kappa_iter_nums'), config.kappa_iter_nums = []; end
+    if ~isfield(config, 'skip_parpool_calculations'), config.skip_parpool_calculations = false; end
 
 
     % Do not change anything below, these are no longer hyper parameter definitions!
