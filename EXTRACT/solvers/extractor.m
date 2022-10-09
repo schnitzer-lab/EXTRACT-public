@@ -169,9 +169,6 @@ else
     w_adjusted = w / dss;
     npx = max(round(w_adjusted / PARTITION_SIDE_LEN), 1);
     npy = max(round(h_adjusted / PARTITION_SIDE_LEN), 1);
-    dispfun(sprintf(...
-        '%s: Signal extraction will run on %d partitions (%dx%d) \n', ...
-        datestr(now), npx * npy, npy, npx), config.verbose ~= 0);
 end
 
 
@@ -209,7 +206,7 @@ time_upload = zeros(1,num_partitions);
 time_run = zeros(1,num_partitions);
 
 if config.parallel_cpu || config.multi_gpu
-    dispfun(sprintf('%s: Signal extraction will run on %d partitions with %d parallel workers \n', ...
+    dispfun(sprintf('%s: Signal extraction will run on %d partitions with %d parallel workers... \n', ...
             datestr(now), num_partitions,num_workers), config.verbose ~= 0);
     verbose_old = config.verbose;
     config.verbose = 0;
@@ -338,7 +335,7 @@ if config.parallel_cpu || config.multi_gpu
 
 else
     verbose_old = config.verbose;
-    dispfun(sprintf('%s: Signal extraction will run on %d partitions \n', ...
+    dispfun(sprintf('%s: Signal extraction will run on %d partitions with a single worker... \n', ...
             datestr(now), num_partitions), config.verbose ~= 0);
     if verbose_old == 3
         config.verbose = 0;
