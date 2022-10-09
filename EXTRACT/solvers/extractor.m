@@ -205,6 +205,8 @@ summary = {};
 S = {};
 T = {};
 
+time_upload = zeros(1,num_partitions);
+time_run = zeros(1,num_partitions);
 
 if config.parallel_cpu || config.multi_gpu
     dispfun(sprintf('%s: Signal extraction on %d partitions with %d parallel workers \n', ...
@@ -224,7 +226,7 @@ if config.parallel_cpu || config.multi_gpu
         % Get current movie partition from full movie
         [M_small, fov_occupation] = get_current_partition(...
             M, npx, npy, npt, partition_overlap, idx_partition);
-        time_upload = posixtime(datetime) - start_upload;
+        time_upload(idx_partition) = posixtime(datetime) - start_upload;
         
         % Sometimes partitions contain no signal. Terminate in that case
         std_M = nanstd(M_small(:));
@@ -292,9 +294,10 @@ if config.parallel_cpu || config.multi_gpu
             T{idx_partition} = T_this';
         end
         fov_occupation_total_temp(:,:,idx_partition) = fov_occupation;
-        time_run = posixtime(datetime) - start_upload;
-        dispfun(sprintf('\t \t %s: Partition %d finished. Upload time: %.1f mins. Run time: %.1f mins. \n', datestr(now),idx_partition,time_upload/60,time_run/60),...
-        verbose_old ~= 0);
+        time_run(idx_partition) = posixtime(datetime) - start_upload;
+        dispfun(sprintf('\t \t %s: Partition %d finished. Upload time: %.1f mins. Run time: %.1f mins. \n', datestr(now),...
+            idx_partition,time_upload(idx_partition)/60,time_run(idx_partition)/60),...
+            verbose_old ~= 0);
     end
     fov_occupation_total  = sum(fov_occupation_total_temp,3);
     config.verbose = verbose_old;
@@ -334,7 +337,10 @@ if config.parallel_cpu || config.multi_gpu
     end
 
 else
-
+    verbose_old = config.verbose;
+    if verbose_old == 3
+        config.verbose = 0;
+    end
     for idx_partition = num_partitions:-1:1
         dispfun(sprintf('%s: Signal extraction on partition %d (of %d):\n', ...
             datestr(now), idx_partition, num_partitions), config.verbose ~= 0);
@@ -345,7 +351,7 @@ else
         % Get current movie partition from full movie
         [M_small, fov_occupation] = get_current_partition(...
             M, npx, npy, npt, partition_overlap, idx_partition);
-        time_upload = posixtime(datetime) - start_upload;
+        time_upload(idx_partition) = posixtime(datetime) - start_upload;
         dispfun(sprintf('\t \t \t Upload finished in %.1f minutes ... \n', time_upload/60),config.verbose == 2);
         io_time = io_time + time_upload;
 
@@ -413,6 +419,15 @@ else
             T{idx_partition} = T_this';
         end
         fov_occupation_total = fov_occupation_total + fov_occupation;
+
+
+        time_run(idx_partition) = posixtime(datetime) - start_upload;
+        if verbose_old == 3-D
+            fprintf('\t \t %s: Partition %d finished. Upload time: %.1f mins. Run time: %.1f mins. \n', ...
+                datestr(now),idx_partition,time_upload(idx_partition)/60,time_run(idx_partition)/60);
+            config.verbose = 3;
+        end
+        
     end
 
 end
@@ -466,6 +481,8 @@ info.runtime = total_runtime;
 info.summary_image = summary_image;
 info.F_per_pixel = F_per_pixel;
 info.max_image = max_image;
+info.upload_time = upload_time;
+info.runtime_partition = time_run;
 try
     info.cellcheck=cellcheck;
 catch
