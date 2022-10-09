@@ -352,7 +352,7 @@ else
             M, npx, npy, npt, partition_overlap, idx_partition);
         time_upload(idx_partition) = posixtime(datetime) - start_upload;
         dispfun(sprintf('\t \t \t Upload finished in %.1f minutes ... \n', time_upload/60),config.verbose == 2);
-        io_time = io_time + time_upload;
+        io_time = io_time + time_upload(idx_partition);
 
         % Sometimes partitions contain no signal. Terminate in that case
         std_M = nanstd(M_small(:));
