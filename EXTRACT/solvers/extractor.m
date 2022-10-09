@@ -424,7 +424,7 @@ else
 
 
         time_run(idx_partition) = posixtime(datetime) - start_upload;
-        if verbose_old == 3-D
+        if verbose_old == 3
             fprintf('\t \t %s: Partition %d finished. Upload time: %.1f mins. Run time: %.1f mins. \n', ...
                 datestr(now),idx_partition,time_upload(idx_partition)/60,time_run(idx_partition)/60);
             config.verbose = 3;
