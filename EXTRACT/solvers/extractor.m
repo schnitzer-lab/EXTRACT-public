@@ -480,7 +480,7 @@ info.runtime = total_runtime;
 info.summary_image = summary_image;
 info.F_per_pixel = F_per_pixel;
 info.max_image = max_image;
-info.upload_time = upload_time;
+info.upload_time = time_upload;
 info.runtime_partition = time_run;
 try
     info.cellcheck=cellcheck;
