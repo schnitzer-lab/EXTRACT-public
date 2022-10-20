@@ -5,7 +5,7 @@ if nargin <2
 end
 
 if nargin <3
-    numFrame = 5000;
+    numFrame = 3000;
 end
 
 
@@ -71,12 +71,31 @@ if isfile([outputfilename '.h5'])
     delete([outputfilename '.h5']);
 end
 
-try
-h5create([outputfilename '.h5'],datasetname,[nx ny totalnum],'Datatype','single','ChunkSize',[nx,ny,numFrame]);
-catch
-h5create([outputfilename '.h5'],datasetname,[nx ny totalnum],'Datatype','single','ChunkSize',[nx,ny,round(numFrame/10)]);
+
+switch file_type
+    case 'h5'
+        data = single(h5read([filename '.h5'],datasetname,[1,1,1],[nx,ny,10]));
+    case 'tif'
+        data = single(read_from_tif(input,1,10));
+    case 'tiff'
+        data = single(read_from_tif(input,1,10));
 end
 
+imshow(mean(data,3),[])
+rect = getrect;
+y_min = max(round(rect(1)),0);
+x_min = max(round(rect(2)),0);
+y_max = min(round(rect(1)+rect(3)),ny);
+x_max = min(round(rect(2)+rect(4)),nx);
+
+nx_new = x_max - x_min + 1;
+ny_new = y_max - y_min + 1;
+
+try
+    h5create([outputfilename '.h5'],datasetname,[nx_new ny_new totalnum],'Datatype','single','ChunkSize',[nx_new,ny_new,numFrame]);
+catch
+    h5create([outputfilename '.h5'],datasetname,[nx_new ny_new totalnum],'Datatype','single','ChunkSize',[nx_new,ny_new,round(numFrame/10)]);
+end
 
 
 disp(sprintf('%s: Cropping the movie, split into %s parts', datestr(now),num2str(numel(startno)) ))
@@ -94,10 +113,10 @@ for i=1:numel(startno)
             data = single(read_from_tif(input,startno(i),perframes(i)));
     end
     
-
+    movie_out = data(x_min:x_max,y_min:y_max,:);
     
     
-    h5write([outputfilename '.h5'],datasetname,single(movie_out),[1,1,startno(i)],[nx,ny,perframes(i)]);
+    h5write([outputfilename '.h5'],datasetname,single(movie_out),[1,1,startno(i)],[nx_new,ny_new,perframes(i)]);
    
     
 end
