@@ -9,6 +9,8 @@ function [S, T, summary] = run_extract(M, config)
 %   summary: Matlab struct containing a useful summary of the algorithm
 
 
+start_preprocess= posixtime(datetime);
+
 ABS_TOL = 1e-6;
 
 M = single(M);
@@ -96,6 +98,10 @@ end
 M = reshape(M, fov_size(1) * fov_size(2), n);
 config.is_pixel_valid = std(M, 1, 2) > ABS_TOL;
 M = reshape(M, fov_size(1), fov_size(2), n);
+
+time_summary.preprocess = posixtime(datetime)-start_preprocess;
+
+start_cellfinding = posixtime(datetime);
 
 % Cell finding
 if isempty(config.S_init)
@@ -278,6 +284,11 @@ if config.pre_mask_on
         end
     end
 end
+
+
+time_summary.cellfinding = posixtime(datetime)-start_cellfinding;
+
+start_cellrefinement = posixtime(datetime);
 
 for iter = 1:config.max_iter
 	%---
@@ -515,6 +526,11 @@ for iter = 1:config.max_iter
         break;
     end
 end
+
+
+time_summary.cellrefinement = posixtime(datetime)-start_cellrefinement;
+
+start_frr = posixtime(datetime);
 
 % A final check before final robust regression
 if isempty(T)
@@ -941,6 +957,8 @@ if config.use_sparse_arrays
     S = sparse(double(S));
     S_bad = sparse(double(S_bad));
 end
+time_summary.frr = posixtime(datetime)-frr;
+
 
 summary.S_bad = S_bad;
 summary.T_bad = T_bad;
@@ -954,6 +972,7 @@ summary.classification = classification;
 summary.summary_image = summary_image;
 summary.max_image = max_image;
 summary.config = config;
+summary.time_summary = time_summary;
 
 
     %---
