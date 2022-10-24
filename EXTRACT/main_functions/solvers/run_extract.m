@@ -957,7 +957,7 @@ if config.use_sparse_arrays
     S = sparse(double(S));
     S_bad = sparse(double(S_bad));
 end
-time_summary.frr = posixtime(datetime)-frr;
+time_summary.frr = posixtime(datetime)-start_frr;
 
 
 summary.S_bad = S_bad;
