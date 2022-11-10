@@ -538,6 +538,11 @@ if isempty(T)
     config.reestimate_T_if_downsampled = 0;
 end
 
+if dst > 1  && config.reestimate_T_if_downsampled 
+    trace_temp_opt = config.trace_output_option;
+    config.trace_output_option = 'none';
+end
+
 switch config.trace_output_option
     case 'raw'
         str = sprintf('\t \t \t Providing raw traces... \n');
@@ -692,6 +697,8 @@ end
 
 clear M Mt;
 
+
+
 % Estimate full T if time was downsampled
 if dst > 1 
     if ~isempty(S)
@@ -703,6 +710,7 @@ if dst > 1
         % Tt comes out as row vector when # of components = 1 - Fix it:
         if size(Tt, 1) == 1, Tt = Tt'; end
         if config.reestimate_T_if_downsampled
+            config.trace_output_option = trace_temp_opt;
             % Update kappa according to dst
             kappa = kappa * sqrt(dst);
 
