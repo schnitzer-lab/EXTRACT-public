@@ -2,5 +2,3 @@
 *.h5
 *.hdf5
 .*
-extract.sublime-project
-extract.sublime-workspace
