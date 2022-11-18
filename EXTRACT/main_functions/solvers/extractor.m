@@ -67,8 +67,8 @@ if config.use_gpu && ~config.use_default_gpu && ~config.skip_parpool_calculation
         end
         if config.multi_gpu && c > 1
             avail_mem = min_mem;
-            if isfield(config, 'num_parallel_gpu_workers')
-                num_workers = min(c,config.num_parallel_gpu_workers);
+            if isfield(config, 'num_workers')
+                num_workers = min(c,config.num_workers);
             else
                 num_workers = c;
             end
@@ -103,10 +103,10 @@ end
 if ~config.use_gpu && config.parallel_cpu == 1 && ~config.skip_parpool_calculations
     % Default # of parallel workers is # cores -1
     num_workers = feature('numCores') - 1;
-    if isfield(config, 'num_parallel_cpu_workers')
-        if config.num_parallel_cpu_workers > num_workers + 1
+    if isfield(config, 'num_workers')
+        if config.num_workers > num_workers + 1
             try
-            num_workers = config.num_parallel_cpu_workers;
+            num_workers = config.num_workers;
                 p = gcp('nocreate');
                 if ~isempty(p)
                     if p.NumWorkers ~=num_workers
@@ -123,7 +123,7 @@ if ~config.use_gpu && config.parallel_cpu == 1 && ~config.skip_parpool_calculati
                 num_workers = feature('numCores') - 1;
             end
         else
-            num_workers = config.num_parallel_cpu_workers;
+            num_workers = config.num_workers;
             dispfun(sprintf('%s: Setting up a pool with %d CPU workers... \n', datestr(now),num_workers),...
             config.verbose ~= 0);
         end
@@ -292,7 +292,7 @@ if config.parallel_cpu || config.multi_gpu
         end
         fov_occupation_total_temp(:,:,idx_partition) = fov_occupation;
         time_run(idx_partition) = posixtime(datetime) - start_upload;
-        dispfun(sprintf('\t \t %s: Partition %d finished. Upload time: %.1f mins. Run time: %.1f mins. \n', datestr(now),...
+        dispfun(sprintf('\t \t %s: Partition %d finished. Upload time: %.1f mins. Total run time: %.1f mins. \n', datestr(now),...
             idx_partition,time_upload(idx_partition)/60,time_run(idx_partition)/60),...
             verbose_old ~= 0);
     end
@@ -351,7 +351,7 @@ else
         [M_small, fov_occupation] = get_current_partition(...
             M, npx, npy, npt, partition_overlap, idx_partition);
         time_upload(idx_partition) = posixtime(datetime) - start_upload;
-        dispfun(sprintf('\t \t \t Upload finished in %.1f minutes ... \n', time_upload/60),config.verbose == 2);
+        dispfun(sprintf('\t \t \t Upload finished in %.1f minutes ... \n', time_upload(idx_partition)/60),config.verbose == 2);
         io_time = io_time + time_upload(idx_partition);
 
         % Sometimes partitions contain no signal. Terminate in that case
@@ -474,7 +474,7 @@ end
 end_time = posixtime(datetime);
 total_runtime = end_time - start_time - io_time;
 
-info.version = '1.2.1';
+info.version = '1.2.3';
 info.summary = summary;
 info.runtime = total_runtime;
 info.summary_image = summary_image;
