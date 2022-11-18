@@ -20,7 +20,17 @@ function [cc, A] = find_conncomp(X, threshold, A2)
     if exist('A2', 'var')
         A = A .* A2;
     end
-    [s, memberships] = graphconncomp(sparse(A));
+
+
+    if license('test','bioinformatics_toolbox') == 0
+        % no toolbox, use workaround
+        [s, memberships] = conncomp(sparse(A));
+
+    else
+        [s, memberships] = graphconncomp(sparse(A));
+    end
+
+    
     cc = [];
     acc=0;
     for k = 1:s
