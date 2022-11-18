@@ -1,4 +1,4 @@
-function [S,C] = graphconncomp(G)
+function [S,C] = conncomp(G)
 % CONNCOMP Drop in replacement for graphconncomp.m from the bioinformatics
 % toobox. G is an n by n adjacency matrix, then this identifies the S
 % connected components C. This is also an order of magnitude faster.
