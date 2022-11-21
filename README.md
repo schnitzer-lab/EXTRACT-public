@@ -146,7 +146,7 @@ Here is a list of more advanced configurations:
 
 * `preprocess`: EXTRACT does preprocessing steps such as taking dF/F, highpass filtering for suppressing excessive background, and circular masking for endoscopic movies. Set to `false` to skip all preprocessing. Default: `true`.
 * `downsample_time_by`, `downsample_space_by`: Downsampling factors. Set to `'auto'` for automatic downsampling factors based on avg cell radius and avg calcium event time constant. Defaults: `1` & `1`.
-* `multi_gpu:` Boolean flag for parralel processing of different movie partitions on multiple GPUs (if applicable) in the GPU mode. Default: `false`.
+* `multi_gpu:` Boolean flag for parallel processing of different movie partitions on multiple GPUs (if applicable) in the GPU mode. Default: `false`.
 * `parallel_cpu:` Boolean flag for parallel processing of different movie partitions in the CPU mode. This flag is only effective when `use_gpu = 0`. Default: `false`.
 * `num_parallel_cpu_workers:` When `config.parallel_cpu = 1`, this parameter can be used to set the desired number of CPU workers. Default is # of available cores to Matlab - 1 (minus 1 is for leaving compute room for other tasks).
 * `min_radius_after_downsampling`: When `downsample_space_by= 'auto'`, this determines the spatial downsampling factor by setting a minimum avg radius after downsampling. Default: `5`.
@@ -155,12 +155,12 @@ Here is a list of more advanced configurations:
 * `verbose`: Log is emitted from the console output when set to `1`, set to `0` to suppress output. When set to `2`, EXTRACT provides a detailed summary during the signal extraction process. Default: `2`.
 * `crop_circular`: For microendoscopic movies, set it to `true` for automatically cropping out the region outside the circular imaging region. Default: `false`.
 * `dendrite_aware`: Boolean flag, set it to `true` if dendrites exist in the movie & are desired in the output. Default: `false`.
-* `adaptive_kappa`: If `true`, then during cell finding, the robust esimation loss will adaptively set its robustness parameter. Default: `false`.
+* `adaptive_kappa`: If `true`, then during cell finding, the robust estimation loss will adaptively set its robustness parameter. Default: `false`.
 * `smoothing_ratio_x2y`: If the movie contains mainly objects that are elongated in one dimension (e.g. dendrites), this parameter is useful for more smoothing in either x or y dimension. Default: `1`.
 * `compact_output`: If set to `true`, then the output will not include bad components that were found but then eliminated. This usually reduces the memory used by the output struct substantially. Default: `true`.
 * `use_sparse_arrays`: If set to `true`, then the output cell images will be saved as sparse arrays. Default: `true`.
-* `temporal_denoising`: Boolean flag that determines whether to apply temporal wavelet denoising. This functionality is experimental; expect it to increase runtime considerably if the input movie has >10K frames and hase larger field of view than 250x250 pixels. Default: `false`.
-* `remove_background`. Boolean flag that determines whether to subtract the (spatially) background (largest spatiotemporal mode of the movie matrix). Default: `true`.
+* `temporal_denoising`: Boolean flag that determines whether to apply temporal wavelet denoising. This functionality is experimental; expect it to increase runtime considerably if the input movie has >10K frames and has larger field of view than 250x250 pixels. Default: `false`.
+* `remove_background`. Boolean flag that determines whether to subtract the (spatially) background (largest spatio-temporal mode of the movie matrix). Default: `true`.
 * `cellfind_max_steps`: Maximum number of cell candidate initialization during cell finding step. Default: `1000`.
 * `cellfind_kappa_std_ratio`: Kappa will be set to this times the noise std for the component-wise EXTRACT during initialization. Default: `1`.
 * `cellfind_filter_type`: Type of the spatial smoothing filter used for cell finding. Options: `'butter'` (IIR butterworth filter), `'gauss'` (FIR filter with a gaussian kernel), `'wiener'` (wiener filter), `'movavg'` (moving average in space), `'none'` (no filtering). Default: `'butter'`.
@@ -172,7 +172,7 @@ Here is a list of more advanced configurations:
 * `smooth_S` : If set to `true`, calculated images are smoothed using a 2-D gaussian filter. Default : `true`.
 * `max_iter` : Maximum number of alternating estimation iterations. Default : `6`.
 * `plot_loss`: When set to `true`, empirical risk is plotted against iterations during alternating estimation. Default: `false`.
-* `l1_penalty_factor`: A numeric in range `[0, 1]` which determines the strength of l1 regularization penalty to be applied when estimating the temporal components. The penalty is applied only to cells that overlap in space and whose temoral components are correlated. Use larger values if spurious cells are observed in the vicinity of high SNR cells. Default: `0`.
+* `l1_penalty_factor`: A numeric in range `[0, 1]` which determines the strength of l1 regularization penalty to be applied when estimating the temporal components. The penalty is applied only to cells that overlap in space and whose temporal components are correlated. Use larger values if spurious cells are observed in the vicinity of high SNR cells. Default: `0`.
 * `max_iter_S`,`max_iter_T` : Maximum number of iterations for `S` and `T` estimation steps. Default: `100` and `100`.
 * `TOL_sub` : If the 1-step relative change in the objective within each `T` and `S` optimization is less than this, the respective optimization is terminated. Default: `1e-6`.
 * `kappa_std_ratio`. Kappa will be set to this times the noise std during the cell refinement process. Lower values introduce more robustness at the expense of an underestimation bias in `S` and `T` (especially in the low SNR regime). Default : `1`.
@@ -298,7 +298,7 @@ Following the logic of the previous question, if for a particular movie, the fal
 
 ### Using the raw option gives some negative spikes, what is that and how can I prevent it?
 
-During the preprocessing module, EXTRACT performs a stationary background removal step. In some movies, during this step, the time-dependent background removal might lead to negative going spikes. EXTRACT has a built-in assumption to threshold any negative activity, thus the negative going spikes do not show-up during the usual EXTRACTion process, but only during the (optional) final robust regression of raw traces. In these cases, please set `remove_background=0` in the configuration file and run EXTRACT. Note that if this is done, it is important that one has a movie with a fairly stationary background throughout time points.
+During the pre-processing module, EXTRACT performs a stationary background removal step. In some movies, during this step, the time-dependent background removal might lead to negative going spikes. EXTRACT has a built-in assumption to threshold any negative activity, thus the negative going spikes do not show-up during the usual EXTRACTion process, but only during the (optional) final robust regression of raw traces. In these cases, please set `remove_background=0` in the configuration file and run EXTRACT. Note that if this is done, it is important that one has a movie with a fairly stationary background throughout time points.
 
 Our general suggestion is to keep `remove_background=1` in all cases, use non-negative traces for data analysis and use raw traces (that might contain some negative spikes here and there) for noise estimation. Once noise is estimated from the raw traces, we suggest to perform thresholding to the traces (max(0,traces)), which turns them into non-negative traces. This is consistent with EXTRACT's inherent assumption that signal is non-negative.
 
