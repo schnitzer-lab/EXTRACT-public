@@ -153,7 +153,7 @@ Here is a list of more advanced configurations:
 * `min_tau_after_downsampling`: When `downsample_time_by='auto'`, this determines the temporal downsampling factor by setting a minimum event tau after downsampling. Default: `5`.
 * `reestimate_S_if_downsampled`: When set to `true`, images are re-estimated from full movie at the end. When `false`, images are upsampled by interpolation. `reestimate_S_if_downsampled=true` is not recommended as precise shape of cell images are typically not essential, and re-estimation from full movie is costly.
 * `verbose`: Log is emitted from the console output when set to `1`, set to `0` to suppress output. When set to `2`, EXTRACT provides a detailed summary during the signal extraction process. Default: `2`.
-* `crop_cicrcular`: For microendoscopic movies, set it to `true` for automatically cropping out the region outside the circular imaging region. Default: `false`.
+* `crop_circular`: For microendoscopic movies, set it to `true` for automatically cropping out the region outside the circular imaging region. Default: `false`.
 * `dendrite_aware`: Boolean flag, set it to `true` if dendrites exist in the movie & are desired in the output. Default: `false`.
 * `adaptive_kappa`: If `true`, then during cell finding, the robust esimation loss will adaptively set its robustness parameter. Default: `false`.
 * `smoothing_ratio_x2y`: If the movie contains mainly objects that are elongated in one dimension (e.g. dendrites), this parameter is useful for more smoothing in either x or y dimension. Default: `1`.
