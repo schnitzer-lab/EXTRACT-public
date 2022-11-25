@@ -8,7 +8,7 @@ function config = get_defaults(config)
     if ~isfield(config, 'use_gpu'), config.use_gpu = true; end
     if ~isfield(config, 'parallel_cpu'), config.parallel_cpu = false; end
     if ~isfield(config, 'dendrite_aware'), config.dendrite_aware = false; end
-    if ~isfield(config, 'adaptive_kappa'), config.adaptive_kappa = 2; end
+    if ~isfield(config, 'adaptive_kappa'), config.adaptive_kappa = 1; end
     if ~isfield(config, 'use_sparse_arrays'), config.use_sparse_arrays = false; end
     if ~isfield(config, 'hyperparameter_tuning_flag'), config.hyperparameter_tuning_flag = false; end
     if ~isfield(config, 'remove_duplicate_cells'), config.remove_duplicate_cells = true; end
@@ -42,7 +42,7 @@ function config = get_defaults(config)
     if ~isfield(config, 'cellfind_min_snr'), config.cellfind_min_snr = 1; end
     if ~isfield(config, 'cellfind_max_steps'), config.cellfind_max_steps = 1000; end
     if ~isfield(config, 'cellfind_kappa_std_ratio'), config.cellfind_kappa_std_ratio = 0.7; end
-    if ~isfield(config, 'cellfind_adaptive_kappa'), config.cellfind_adaptive_kappa = 1; end
+    if ~isfield(config, 'cellfind_adaptive_kappa'), config.cellfind_adaptive_kappa = 0; end
     if ~isfield(config, 'init_with_gaussian'), config.init_with_gaussian = false; end
     if ~isfield(config, 'avg_yield_threshold'), config.avg_yield_threshold = 0.1; end
 
@@ -69,7 +69,7 @@ function config = get_defaults(config)
     if ~isfield(thresholds, 'temporal_corrupt_thresh'), thresholds.temporal_corrupt_thresh = 0.7; end
     if ~isfield(thresholds, 'spatial_corrupt_thresh'), thresholds.spatial_corrupt_thresh = 1.5; end
     if ~isfield(thresholds, 'eccent_thresh'), thresholds.eccent_thresh = 6; end
-    if ~isfield(thresholds, 'low_ST_index_thresh'), thresholds.low_ST_index_thresh = 1e-2; end
+    if ~isfield(thresholds, 'low_ST_index_thresh'), thresholds.low_ST_index_thresh = -1; end
     if ~isfield(thresholds, 'low_ST_corr_thresh'), thresholds.low_ST_corr_thresh = 0; end
     
 
