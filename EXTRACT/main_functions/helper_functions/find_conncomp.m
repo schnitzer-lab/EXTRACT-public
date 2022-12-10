@@ -1,13 +1,6 @@
 function [cc, A] = find_conncomp(X, threshold, A2)
 % Finds connected components of columns of A wrt a corr. threshold
 % A2 (optional) is an additional adjacency matrix as a multiplicative constraint
-    
-
-    try
-        warning('off','bioinfo:graphconncomp:FunctionToBeRemoved')
-    catch
-        % Todo: Re-write this function at some point
-    end
 
     tiny = 1e-6;
     XpX = full(X'*X);
@@ -21,20 +14,13 @@ function [cc, A] = find_conncomp(X, threshold, A2)
         A = A .* A2;
     end
 
-
-    if license('test','bioinformatics_toolbox') == 0
-        % no toolbox, use workaround
-        [s, memberships] = conncomp(sparse(A));
-
-    else
-        [s, memberships] = graphconncomp(sparse(A));
-    end
-
+    memberships = conncomp(graph(sparse(A)), 'OutputForm', 'cell');
+    s = numel(memberships);
     
     cc = [];
     acc=0;
     for k = 1:s
-        idx = find(memberships == k);
+        idx = memberships{k};
         if numel(idx) > 1
             % Find idx with most common neighbors
             [~, i] = max(sum(A(:, idx), 1));
