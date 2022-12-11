@@ -470,7 +470,7 @@ for iter = 1:config.max_iter
         % Identify cells to be deleted
         [classification, is_bad] = remove_redundant(...
                 classification, S, S_smooth, T, M, S_surround, T_corr_in, T_corr_out, fov_size, round(avg_radius), ...
-                config.use_gpu, config.thresholds);
+                config.use_gpu, config.thresholds,config.use_sparse_arrays);
 		
 
         % Merge duplicate cells (update images)

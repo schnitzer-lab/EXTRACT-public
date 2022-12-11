@@ -1,5 +1,5 @@
 function [x, is_bad] = remove_redundant(...
-        x, S, S_smooth, T, M, pre_S_corr, pre_T_corr_in, pre_T_corr_out, fov_size, avg_radius, use_gpu, thresholds)
+        x, S, S_smooth, T, M, pre_S_corr, pre_T_corr_in, pre_T_corr_out, fov_size, avg_radius, use_gpu, thresholds,sparse_arrays)
     num_cells_this_iter = size(T, 1);
     [fmap, ~] = get_quality_metric_map;
     
@@ -18,7 +18,7 @@ function [x, is_bad] = remove_redundant(...
     metrics(fmap('S_smooth_area_2'), :) = get_cell_areas(S_smooth);
     S_norm = zscore(S_smooth, 1, 1) / sqrt(size(S_smooth, 1));
     metrics(fmap('S_max_corr'), :) = max(S_norm' * S_norm, [], 1);
-    metrics(fmap('S_corruption'), :) = spat_corruption(S, fov_size);
+    metrics(fmap('S_corruption'), :) = spat_corruption(S, fov_size,[],sparse_arrays);
     [circularities, eccentricities] = get_circularity_metrics(S, fov_size);
     metrics(fmap('S_circularity'), :) = circularities;
     metrics(fmap('S_eccent'), :) = eccentricities;
