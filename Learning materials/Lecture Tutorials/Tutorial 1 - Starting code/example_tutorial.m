@@ -18,14 +18,16 @@ config.num_partitions_y=1;
 %config.cellfind_filter_type='none'; % The movie is clean enough, no need for lowpass filtering
 config.verbose=2; %Keeping verbose=2 gives insight into the EXTRACTion process, always advised to keep 2
 config.spatial_highpass_cutoff=inf; % no need for highpass filtering
-
+config.cellfind_filter_type ='none';
 % Optionals whose defaults exist:
 config.use_gpu=0; % This is a small dataset, will be fast on cpu anyways.
 config.max_iter = 10; % 10 is a good number for this dataset
-config.adaptive_kappa = 1;% Adaptive kappa is on for this movie. For an actual movie, keeping it off
+config.adaptive_kappa = 2;% Adaptive kappa is on for this movie. For an actual movie, keeping it off
+config.cellfind_adaptive_kappa = 1;% Adaptive kappa is on for this movie. For an actual movie, keeping it off
+
 % may be beneficial depending on the noise levels.
-config.cellfind_min_snr=5;% Default snr is 1, lower this (never less than 0) to increase cell count at the expense of more spurious cells!
-config.thresholds.T_min_snr=10;
+config.cellfind_min_snr=0.5;% Default snr is 1, lower this (never less than 0) to increase cell count at the expense of more spurious cells!
+config.thresholds.T_min_snr=7;
 
 config.visualize_cellfinding=0;
 
