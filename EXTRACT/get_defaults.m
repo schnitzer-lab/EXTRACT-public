@@ -20,6 +20,7 @@ function config = get_defaults(config)
     if ~isfield(config, 'pre_mask_radius'), config.pre_mask_radius = 0; end
     if ~isfield(config, 'minimal_checks'), config.minimal_checks = 0; end
     if ~isfield(config, 'cellfind_check_min_magnitude'), config.cellfind_check_min_magnitude = true; end
+    if ~isfield(config, 'frr_check_every_step'), config.frr_check_every_step = true; end
 
     % Preprocessing module parameters
 
