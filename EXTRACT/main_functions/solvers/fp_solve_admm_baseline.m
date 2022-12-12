@@ -48,7 +48,7 @@ decay = lambda * iAc * kappa;
 X_ls = B * pA;
 
 if check_every == 0
-    temp_baseline = min(0,quantile(X_ls,baseline,1))
+    temp_baseline = min(0,quantile(X_ls,baseline,1));
 end
 
 X2 = X;
