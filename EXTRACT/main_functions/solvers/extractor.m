@@ -211,7 +211,7 @@ if config.parallel_cpu || config.multi_gpu
     verbose_old = config.verbose;
     config.verbose = 0;
     fov_occupation_total_temp = zeros(h, w);
-     parfor (idx_partition = 1:num_partitions, num_workers)
+    parfor (idx_partition = 1:num_partitions, num_workers)
         dispfun(sprintf('%s: Signal extraction on partition %d (of %d):\n', ...
             datestr(now), idx_partition, num_partitions), config.verbose ~= 0);
         
