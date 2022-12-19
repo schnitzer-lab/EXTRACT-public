@@ -1,7 +1,11 @@
-function metric = spat_corruption(F, siz, visualize)
+function metric = spat_corruption(F, siz, visualize,sparse_array)
 
     if nargin < 3 || isempty(visualize)
         visualize = false;
+    end
+
+    if nargin < 4 || isempty(sparse_array)
+        sparse_array = false;
     end
 
     h = siz(1);
@@ -11,6 +15,35 @@ function metric = spat_corruption(F, siz, visualize)
     mask_in = F>1e-3;
     nnz_each = sum(mask_in,1);
     mean_each = sum(mask_in.*F,1)./nnz_each;
+    if sparse_array
+        metric = zeros(1,size(F,2));
+        for cell = 1:size(F,2)
+            mask_in_temp = mask_in(:,cell);
+            F_temp = F(:,cell);
+            F_diff = mask_in_temp.*bsxfun(@minus, F_temp, mean_each(cell));
+            F_diff = bsxfun(@times, F_diff, sqrt(1./max(mean_each(cell), 1e-2)));
+            var_each = sum(F_diff.^2, 1)./nnz_each(cell);
+        %     var_each = zeros(nk, 1);
+        %     for i = 1:nk
+        %         f = F_diff(:, i);
+        %         var_each(i) = median(f(f>0));
+        %     end
+            mask_in_temp = reshape(mask_in_temp,h,w,1);
+            F_temp = reshape(F_temp,h,w,1);
+            filt = ones(4);%[0, 1, 0; 1, 1, 1; 0, 1, 0];
+            filt = filt/sum(filt(:));
+            local_mean = imfilter(F_temp,filt, 'replicate');
+            F_diff = mask_in_temp.*(F_temp-local_mean);
+            
+            local_mean = reshape(local_mean, h*w, 1);
+            F_diff = reshape(F_diff,h*w,1);
+            F_diff = F_diff .* (1./sqrt(max(1e-2, local_mean)));
+            
+            var_local_each = sum(F_diff.^2, 1)./nnz_each(cell);
+            metric(cell) = var_local_each ./ var_each;
+        end
+        F = reshape(F, h*w, nk);
+    else
     F_diff = mask_in.*bsxfun(@minus, F, mean_each);
     F_diff = bsxfun(@times, F_diff, sqrt(1./max(mean_each, 1e-2)));
     var_each = sum(F_diff.^2, 1)./nnz_each;
@@ -38,7 +71,7 @@ function metric = spat_corruption(F, siz, visualize)
 %     end
     metric = var_local_each ./ var_each;
     F = reshape(F, h*w, nk);
-    
+    end
     
     if visualize
         for i = 24:size(F, 2)

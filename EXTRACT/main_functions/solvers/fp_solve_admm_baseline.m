@@ -1,5 +1,5 @@
 function [X2,loss] = fp_solve_admm_baseline(X, A, B, mask, lambda, kappa, nIter, ...
-        tol, compute_loss, use_gpu, transpose_B,baseline)
+        check_every, compute_loss, use_gpu, transpose_B,baseline)
 % Solve for X using fixed point algorithm inside fast-ADMM routine
 % This function is gpu-aware.
 
@@ -47,6 +47,10 @@ pA = A' * iAc;
 decay = lambda * iAc * kappa;
 X_ls = B * pA;
 
+if check_every == 0
+    temp_baseline = min(0,quantile(X_ls,baseline,1));
+end
+
 X2 = X;
 Y = X * 0;
 n = numel(X);  % Problem dimension
@@ -67,7 +71,13 @@ for k = 1:nIter
     % X2 update
     X2_m1 = X2;
     X2 = X + Y;
-    X2 = max(X2,min(0,quantile(X2,baseline,1)));
+
+    if check_every == 0
+        X2 = max(X2,temp_baseline);
+    else
+        X2 = max(X2,min(0,quantile(X2,baseline,1)));
+    end
+
     if ~isempty(mask)
         X2 = X2 .* mask;
     end

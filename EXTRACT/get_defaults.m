@@ -19,6 +19,9 @@ function config = get_defaults(config)
     if ~isfield(config, 'pre_mask_on'), config.pre_mask_on = 0; end
     if ~isfield(config, 'pre_mask_radius'), config.pre_mask_radius = 0; end
     if ~isfield(config, 'minimal_checks'), config.minimal_checks = 0; end
+    if ~isfield(config, 'cellfind_check_min_magnitude'), config.cellfind_check_min_magnitude = true; end
+    if ~isfield(config, 'frr_check_every_step'), config.frr_check_every_step = true; end
+    if ~isfield(config, 'show_progress'), config.show_progress = false; end
 
     % Preprocessing module parameters
 
@@ -146,6 +149,15 @@ function config = get_defaults(config)
         thresholds.eccent_thresh = inf;
         thresholds.spatial_corrupt_thresh = inf;
         thresholds.low_ST_index_thresh = -1;
+    end
+
+    if config.parallel_cpu
+        config.use_gpu = 0;
+        config.multi_gpu =0;
+    end
+
+    if config.multi_gpu
+        config.parallel_cpu = 0;
     end
 
     config.thresholds = thresholds;

@@ -210,9 +210,16 @@ if config.parallel_cpu || config.multi_gpu
             datestr(now), num_partitions,num_workers), config.verbose ~= 0);
     verbose_old = config.verbose;
     config.verbose = 0;
-    fov_occupation_total_temp = zeros(h, w,num_partitions);
-    
-     parfor (idx_partition = 1:num_partitions, num_workers)
+    fov_occupation_total_temp = zeros(h, w);
+    if config.show_progress
+        ppm = ParforProgressbar(num_partitions, 'progressBarUpdatePeriod', 60,'title', ...
+            sprintf('Signal extraction will run on %d partitions with %d parallel workers... \n', ...
+             num_partitions,num_workers));
+    else
+        ppm = [];
+    end
+
+    parfor (idx_partition = 1:num_partitions, num_workers)
         dispfun(sprintf('%s: Signal extraction on partition %d (of %d):\n', ...
             datestr(now), idx_partition, num_partitions), config.verbose ~= 0);
         
@@ -290,13 +297,19 @@ if config.parallel_cpu || config.multi_gpu
             S{idx_partition} = S_this;
             T{idx_partition} = T_this';
         end
-        fov_occupation_total_temp(:,:,idx_partition) = fov_occupation;
+        fov_occupation_total_temp = fov_occupation + fov_occupation_total_temp;
         time_run(idx_partition) = posixtime(datetime) - start_upload;
         dispfun(sprintf('\t \t %s: Partition %d finished. Upload time: %.1f mins. Total run time: %.1f mins. \n', datestr(now),...
             idx_partition,time_upload(idx_partition)/60,time_run(idx_partition)/60),...
             verbose_old ~= 0);
+        if config.show_progress
+            ppm.increment(); 
+        end
     end
-    fov_occupation_total  = sum(fov_occupation_total_temp,3);
+    if config.show_progress
+        delete(ppm); 
+    end
+    fov_occupation_total  = fov_occupation_total_temp;
     config.verbose = verbose_old;
 
     if ~isfield(config, 'F_per_pixel')
@@ -336,6 +349,9 @@ if config.parallel_cpu || config.multi_gpu
 else
     dispfun(sprintf('%s: Signal extraction will run on %d partitions serially... \n', ...
             datestr(now), num_partitions), config.verbose ~= 0);
+    if config.show_progress
+        progressbar(sprintf('Running EXTRACT on %d partitions',num_partitions));
+    end
     for idx_partition = num_partitions:-1:1
         verbose_old = config.verbose;
         if verbose_old == 3
@@ -426,9 +442,10 @@ else
                 datestr(now),idx_partition,time_upload(idx_partition)/60,time_run(idx_partition)/60);
             config.verbose = 3;
         end
-        
+        if config.show_progress
+            progressbar((num_partitions-idx_partition+1)/num_partitions);
+        end
     end
-
 end
 
 % Concatenate components from different partitions

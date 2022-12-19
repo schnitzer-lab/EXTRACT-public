@@ -176,9 +176,11 @@ for i = 1:max_steps
 %     mod_im_summary = mod_im_summary .*Cn;
     [val_max, ind_max] = max(mod_im_summary(:));
     % Check min magnitude condition
-    if val_max < min_magnitude %max(abs_noise_threshold, min_magnitude)
-        init_stop_reason = 'min_magnitude';
-        break;
+    if config.cellfind_check_min_magnitude
+        if val_max < min_magnitude %max(abs_noise_threshold, min_magnitude)
+            init_stop_reason = 'min_magnitude';
+            break;
+        end
     end
 
     % Initialize image

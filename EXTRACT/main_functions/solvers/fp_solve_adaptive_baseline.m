@@ -1,5 +1,5 @@
 function [X2,loss] = fp_solve_adaptive_baseline(X, A, B, mask, lambda, noise_std,...
-        nIter, tol, compute_loss, use_gpu, transpose_B,baseline,kappa_iter_nums)
+        nIter, check_every, compute_loss, use_gpu, transpose_B,baseline,kappa_iter_nums)
 % Solve for X using fixed point algorithm inside ADMM routine
 % This function is gpu-aware.
 if nargin<13 || isempty(kappa_iter_nums)
@@ -46,6 +46,10 @@ iAc = (Ac + rho * I) \ I;
 pA = A' * iAc;
 decay = lambda * iAc * 0; % Used to be * kappa
 X_ls = B * pA;
+
+if check_every == 0
+    temp_baseline = min(0,quantile(X_ls,baseline,1));
+end
 
 X2 = X;
 Y = X * 0;
@@ -104,7 +108,12 @@ while k < nIter
     % X2 update
     X2_m1 = X2;
     X2 = bsxfun(@minus, X + Y, opt_2 * lambda / rho);
-    X2 = max(X2,min(0,quantile(X2,baseline,1)));
+    if check_every == 0
+        X2 = max(X2,temp_baseline);
+    else
+        X2 = max(X2,min(0,quantile(X2,baseline,1)));
+    end
+
     if ~isempty(mask)
         X2 = X2 .* mask;
     end
