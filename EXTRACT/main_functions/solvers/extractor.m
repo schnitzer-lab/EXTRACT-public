@@ -212,7 +212,9 @@ if config.parallel_cpu || config.multi_gpu
     config.verbose = 0;
     fov_occupation_total_temp = zeros(h, w);
     if config.show_progress
-        ppm = ParforProgressbar(num_partitions, 'progressBarUpdatePeriod', 60)
+        ppm = ParforProgressbar(num_partitions, 'progressBarUpdatePeriod', 60);
+    else
+        ppm = [];
     end
 
     parfor (idx_partition = 1:num_partitions, num_workers)
