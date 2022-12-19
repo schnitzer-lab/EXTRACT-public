@@ -439,13 +439,9 @@ else
             config.verbose = 3;
         end
         if config.show_progress
-            progressbar(idx_partition/num_partitions);
+            progressbar((num_partitions-idx_partition+1)/num_partitions);
         end
     end
-    if config.show_progress
-        progressbar(1);
-    end
-
 end
 
 % Concatenate components from different partitions
