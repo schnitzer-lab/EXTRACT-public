@@ -212,7 +212,9 @@ if config.parallel_cpu || config.multi_gpu
     config.verbose = 0;
     fov_occupation_total_temp = zeros(h, w);
     if config.show_progress
-        ppm = ParforProgressbar(num_partitions, 'progressBarUpdatePeriod', 60);
+        ppm = ParforProgressbar(num_partitions, 'progressBarUpdatePeriod', 60,'title', ...
+            sprintf('Signal extraction will run on %d partitions with %d parallel workers... \n', ...
+             num_partitions,num_workers));
     else
         ppm = [];
     end
