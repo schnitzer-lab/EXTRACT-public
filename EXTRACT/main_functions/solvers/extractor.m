@@ -439,7 +439,7 @@ else
             config.verbose = 3;
         end
         if config.show_progress
-            progressbar(idx_partition/num_partitions));
+            progressbar(idx_partition/num_partitions);
         end
     end
     if config.show_progress
