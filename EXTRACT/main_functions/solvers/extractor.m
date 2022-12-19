@@ -211,6 +211,10 @@ if config.parallel_cpu || config.multi_gpu
     verbose_old = config.verbose;
     config.verbose = 0;
     fov_occupation_total_temp = zeros(h, w);
+    if config.show_progress
+        ppm = ParforProgressbar(num_partitions, 'progressBarUpdatePeriod', 60)
+    end
+
     parfor (idx_partition = 1:num_partitions, num_workers)
         dispfun(sprintf('%s: Signal extraction on partition %d (of %d):\n', ...
             datestr(now), idx_partition, num_partitions), config.verbose ~= 0);
@@ -294,6 +298,12 @@ if config.parallel_cpu || config.multi_gpu
         dispfun(sprintf('\t \t %s: Partition %d finished. Upload time: %.1f mins. Total run time: %.1f mins. \n', datestr(now),...
             idx_partition,time_upload(idx_partition)/60,time_run(idx_partition)/60),...
             verbose_old ~= 0);
+        if config.show_progress
+            ppm.increment(); 
+        end
+    end
+    if config.show_progress
+        delete(ppm); 
     end
     fov_occupation_total  = fov_occupation_total_temp;
     config.verbose = verbose_old;
