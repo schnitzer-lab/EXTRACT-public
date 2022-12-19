@@ -151,6 +151,15 @@ function config = get_defaults(config)
         thresholds.low_ST_index_thresh = -1;
     end
 
+    if config.parallel_cpu
+        config.use_gpu = 0;
+        config.multi_gpu =0;
+    end
+
+    if config.multi_gpu
+        config.parallel_cpu = 0;
+    end
+
     config.thresholds = thresholds;
 
 end
