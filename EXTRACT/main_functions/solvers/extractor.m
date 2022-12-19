@@ -345,6 +345,9 @@ if config.parallel_cpu || config.multi_gpu
 else
     dispfun(sprintf('%s: Signal extraction will run on %d partitions serially... \n', ...
             datestr(now), num_partitions), config.verbose ~= 0);
+    if config.show_progress
+        progressbar(sprintf('Running EXTRACT on %d partitions',num_partitions));
+    end
     for idx_partition = num_partitions:-1:1
         verbose_old = config.verbose;
         if verbose_old == 3
@@ -435,7 +438,12 @@ else
                 datestr(now),idx_partition,time_upload(idx_partition)/60,time_run(idx_partition)/60);
             config.verbose = 3;
         end
-        
+        if config.show_progress
+            progressbar(idx_partition/num_partitions));
+        end
+    end
+    if config.show_progress
+        progressbar(1);
     end
 
 end
