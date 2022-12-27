@@ -39,6 +39,7 @@ function cell_check(output, M)
     
     [is_attr_bad,metrics,is_elim]=get_cellcheck_features(output);
     output.config = get_defaults(output.config);
+    metrics(isnan(metrics)) = 0;
     
     
     
