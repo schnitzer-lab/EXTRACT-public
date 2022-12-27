@@ -686,7 +686,7 @@ function cell_check(output, M)
         axes_width = 1 / (1 + default_n_active_frames);
         % Plot cell image
         im = full(cellcheck.ims(y_current, x_current, idx_current_cell));
-        [x_lims, y_lims] = get_image_xy_ranges(im> 0.2, 5);
+        [x_lims, y_lims] = get_image_xy_ranges(im> 0.2, 20);
         cell_image = im(y_lims(1):y_lims(2), x_lims(1):x_lims(2));
         % Create axes & image first time, update cdata in subsequent calls
         if isempty(handle_snapshots{1})
@@ -811,7 +811,7 @@ function cell_check(output, M)
             images = max(cat(3, images, ims_neighbor), [], 3);
         end
         % get the extent of the roi
-        [x_range, y_range] = get_image_xy_ranges(images> 0.2, 1);
+        [x_range, y_range] = get_image_xy_ranges(images> 0.2, 20);
         x_current = x_range(1):x_range(2);
         y_current = y_range(1):y_range(2);
     end
