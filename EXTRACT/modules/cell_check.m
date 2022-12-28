@@ -269,7 +269,7 @@ function cell_check(output, M)
         line2 = sprintf('EXTRACT score: %.2f\n', confidence);
         line3 = sprintf('Elimination reason(s): %s', get_bad_metrics);
         set(label_cell_report, 'text', sprintf('%s %s %s', line1, line2, line3),...
-            'BackgroundColor', max(0.5, label_to_color_mapping(verdict)));
+            'BackgroundColor', label_to_color_mapping(verdict));
         
         function label = get_label_str(verdict, fancy)
             if verdict == 1
