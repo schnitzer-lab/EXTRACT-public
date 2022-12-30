@@ -9,6 +9,7 @@ function config = get_defaults(config)
     if ~isfield(config, 'parallel_cpu'), config.parallel_cpu = false; end
     if ~isfield(config, 'dendrite_aware'), config.dendrite_aware = false; end
     if ~isfield(config, 'adaptive_kappa'), config.adaptive_kappa = 1; end
+    if ~isfield(config, 'adaptive_kappa_filter'), config.adaptive_kappa_filter = 0; end
     if ~isfield(config, 'use_sparse_arrays'), config.use_sparse_arrays = false; end
     if ~isfield(config, 'hyperparameter_tuning_flag'), config.hyperparameter_tuning_flag = false; end
     if ~isfield(config, 'remove_duplicate_cells'), config.remove_duplicate_cells = true; end
