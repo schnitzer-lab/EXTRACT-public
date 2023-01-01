@@ -77,15 +77,17 @@ function [T_out, l, np_x, np_y, np_time] = solve_T_robust(T_in, S, M, fov_size, 
                     T_out(idx_comp, idx_t) = T_out(idx_comp, idx_t) + ...
                         bsxfun(@times, Tt_out_sub', power_s_sub);
                     
-                    temp_vals = min(T_out(idx_comp, idx_t),[],2)';
+                    
 
-                    min_vals(idx_comp) = max(temp_vals , min_vals(idx_comp));
+                    %temp_vals = min(T_out(idx_comp, idx_t),[],2)';
+
+                    %min_vals(idx_comp) = max(temp_vals , min_vals(idx_comp));
                 end
             end
         end
     end
 
-    T_out = max(T_out,min_vals');
+    %T_out = max(T_out,min_vals');
 
     % Divide each T component by total power of its image
     power_s = sum(S.^2, 1)';
