@@ -1,5 +1,5 @@
 function [T_out, l, np_x, np_y, np_time] = solve_T_robust(T_in, S, M, fov_size, avg_radius, lambda, ...
-        kappa, max_iter, TOL, compute_loss, baseline, use_gpu, is_M_transposed,fp_solve_func,GPU_SLACK_FACTOR,kappa_iter_nums)
+        kappa, max_iter, TOL, compute_loss, baseline, use_gpu, is_M_transposed,fp_solve_func,GPU_SLACK_FACTOR,kappa_iter_nums,edge_case)
     
         
     if nargin < 15
@@ -73,21 +73,29 @@ function [T_out, l, np_x, np_y, np_time] = solve_T_robust(T_in, S, M, fov_size, 
                         compute_loss, use_gpu, transpose_M,baseline,kappa_iter_nums);
                     end
 
+                    if edge_case == 0
+                        Tt_out_sub = Tt_out_sub - min(Tt_out_sub,[],1);
+                    end
+
                     % Weight T components by their image powers
                     T_out(idx_comp, idx_t) = T_out(idx_comp, idx_t) + ...
                         bsxfun(@times, Tt_out_sub', power_s_sub);
                     
                     
+                    if edge_case 
+                        temp_vals = min(T_out(idx_comp, idx_t),[],2)';
 
-                    %temp_vals = min(T_out(idx_comp, idx_t),[],2)';
+                        min_vals(idx_comp) = max(temp_vals , min_vals(idx_comp));
+                    end
 
-                    %min_vals(idx_comp) = max(temp_vals , min_vals(idx_comp));
                 end
             end
         end
     end
 
-    %T_out = max(T_out,min_vals');
+    if edge_case
+        T_out = max(T_out,min_vals');
+    end
 
     % Divide each T component by total power of its image
     power_s = sum(S.^2, 1)';

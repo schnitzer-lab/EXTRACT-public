@@ -605,11 +605,11 @@ switch config.trace_output_option
             try 
                 [T, ~, ~, ~, ~] = solve_T_robust(T, S, Mt, fov_size, avg_radius, lambda, ...
                     kappa, config.max_iter_T_final, config.frr_check_every_step, ...
-                    config.plot_loss, config.trace_quantile, config.use_gpu, 1,@fp_solve_adaptive_baseline,4,config.kappa_iter_nums);
+                    config.plot_loss, config.trace_quantile, config.use_gpu, 1,@fp_solve_adaptive_baseline,4,config.kappa_iter_nums,config.frr_edge_case_flag);
             catch
                 [T, ~, ~, ~, ~] = solve_T_robust(T, S, Mt, fov_size, avg_radius, lambda, ...
                 kappa, config.max_iter_T_final, config.frr_check_every_step, ...
-                config.plot_loss, config.trace_quantile, config.use_gpu, 1,@fp_solve_adaptive_baseline,30,config.kappa_iter_nums);
+                config.plot_loss, config.trace_quantile, config.use_gpu, 1,@fp_solve_adaptive_baseline,30,config.kappa_iter_nums,config.frr_edge_case_flag);
             end
         else
             str = sprintf('\t \t \t Providing baseline adjusted traces with a fixed kappa of %.1f... \n',config.kappa_std_ratio);
@@ -618,11 +618,11 @@ switch config.trace_output_option
             try
                 [T, ~, ~, ~, ~] = solve_T_robust(T, S, Mt, fov_size, avg_radius, lambda, ...
                     kappa, config.max_iter_T_final, config.frr_check_every_step, ...
-                    config.plot_loss, config.trace_quantile, config.use_gpu, 1,@fp_solve_admm_baseline);
+                    config.plot_loss, config.trace_quantile, config.use_gpu, 1,@fp_solve_admm_baseline,4,[],config.frr_edge_case_flag);
             catch
                 [T, ~, ~, ~, ~] = solve_T_robust(T, S, Mt, fov_size, avg_radius, lambda, ...
                 kappa, config.max_iter_T_final, config.frr_check_every_step, ...
-                config.plot_loss, config.trace_quantile, config.use_gpu, 1,@fp_solve_admm_baseline,30);
+                config.plot_loss, config.trace_quantile, config.use_gpu, 1,@fp_solve_admm_baseline,30,[],config.frr_edge_case_flag);
             end
         end
 
@@ -778,21 +778,21 @@ if dst > 1
                         try
                             [T, ~, ~, ~, ~] = solve_T_robust(T, S, M_before_dst, fov_size, avg_radius, lambda, ...
                                 kappa, config.max_iter_T_final, config.frr_check_every_step, ...
-                                config.plot_loss, config.trace_quantile, config.use_gpu, 0,@fp_solve_adaptive_baseline,4,config.kappa_iter_nums);
+                                config.plot_loss, config.trace_quantile, config.use_gpu, 0,@fp_solve_adaptive_baseline,4,config.kappa_iter_nums,config.frr_edge_case_flag);
                         catch
                                 [T, ~, ~, ~, ~] = solve_T_robust(T, S, M_before_dst, fov_size, avg_radius, lambda, ...
                                 kappa, config.max_iter_T_final, config.frr_check_every_step, ...
-                                config.plot_loss, config.trace_quantile, config.use_gpu, 0,@fp_solve_adaptive_baseline,30,config.kappa_iter_nums);   
+                                config.plot_loss, config.trace_quantile, config.use_gpu, 0,@fp_solve_adaptive_baseline,30,config.kappa_iter_nums,config.frr_edge_case_flag);   
                         end                         
                     else
                         try
                             [T, ~, ~, ~, ~] = solve_T_robust(T, S, M_before_dst, fov_size, avg_radius, lambda, ...
                                 kappa, config.max_iter_T_final, config.frr_check_every_step, ...
-                                config.plot_loss, config.trace_quantile, config.use_gpu, 0,@fp_solve_admm_baseline);
+                                config.plot_loss, config.trace_quantile, config.use_gpu, 0,@fp_solve_admm_baseline,4,[],config.frr_edge_case_flag);
                         catch
                             [T, ~, ~, ~, ~] = solve_T_robust(T, S, M_before_dst, fov_size, avg_radius, lambda, ...
                                 kappa, config.max_iter_T_final, config.frr_check_every_step, ...
-                                config.plot_loss, config.trace_quantile, config.use_gpu, 0,@fp_solve_admm_baseline,30);
+                                config.plot_loss, config.trace_quantile, config.use_gpu, 0,@fp_solve_admm_baseline,30,[],config.frr_edge_case_flag);
                         end
                     end
 

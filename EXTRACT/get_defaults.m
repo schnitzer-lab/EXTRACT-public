@@ -22,6 +22,7 @@ function config = get_defaults(config)
     if ~isfield(config, 'minimal_checks'), config.minimal_checks = 0; end
     if ~isfield(config, 'cellfind_check_min_magnitude'), config.cellfind_check_min_magnitude = true; end
     if ~isfield(config, 'frr_check_every_step'), config.frr_check_every_step = true; end
+    if ~isfield(config, 'frr_edge_case_flag'), config.frr_edge_case_flag = 1; end
     if ~isfield(config, 'show_progress'), config.show_progress = false; end
 
     % Preprocessing module parameters
