@@ -42,7 +42,7 @@ function cell_check(output, M)
     metrics(isnan(metrics)) = 0;
     if output.config.use_gpu
         try
-            gpuDevice(1)
+            gpuDevice(1);
         catch
             output.config.use_gpu = 0;
         end
