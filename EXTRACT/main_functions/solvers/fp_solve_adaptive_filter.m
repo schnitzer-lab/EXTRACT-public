@@ -57,6 +57,8 @@ pre_kappa = maybe_gpu(use_gpu, 0.6361*ones(size(A,2), size(A, 1), 'single'));
 % Estimate kappa at below iteration indices
 idx_estimate_kappa = round(nIter*[0.5, 0.7, 0.9]);
 
+temp_baseline = min(0,quantile(X_ls,0.25,1));
+
 k = 0;
 acc = 0;
 while k < nIter
@@ -103,7 +105,8 @@ while k < nIter
     end
     % X2 update
     X2_m1 = X2;
-    X2 = max(bsxfun(@minus, X + Y, opt_2 * lambda / rho), 0);
+    X2 = bsxfun(@minus, X + Y, opt_2 * lambda / rho);
+    X2 = max(X2,temp_baseline);
     if ~isempty(mask)
         X2 = X2 .* mask;
     end
