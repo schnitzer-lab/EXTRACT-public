@@ -577,6 +577,12 @@ function cell_check(output, M)
     function label_as_dendrite(varargin)
         user_labels(idx_current_cell) = 2;
         update_labels;
+
+        % If active lerning is on, then update predictive model
+        if active_learning
+            update_scoring_model;
+            update_labels;
+        end
         
         if fast_cellcheck == 0
             update_extract_labels;        
