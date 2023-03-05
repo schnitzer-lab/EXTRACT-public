@@ -26,7 +26,7 @@ max_im = output.info.summary_image;
 clims = quantile(max_im(:), clim_scale);
 imagesc(max_im, clims);
 axis image; axis off;
-colormap bone;
+colormap(flipud(brewermap(64, 'rdgy')));
 [h, w] = size(max_im);
 
 title_str = '';
