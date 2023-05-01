@@ -12,13 +12,13 @@ catch
 end
 
 if ~isfield(config, 'partition_size_time')
-    partition_size_time = 1000; 
+    partition_size_time = 10000; 
 else
     partition_size_time = config.partition_size_time;
 end
 
 if ~isfield(config, 'partition_size_space')
-    partition_size_space = 50; 
+    partition_size_space = 100; 
 else
     partition_size_space = config.partition_size_space;
 end
