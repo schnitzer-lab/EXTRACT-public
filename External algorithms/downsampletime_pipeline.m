@@ -7,7 +7,7 @@ filename  = filename(1:end-3);
 
 hinfo=h5info([filename '.h5']);
 if nargin <4
-    totalnum = hinfo.Datasets.Dataspace.Size(3);
+    totalnum = hinfo.Datasets(1).Dataspace.Size(3);
     totalnum = totalnum - mod(totalnum,1000);
 end
 
@@ -19,8 +19,8 @@ if nargin < 3
     blocks = totalnum / 1000;
 end
 
-nx = hinfo.Datasets.Dataspace.Size(1);
-ny = hinfo.Datasets.Dataspace.Size(2);
+nx = hinfo.Datasets(1).Dataspace.Size(1);
+ny = hinfo.Datasets(1).Dataspace.Size(2);
 
 if (mod(totalnum,blocks) ~= 0 || mod(totalnum,blocks*dt) ~= 0)
     error('Pick dt and num_blocks more carefully!')
