@@ -5,7 +5,7 @@ end
 
 config = get_defaults(config);
 try
-    gpuDevice(1)
+    gpuDevice(1);
 catch
     config.use_gpu = 0;
     warning('No GPU detected, using CPU instead')

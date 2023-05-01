@@ -3,7 +3,7 @@ function [M, config] = preprocess_movie(M, config)
 
     % Handle GPU errors
     try
-        gpuDevice(1)
+        gpuDevice(1);
     catch
         config.use_gpu = 0;
     end
