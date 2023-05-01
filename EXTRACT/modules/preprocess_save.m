@@ -23,6 +23,12 @@ else
     partition_size_space = config.partition_size_space;
 end
 
+if config.downsample_time_by >1
+    time_dt = config.downsample_time_by; 
+else
+    time_dt = 5;
+end
+
 [filename,datasetname] = parse_movie_name(input);
 filename  = filename(1:end-3);
 filename_df = [filename '_df'];
@@ -82,7 +88,14 @@ for i=1:numel(startno)
     h5write([filename_final '.h5'],datasetname,M,[1,1,startno(i)],[nx,ny,perframes(i)]); 
 end
 
+
+downsampletime_pipeline([filename_final '.h5:' datasetname],time_dt)
+h5create([filename_final '_downsampled.h5'],'/F_per_pixel',[nx ny],'Datatype','single');
+F_per_pixel = h5read([filename_df '.h5'],'/F_per_pixel');
+h5write([filename_final '_downsampled.h5'],'/F_per_pixel',F_per_pixel);
 fprintf('%s: Preprocessing finished. \n',datestr(now));
+
+
 end
 
 
