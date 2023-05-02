@@ -17,12 +17,6 @@ else
     partition_size_time = config.partition_size_time;
 end
 
-if ~isfield(config, 'partition_size_space')
-    partition_size_space = 100; 
-else
-    partition_size_space = config.partition_size_space;
-end
-
 if config.downsample_time_by >1
     time_dt = config.downsample_time_by; 
 else
@@ -63,27 +57,29 @@ h5create([filename_df '.h5'],'/F_per_pixel',[nx ny],'Datatype','single');
 
 
 % Run the df process
-fprintf('%s: Running delta F subtraction ... \n',datestr(now));
-[perframes,startno] = get_partition_starters(nx,partition_size_space);
+fprintf('%s: Calculating F_per_pixel ... \n',datestr(now));
+m = zeros(nx,ny);
+[perframes,startno] = get_partition_starters(nt,2*partition_size_time);
 for i=1:numel(startno)
     fprintf('\t \t \t %s: Running %i out of %i parts \n',datestr(now),i,numel(startno));
-    M = single(h5read([filename '.h5'],datasetname,[startno(i),1,1],[perframes(i),ny,nt]));
-    m = mean(M,3);
-    M = bsxfun(@minus, M, m);
-
-    h5write([filename_df '.h5'],datasetname,M,[startno(i),1,1],[perframes(i),ny,nt]);
-    h5write([filename_df '.h5'],'/F_per_pixel',m,[startno(i),1],[perframes(i),ny]);
-    h5write([filename_final '.h5'],'/F_per_pixel',m,[startno(i),1],[perframes(i),ny]);
-    clear M
-    clear m
+    M = single(h5read([filename '.h5'],datasetname,[1,1,startno(i)],[nx,ny,perframes(i)]));
+    m = m+sum(M,3);
 end
+
+m = m/nt;
+
+h5write([filename_df '.h5'],'/F_per_pixel',m);
+h5write([filename_final '.h5'],'/F_per_pixel',m);
 
 % Compute the highpass movie
 fprintf('%s: Running Highpass filtering ... \n',datestr(now));
 [perframes,startno] = get_partition_starters(nt,partition_size_time);
 for i=1:numel(startno)
     fprintf('\t \t \t %s: Running %i out of %i parts \n',datestr(now),i,numel(startno));
-    M = single(h5read([filename_df '.h5'],datasetname,[1,1,startno(i)],[nx,ny,perframes(i)]));
+    M = single(h5read([filename '.h5'],datasetname,[1,1,startno(i)],[nx,ny,perframes(i)]));
+
+    M = M -m;
+    h5write([filename_df '.h5'],datasetname,M,[1,1,startno(i)],[nx,ny,perframes(i)]);
     M = spatial_bandpass(M, config.avg_cell_radius, ...
                 config.spatial_highpass_cutoff, inf, config.use_gpu);
 
