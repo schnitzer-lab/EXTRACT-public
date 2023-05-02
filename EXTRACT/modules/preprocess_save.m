@@ -74,6 +74,8 @@ for i=1:numel(startno)
     h5write([filename_df '.h5'],datasetname,M,[startno(i),1,1],[perframes(i),ny,nt]);
     h5write([filename_df '.h5'],'/F_per_pixel',m,[startno(i),1],[perframes(i),ny]);
     h5write([filename_final '.h5'],'/F_per_pixel',m,[startno(i),1],[perframes(i),ny]);
+    clear M
+    clear m
 end
 
 % Compute the highpass movie
@@ -86,6 +88,7 @@ for i=1:numel(startno)
                 config.spatial_highpass_cutoff, inf, config.use_gpu);
 
     h5write([filename_final '.h5'],datasetname,M,[1,1,startno(i)],[nx,ny,perframes(i)]); 
+    clear M
 end
 
 
