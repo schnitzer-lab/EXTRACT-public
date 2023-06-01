@@ -87,11 +87,14 @@ for i=1:numel(startno)
     clear M
 end
 
-
-downsampletime_pipeline([filename_final '.h5:' datasetname],time_dt)
-h5create([filename_final '_downsampled.h5'],'/F_per_pixel',[nx ny],'Datatype','single');
-F_per_pixel = h5read([filename_df '.h5'],'/F_per_pixel');
-h5write([filename_final '_downsampled.h5'],'/F_per_pixel',F_per_pixel);
+try
+    downsampletime_pipeline([filename_final '.h5:' datasetname],time_dt)
+    h5create([filename_final '_downsampled.h5'],'/F_per_pixel',[nx ny],'Datatype','single');
+    F_per_pixel = h5read([filename_df '.h5'],'/F_per_pixel');
+    h5write([filename_final '_downsampled.h5'],'/F_per_pixel',F_per_pixel);
+catch
+    fprintf('%s: Time downsampling failed. \n',datestr(now))
+end
 fprintf('%s: Preprocessing finished. \n',datestr(now));
 
 

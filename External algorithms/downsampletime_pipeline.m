@@ -7,7 +7,11 @@ filename  = filename(1:end-3);
 
 hinfo=h5info([filename '.h5']);
 if nargin <4
-    totalnum = hinfo.Datasets(1).Dataspace.Size(3);
+    try
+        totalnum = hinfo.Datasets(1).Dataspace.Size(3);
+    catch
+        totalnum = hinfo.Datasets(2).Dataspace.Size(3);
+    end
     totalnum = totalnum - mod(totalnum,1000);
 end
 

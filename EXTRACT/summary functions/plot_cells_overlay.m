@@ -22,15 +22,15 @@ end
 is_ndSparse = isa(cell_images, 'ndSparse');
 % Smooth images
 [h, w, k] = size(cell_images);
-cell_images_2d = reshape(cell_images, h * w, k);
-if is_ndSparse
-    cell_images_2d = full(cell_images_2d);
-end
-cell_images_2d = smooth_images(cell_images_2d, [h, w], 4, 0);
-if is_ndSparse
-    cell_images_2d = ndSparse(cell_images_2d);
-end
-cell_images = reshape(cell_images_2d, h, w, k);
+%cell_images_2d = reshape(cell_images, h * w, k);
+%if is_ndSparse
+%    cell_images_2d = full(cell_images_2d);
+%end
+%cell_images_2d = smooth_images(cell_images_2d, [h, w], 4, 0);
+%if is_ndSparse
+%    cell_images_2d = ndSparse(cell_images_2d);
+%end
+%cell_images = reshape(cell_images_2d, h, w, k);
 
 for idx = 1:size(cell_images, 3)
     im = full(full(cell_images(:, :, idx)));
