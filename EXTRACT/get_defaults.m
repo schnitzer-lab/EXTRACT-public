@@ -24,6 +24,7 @@ function config = get_defaults(config)
     if ~isfield(config, 'frr_check_every_step'), config.frr_check_every_step = true; end
     if ~isfield(config, 'frr_edge_case_flag'), config.frr_edge_case_flag = 1; end
     if ~isfield(config, 'show_progress'), config.show_progress = false; end
+    if ~isfield(config, 'filter_sigma'), config.filter_sigma = [2,2,10]; end
 
     % Preprocessing module parameters
 
