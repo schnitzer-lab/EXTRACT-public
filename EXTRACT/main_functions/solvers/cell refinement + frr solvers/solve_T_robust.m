@@ -25,8 +25,8 @@ function [T_out, l, np_x, np_y, np_time] = solve_T_robust(T_in, S, M, fov_size, 
 
     
     n_cell = size(S,2);
-    ns_tar = ceil(sqrt(n_cell/100));
-    nt_tar = ceil(nt/20000);
+    ns_tar = round(sqrt(n_cell/100));
+    nt_tar = round(nt/20000);
     
 
     h = fov_size(1); w = fov_size(2);
