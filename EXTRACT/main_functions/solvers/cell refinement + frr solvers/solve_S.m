@@ -32,7 +32,7 @@ function [S_out, l, np_x, np_y, T_corr_in, T_corr_out, S_surround] = solve_S(...
         np_y = ceil(ns / sp_space / np_x);
     end
     
-    if max_iter < 50
+    if max_iter < 101
         np_x = max(np_x,ns_tar);
         np_y = max(np_y,ns_tar);
     end

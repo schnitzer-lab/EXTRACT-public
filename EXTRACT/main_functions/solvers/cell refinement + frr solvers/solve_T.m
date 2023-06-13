@@ -39,7 +39,7 @@ function [T_out, l, np_x, np_y, np_time] = solve_T(T_in, S, M, fov_size, avg_rad
         np_y = max(round(h / CPU_SPACE_SIDELEN), 1);
         np_time = 1;
     end
-    if max_iter < 50
+    if max_iter < 101
         np_x = max(np_x,ns_tar);
         np_y = max(np_y,ns_tar);
         np_time = max(np_time,nt_tar);
