@@ -4,6 +4,8 @@ function [S_out, l, np_x, np_y, T_corr_in, T_corr_out, S_surround] = solve_S(...
     if nargin < 14
         GPU_SLACK_FACTOR = 10;
     end
+    n_cell = size(S,2);
+    ns_tar = ceil(sqrt(n_cell/100));
 
     CPU_SPACE_SIDELEN = 10 * 2 * avg_radius; % ~10 cells wide
     % Work with transposed T variants for better indexing
@@ -29,6 +31,9 @@ function [S_out, l, np_x, np_y, T_corr_in, T_corr_out, S_surround] = solve_S(...
         np_x = max(round(sqrt(ns / sp_space)), 1);
         np_y = ceil(ns / sp_space / np_x);
     end
+
+    np_x = max(np_x,ns_tar);
+    np_y = max(np_y,ns_tar);
 
     % Get nonzero idx of S - only these will be estimated
     idx_S_nonzero = find(sum(mask, 2) > 0);
