@@ -4,7 +4,7 @@ function [S_out, l, np_x, np_y, T_corr_in, T_corr_out, S_surround] = solve_S(...
     if nargin < 14
         GPU_SLACK_FACTOR = 10;
     end
-    n_cell = size(S,2);
+    n_cell = size(S_in,2);
     ns_tar = ceil(sqrt(n_cell/100));
 
     CPU_SPACE_SIDELEN = 10 * 2 * avg_radius; % ~10 cells wide
