@@ -31,9 +31,11 @@ function [S_out, l, np_x, np_y, T_corr_in, T_corr_out, S_surround] = solve_S(...
         np_x = max(round(sqrt(ns / sp_space)), 1);
         np_y = ceil(ns / sp_space / np_x);
     end
-
-    np_x = max(np_x,ns_tar);
-    np_y = max(np_y,ns_tar);
+    
+    if max_iter < 50
+        np_x = max(np_x,ns_tar);
+        np_y = max(np_y,ns_tar);
+    end
 
     % Get nonzero idx of S - only these will be estimated
     idx_S_nonzero = find(sum(mask, 2) > 0);

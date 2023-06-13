@@ -17,10 +17,11 @@ function [T_out, l, np_x, np_y, np_time] = solve_T(T_in, S, M, fov_size, avg_rad
         [ns, nt] = size(M);
         transpose_M = true;
     end
-
+    
     n_cell = size(S,2);
     ns_tar = ceil(sqrt(n_cell/100));
     nt_tar = ceil(nt/20000);
+
 
 
     h = fov_size(1); w = fov_size(2);
@@ -38,10 +39,11 @@ function [T_out, l, np_x, np_y, np_time] = solve_T(T_in, S, M, fov_size, avg_rad
         np_y = max(round(h / CPU_SPACE_SIDELEN), 1);
         np_time = 1;
     end
-    np_x = max(np_x,ns_tar);
-    np_y = max(np_y,ns_tar);
-    np_time = max(np_time,nt_tar);
-
+    if max_iter < 50
+        np_x = max(np_x,ns_tar);
+        np_y = max(np_y,ns_tar);
+        np_time = max(np_time,nt_tar);
+    end
     % Get nonzero idx of S - only these will be used for T estimation
     idx_S_nonzero = find(sum(S, 2) > 0);
     % Solve for T in multiple sub-problems

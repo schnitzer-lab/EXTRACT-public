@@ -21,8 +21,8 @@ function config = get_defaults(config)
     if ~isfield(config, 'pre_mask_radius'), config.pre_mask_radius = 0; end
     if ~isfield(config, 'minimal_checks'), config.minimal_checks = 0; end
     if ~isfield(config, 'cellfind_check_min_magnitude'), config.cellfind_check_min_magnitude = true; end
-    if ~isfield(config, 'frr_check_every_step'), config.frr_check_every_step = true; end
-    if ~isfield(config, 'frr_edge_case_flag'), config.frr_edge_case_flag = 1; end
+    if ~isfield(config, 'frr_check_every_step'), config.frr_check_every_step = false; end
+    if ~isfield(config, 'frr_edge_case_flag'), config.frr_edge_case_flag = 0; end
     if ~isfield(config, 'show_progress'), config.show_progress = false; end
     if ~isfield(config, 'filter_sigma'), config.filter_sigma = [2,2,10]; end
 
