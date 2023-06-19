@@ -1041,7 +1041,10 @@ function cell_check(output, M)
             % Turn off dff
             this_config.skip_dff = true;
             M_out = preprocess_movie(M_out, this_config);
-           
+            switch config.cellfind_filter_type
+                case 'gaus'
+                    M = imgaussfilt3(M,config_this.filter_sigma);
+            end
         end
     end
 
