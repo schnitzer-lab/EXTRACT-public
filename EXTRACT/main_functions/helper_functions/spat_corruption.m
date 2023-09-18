@@ -19,7 +19,7 @@ function metric = spat_corruption(F, siz, visualize,sparse_array)
     if sparse_array
         metric = zeros(1,size(F,2));
         mask_in = sparse(mask_in);
-        F = sparse(F);
+        F = sparse(double(F));
         for cell = 1:size(F,2)
             mask_in_temp = full(mask_in(:,cell));
             F_temp = full(F(:,cell));
