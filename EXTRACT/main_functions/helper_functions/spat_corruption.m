@@ -6,6 +6,7 @@ function metric = spat_corruption(F, siz, visualize,sparse_array)
 
     if nargin < 4 || isempty(sparse_array)
         sparse_array = 0;
+        F = full(F);
     end
 
     h = siz(1);
