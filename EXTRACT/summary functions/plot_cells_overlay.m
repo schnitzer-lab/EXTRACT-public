@@ -35,7 +35,7 @@ is_ndSparse = isa(cell_images, 'ndSparse');
 for idx = 1:size(cell_images, 3)
     im = full(full(cell_images(:, :, idx)));
     max_val = max(max(im));
-    b = bwboundaries(im > contour_thresh * max_val);
+    b = bwboundaries(im > contour_thresh * max_val,'noholes');
     lens = cellfun(@length, b);
     if ~isempty(lens)
         b = b{find(lens == max(lens), 1)};
