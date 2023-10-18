@@ -26,7 +26,7 @@ max_im = output.info.summary_image;
 clims = quantile(max_im(:), clim_scale);
 imagesc(max_im, clims);
 axis image; axis off;
-colormap bone;
+colormap(flipud(brewermap(64, 'rdgy')));
 [h, w] = size(max_im);
 
 title_str = '';
@@ -59,7 +59,7 @@ if include_bad_cells > 0
     plot_cells_overlay(output.spatial_weights, 'g', []);
     title_str = sprintf(' \n# eliminated cells: %d', num_bad_cells);
 else
-    plot_cells_overlay(output.spatial_weights, [0, 0.7, 0.1], 0.5);
+    plot_cells_overlay(output.spatial_weights, [0, 0.7, 0.1], 1.5);
 end
 title_str = [sprintf('# output cells: %d    ', size(output.spatial_weights, 3)),...
     title_str];

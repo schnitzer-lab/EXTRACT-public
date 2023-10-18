@@ -39,6 +39,14 @@ function cell_check(output, M)
     
     [is_attr_bad,metrics,is_elim]=get_cellcheck_features(output);
     output.config = get_defaults(output.config);
+    metrics(isnan(metrics)) = 0;
+    if output.config.use_gpu
+        try
+            gpuDevice(1);
+        catch
+            output.config.use_gpu = 0;
+        end
+    end
     
     
     
@@ -161,18 +169,24 @@ function cell_check(output, M)
         'Fontweight', 'bold', 'FontSize', 14,...
         'horizontalalignment', 'center');
     button_good_cell = uibutton(main_fig, 'text', 'Cell', ...
-        'Position', norm2pix([0.4+0.2/3, 0.7, 0.2/3, 0.1], figure_pos),...
+        'Position', norm2pix([0.4+0.2/4, 0.7, 0.2/4, 0.1], figure_pos),...
         'FontColor', 'w', 'FontWeight', 'bold', 'BackgroundColor', [0, 0.8, 0]);
     add_callback(button_good_cell, 'ButtonPushedFcn', @label_as_good);
-    button_bad_cell = uibutton(main_fig, 'text', 'Not a cell', ...
-        'Position', norm2pix([0.4, 0.7, 0.2/3, 0.1], figure_pos),...
+    button_bad_cell = uibutton(main_fig, 'text', 'Discard', ...
+        'Position', norm2pix([0.4, 0.7, 0.2/4, 0.1], figure_pos),...
         'FontColor', 'w', 'FontWeight', 'bold', 'BackgroundColor', [0.8, 0, 0]);
     add_callback(button_bad_cell, 'ButtonPushedFcn', @label_as_bad);
     button_unlabeled_cell = uibutton(main_fig, 'text', 'Unlabeled', ...
-        'Position', norm2pix([0.4+0.4/3, 0.7, 0.2/3, 0.1], figure_pos),...
+        'Position', norm2pix([0.4+0.4/4, 0.7, 0.2/4, 0.1], figure_pos),...
         'FontColor', 'w', 'FontWeight', 'bold', 'BackgroundColor', color_unlabeled);
     add_callback(button_unlabeled_cell, 'ButtonPushedFcn', @label_as_unlabeled);
     
+    button_dendrite_cell = uibutton(main_fig, 'text', 'Dendrite', ...
+        'Position', norm2pix([0.4+0.6/4, 0.7, 0.3/4, 0.1], figure_pos),...
+        'FontColor', 'w', 'FontWeight', 'bold', 'BackgroundColor', [1,0.5,0]);
+    add_callback(button_dendrite_cell, 'ButtonPushedFcn', @label_as_dendrite);
+    
+
     % Cell statistics
     uilabel(panel_cell_stats, 'text', sprintf(' Not a cell if score < :'),...
         'Position', subpos([0, 0.92, 0.5, 0.05], pos_panel_cell_stats),...
@@ -255,7 +269,7 @@ function cell_check(output, M)
         line2 = sprintf('EXTRACT score: %.2f\n', confidence);
         line3 = sprintf('Elimination reason(s): %s', get_bad_metrics);
         set(label_cell_report, 'text', sprintf('%s %s %s', line1, line2, line3),...
-            'BackgroundColor', max(0.5, label_to_color_mapping(verdict)));
+            'BackgroundColor', label_to_color_mapping(verdict));
         
         function label = get_label_str(verdict, fancy)
             if verdict == 1
@@ -266,6 +280,10 @@ function cell_check(output, M)
                 label = 'unlabeled';
                 pre = 'an ';
                 sf = ' cell';
+            elseif verdict == 2
+                label = 'dendrite';
+                pre = '';
+                sf = '';
             elseif verdict == -1
                 label = 'not a cell';
                 pre = '';
@@ -304,17 +322,17 @@ function cell_check(output, M)
             % pos given instead of handles cell array, create them with given
             % pos:
             ypos = h_stats;
-            colors = {color_good, color_unlabeled, color_bad};
-            h_stats = cell(1, 3);
+            colors = {color_good, color_unlabeled, color_bad,[1,0.5,0]};
+            h_stats = cell(1, 4);
             if exist('dscp_txt', 'var')
                 pos = subpos([0, ypos(1), 1/4, ypos(2)],...
                     get(panel_cell_stats, 'Position'));
                 uilabel(panel_cell_stats, 'Position', pos, ...
                     'FontWeight', 'Bold', 'Fontsize', 10, 'text', dscp_txt);
             end
-            for i = 1:3
+            for i = 1:4
                 % stats label
-                pos = subpos([1/4*i, ypos(1), 1/4, ypos(2)],...
+                pos = subpos([1/5*i, ypos(1), 1/5, ypos(2)],...
                     get(panel_cell_stats, 'Position'));
                 h = uilabel(panel_cell_stats, 'Position', pos, ...
                     'BackgroundColor', colors{i}, 'FontColor', 'k',...
@@ -323,21 +341,21 @@ function cell_check(output, M)
                 h_stats{i} = h;
             end
         end
-        get_stats = @(labels)  [sum(labels==1), sum(labels==0), sum(labels==-1)];
+        get_stats = @(labels)  [sum(labels==1), sum(labels==0), sum(labels==-1),sum(labels==2)];
         stats = get_stats(labels);
         x_len_norm = stats / sum(stats);
         x_start_norm = cumsum(x_len_norm);
-        x_start_norm = [0, x_start_norm(1:2)];
+        x_start_norm = [0, x_start_norm(1:3)];
         % Get props
-        poss = cell(1, 3);
-        for i = 1:3
+        poss = cell(1, 4);
+        for i = 1:4
             poss{i} = get(h_stats{i}, 'Position');
         end
         % Get global limits
         x_start = poss{1}(1);
-        x_total_len = poss{3}(1) + poss{3}(3) - x_start;
+        x_total_len = poss{4}(1) + poss{4}(3) - x_start;
         % Set props
-        for i = 1:3
+        for i = 1:4
             pos = poss{i};
             pos(1) = x_start + x_start_norm(i) * x_total_len;
             pos(3) = x_total_len * x_len_norm(i);
@@ -556,6 +574,23 @@ function cell_check(output, M)
         set_current_cell_from_button_next;
     end
 
+    function label_as_dendrite(varargin)
+        user_labels(idx_current_cell) = 2;
+        update_labels;
+
+        % If active lerning is on, then update predictive model
+        if active_learning
+            update_scoring_model;
+            update_labels;
+        end
+        
+        if fast_cellcheck == 0
+            update_extract_labels;        
+        end
+        update_stats_all;
+        set_current_cell_from_button_next;
+    end
+
     function set_score_thresholds(varargin)
         score_upper_threshold = slider_score_upper.Value;
         score_lower_threshold = slider_score_lower.Value;
@@ -657,7 +692,7 @@ function cell_check(output, M)
         axes_width = 1 / (1 + default_n_active_frames);
         % Plot cell image
         im = full(cellcheck.ims(y_current, x_current, idx_current_cell));
-        [x_lims, y_lims] = get_image_xy_ranges(im> 0.2, 5);
+        [x_lims, y_lims] = get_image_xy_ranges(im> 0.2, 10);
         cell_image = im(y_lims(1):y_lims(2), x_lims(1):x_lims(2));
         % Create axes & image first time, update cdata in subsequent calls
         if isempty(handle_snapshots{1})
@@ -782,7 +817,7 @@ function cell_check(output, M)
             images = max(cat(3, images, ims_neighbor), [], 3);
         end
         % get the extent of the roi
-        [x_range, y_range] = get_image_xy_ranges(images> 0.2, 1);
+        [x_range, y_range] = get_image_xy_ranges(images> 0.2, 10);
         x_current = x_range(1):x_range(2);
         y_current = y_range(1):y_range(2);
     end
@@ -854,9 +889,11 @@ function cell_check(output, M)
         l1 = labels == 1;
         l0 = (labels == 0) | (labels == -2);
         lm1 = labels == -1;
+        l2 = labels == 2;
         colors(l1) = {color_good};
         colors(l0) = {color_unlabeled};
         colors(lm1) = {min(1, color_bad + ones(1, 3)*0.5)};
+        colors(l2) = {[1,0.5,0]};
         % Don't output cell array if length is 1
         if length(colors) == 1
             colors = colors{1};
@@ -1004,7 +1041,10 @@ function cell_check(output, M)
             % Turn off dff
             this_config.skip_dff = true;
             M_out = preprocess_movie(M_out, this_config);
-           
+            switch config.cellfind_filter_type
+                case 'gaus'
+                    M = imgaussfilt3(M,config_this.filter_sigma);
+            end
         end
     end
 

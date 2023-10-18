@@ -5,7 +5,8 @@ function metric = spat_corruption(F, siz, visualize,sparse_array)
     end
 
     if nargin < 4 || isempty(sparse_array)
-        sparse_array = false;
+        sparse_array = 0;
+        F = full(F);
     end
 
     h = siz(1);
@@ -13,21 +14,18 @@ function metric = spat_corruption(F, siz, visualize,sparse_array)
     nk = size(F,2);
 
     mask_in = F>1e-3;
-    nnz_each = sum(mask_in,1);
-    mean_each = sum(mask_in.*F,1)./nnz_each;
+    nnz_each = full(sum(mask_in,1));
+    mean_each = full(sum(mask_in.*F,1)./nnz_each);
     if sparse_array
         metric = zeros(1,size(F,2));
+        mask_in = sparse(mask_in);
+        F = sparse(double(F));
         for cell = 1:size(F,2)
-            mask_in_temp = mask_in(:,cell);
-            F_temp = F(:,cell);
+            mask_in_temp = full(mask_in(:,cell));
+            F_temp = full(F(:,cell));
             F_diff = mask_in_temp.*bsxfun(@minus, F_temp, mean_each(cell));
             F_diff = bsxfun(@times, F_diff, sqrt(1./max(mean_each(cell), 1e-2)));
             var_each = sum(F_diff.^2, 1)./nnz_each(cell);
-        %     var_each = zeros(nk, 1);
-        %     for i = 1:nk
-        %         f = F_diff(:, i);
-        %         var_each(i) = median(f(f>0));
-        %     end
             mask_in_temp = reshape(mask_in_temp,h,w,1);
             F_temp = reshape(F_temp,h,w,1);
             filt = ones(4);%[0, 1, 0; 1, 1, 1; 0, 1, 0];

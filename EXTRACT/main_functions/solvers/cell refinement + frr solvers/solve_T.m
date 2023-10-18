@@ -1,16 +1,11 @@
-function [T_out, l, np_x, np_y, np_time] = solve_T_robust(T_in, S, M, fov_size, avg_radius, lambda, ...
-        kappa, max_iter, TOL, compute_loss, baseline, use_gpu, is_M_transposed,fp_solve_func,GPU_SLACK_FACTOR,kappa_iter_nums)
+function [T_out, l, np_x, np_y, np_time] = solve_T(T_in, S, M, fov_size, avg_radius, lambda, ...
+        kappa, max_iter, TOL, compute_loss, est_func, use_gpu, is_M_transposed,GPU_SLACK_FACTOR)
     
-        
-    if nargin < 15
+    if nargin < 14
         GPU_SLACK_FACTOR = 4;
     end
-
-    if nargin<16
-        kappa_iter_nums = [];
-    end
-
-    min_vals = zeros(1,size(S,2))-100;
+    n_cell = size(S,2);
+    ns_tar = ceil(sqrt(n_cell/100));
 
     CPU_SPACE_SIDELEN = 10 * 2 * avg_radius; % ~10 cells wide
     T_out = zeros(size(T_in), 'single');
@@ -22,6 +17,13 @@ function [T_out, l, np_x, np_y, np_time] = solve_T_robust(T_in, S, M, fov_size, 
         [ns, nt] = size(M);
         transpose_M = true;
     end
+    
+    n_cell = size(S,2);
+    ns_tar = round(sqrt(n_cell/100));
+    nt_tar = round(nt/20000);
+
+
+
     h = fov_size(1); w = fov_size(2);
     l = {};  % If asked, keep loss in a cell array
     % Decide on space & time partitions
@@ -37,7 +39,11 @@ function [T_out, l, np_x, np_y, np_time] = solve_T_robust(T_in, S, M, fov_size, 
         np_y = max(round(h / CPU_SPACE_SIDELEN), 1);
         np_time = 1;
     end
-
+    if max_iter < 101
+        np_x = max(np_x,ns_tar);
+        np_y = max(np_y,ns_tar);
+        np_time = max(np_time,nt_tar);
+    end
     % Get nonzero idx of S - only these will be used for T estimation
     idx_S_nonzero = find(sum(S, 2) > 0);
     % Solve for T in multiple sub-problems
@@ -63,30 +69,16 @@ function [T_out, l, np_x, np_y, np_time] = solve_T_robust(T_in, S, M, fov_size, 
                     end
                     T_in_sub = T_in(idx_comp, idx_t);
                     % Solve regression
-                    if isempty(kappa_iter_nums)
-                    [Tt_out_sub, l{end+1}] = fp_solve_func(T_in_sub', S_sub', M_sub, ...
+                    [Tt_out_sub, l{end+1}] = est_func(T_in_sub', S_sub', M_sub, ...
                         [], lambda(idx_comp), kappa, max_iter, TOL, ...
-                        compute_loss, use_gpu, transpose_M,baseline);
-                    else
-                        [Tt_out_sub, l{end+1}] = fp_solve_func(T_in_sub', S_sub', M_sub, ...
-                        [], lambda(idx_comp), kappa, max_iter, TOL, ...
-                        compute_loss, use_gpu, transpose_M,baseline,kappa_iter_nums);
-                    end
-
+                        compute_loss, use_gpu, transpose_M);
                     % Weight T components by their image powers
                     T_out(idx_comp, idx_t) = T_out(idx_comp, idx_t) + ...
                         bsxfun(@times, Tt_out_sub', power_s_sub);
-                    
-                    temp_vals = min(T_out(idx_comp, idx_t),[],2)';
-
-                    min_vals(idx_comp) = max(temp_vals , min_vals(idx_comp));
                 end
             end
         end
     end
-
-    T_out = max(T_out,min_vals');
-
     % Divide each T component by total power of its image
     power_s = sum(S.^2, 1)';
     T_out = bsxfun(@rdivide, T_out, power_s);

@@ -41,6 +41,7 @@ for i = 1:n_iter_out
 %     t = maybe_gpu(use_gpu, medfilt1(gather(t)));
     
     if sum(t)==0
+        clear M_subsub
         break;
     end
     % S update (transpose when necessary)

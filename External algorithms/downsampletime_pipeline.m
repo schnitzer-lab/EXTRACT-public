@@ -7,7 +7,11 @@ filename  = filename(1:end-3);
 
 hinfo=h5info([filename '.h5']);
 if nargin <4
-    totalnum = hinfo.Datasets.Dataspace.Size(3);
+    try
+        totalnum = hinfo.Datasets(1).Dataspace.Size(3);
+    catch
+        totalnum = hinfo.Datasets(2).Dataspace.Size(3);
+    end
     totalnum = totalnum - mod(totalnum,1000);
 end
 
@@ -19,8 +23,8 @@ if nargin < 3
     blocks = totalnum / 1000;
 end
 
-nx = hinfo.Datasets.Dataspace.Size(1);
-ny = hinfo.Datasets.Dataspace.Size(2);
+nx = hinfo.Datasets(1).Dataspace.Size(1);
+ny = hinfo.Datasets(1).Dataspace.Size(2);
 
 if (mod(totalnum,blocks) ~= 0 || mod(totalnum,blocks*dt) ~= 0)
     error('Pick dt and num_blocks more carefully!')
@@ -45,7 +49,7 @@ disp(sprintf('%s: Downsampling in time by a factor of %s, split into %s movies',
 k=1;
 for i=1:numFrame:totalnum
     
-    fprintf('\t %s: Running %i out of %i parts \n',datestr(now),round(i/numFrame)+1,totalnum/numFrame);
+    fprintf('\t \t \t %s: Running %i out of %i parts \n',datestr(now),round(i/numFrame)+1,totalnum/numFrame);
     data = single(h5read([filename '.h5'],datasetname,[1,1,i],[nx,ny,numFrame]));
     
     [movie_out] = downsample_time(data,dt);

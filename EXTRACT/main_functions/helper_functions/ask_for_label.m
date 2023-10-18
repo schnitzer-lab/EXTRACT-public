@@ -1,6 +1,7 @@
 function [idx_active_label, preds, competences, w] = ...
     ask_for_label(features, labels, ml_labels, varargin)
-
+    labels(labels == 2) = 1;
+    ml_labels(ml_labels == 2) =1;
     method = 'min_conf';
     do_zscoring = true;
     D = [];

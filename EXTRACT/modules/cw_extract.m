@@ -45,6 +45,8 @@ switch config.cellfind_filter_type
         M=convn(M,X,'same');
     case 'median'
         M= medfilt3(M);
+    case 'gaus'
+        M= imgaussfilt3(M,config.filter_sigma);
     case 'none'
     otherwise
         error('Filter type not supported.');

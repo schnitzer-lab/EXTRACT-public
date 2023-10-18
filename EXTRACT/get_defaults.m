@@ -9,6 +9,7 @@ function config = get_defaults(config)
     if ~isfield(config, 'parallel_cpu'), config.parallel_cpu = false; end
     if ~isfield(config, 'dendrite_aware'), config.dendrite_aware = false; end
     if ~isfield(config, 'adaptive_kappa'), config.adaptive_kappa = 1; end
+    if ~isfield(config, 'adaptive_kappa_filter'), config.adaptive_kappa_filter = 0; end
     if ~isfield(config, 'use_sparse_arrays'), config.use_sparse_arrays = false; end
     if ~isfield(config, 'hyperparameter_tuning_flag'), config.hyperparameter_tuning_flag = false; end
     if ~isfield(config, 'remove_duplicate_cells'), config.remove_duplicate_cells = true; end
@@ -20,8 +21,10 @@ function config = get_defaults(config)
     if ~isfield(config, 'pre_mask_radius'), config.pre_mask_radius = 0; end
     if ~isfield(config, 'minimal_checks'), config.minimal_checks = 0; end
     if ~isfield(config, 'cellfind_check_min_magnitude'), config.cellfind_check_min_magnitude = true; end
-    if ~isfield(config, 'frr_check_every_step'), config.frr_check_every_step = true; end
+    if ~isfield(config, 'frr_check_every_step'), config.frr_check_every_step = false; end
+    if ~isfield(config, 'frr_edge_case_flag'), config.frr_edge_case_flag = 0; end
     if ~isfield(config, 'show_progress'), config.show_progress = false; end
+    if ~isfield(config, 'filter_sigma'), config.filter_sigma = [2,2,10]; end
 
     % Preprocessing module parameters
 
@@ -34,7 +37,7 @@ function config = get_defaults(config)
     if ~isfield(config, 'spatial_highpass_cutoff'), config.spatial_highpass_cutoff = 5; end
     if ~isfield(config, 'temporal_denoising'), config.temporal_denoising = false; end
     if ~isfield(config, 'remove_background'), config.remove_background = false; end
-    if ~isfield(config, 'second_df'), config.second_df = 0.5; end
+    if ~isfield(config, 'second_df'), config.second_df = []; end
 
     % Cell finding module parameters
     if ~isfield(config, 'cellfind_filter_type'), config.cellfind_filter_type = 'butter'; end
