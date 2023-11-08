@@ -65,6 +65,13 @@ It is fairly straightforward to install EXTRACT. Simply download all the files f
 
 ## A quick start for beginners
 
+See our quick tutorial scripts:
+
+| Nickname | View | Run
+| --- | --- | --- |
+| "Newcomer" | [:eyes:]() | [:arrow_forward:](https://matlab.mathworks.com/open/github/v1?repo=EXTRACT-public&file=examples/newcomer.mlx)
+
+
 EXTRACT algorithm has two inputs, movie and configurations (a struct), and a single output, a struct that contains the information on the extracted cell signals. In its essence, the whole extract code can be run by a single line:
 
 `output = extractor(M,config)` 
