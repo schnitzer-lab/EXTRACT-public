@@ -581,11 +581,11 @@ switch config.trace_output_option
             try 
                 [T, ~, ~, ~, ~] = solve_T(T, S, Mt, fov_size, avg_radius, lambda, ...
                     kappa, config.max_iter_T_final, config.TOL_sub, ...
-                    config.plot_loss, @fp_solve_adaptive, config.use_gpu, 1);
+                    config.plot_loss, @fp_solve_adaptive_raw, config.use_gpu, 1);
             catch 
                     [T, ~, ~, ~, ~] = solve_T(T, S, Mt, fov_size, avg_radius, lambda, ...
                 kappa, config.max_iter_T_final, config.TOL_sub, ...
-                config.plot_loss, @fp_solve_adaptive, config.use_gpu, 1,30);
+                config.plot_loss, @fp_solve_adaptive_raw, config.use_gpu, 1,30);
             end
             else
 
@@ -768,11 +768,11 @@ if dst > 1
                         try
                             [T, ~, ~, ~, ~] = solve_T(T, S, M_before_dst, fov_size, avg_radius, lambda, ...
                                 kappa, config.max_iter_T_final, config.TOL_sub, ...
-                                config.plot_loss, @fp_solve_adaptive, config.use_gpu, 0);
+                                config.plot_loss, @fp_solve_adaptive_raw, config.use_gpu, 0);
                         catch
                             [T, ~, ~, ~, ~] = solve_T(T, S, M_before_dst, fov_size, avg_radius, lambda, ...
                                 kappa, config.max_iter_T_final, config.TOL_sub, ...
-                                config.plot_loss, @fp_solve_adaptive, config.use_gpu, 0,30);
+                                config.plot_loss, @fp_solve_adaptive_raw, config.use_gpu, 0,30);
                         end
                     
                     else
