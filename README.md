@@ -69,7 +69,7 @@ See our quick tutorial scripts:
 
 | Nickname | View | Run
 | --- | --- | --- |
-| "Newcomer" | [:eyes:]() | [:arrow_forward:](https://matlab.mathworks.com/open/github/v1?repo=schnitzer-lab/EXTRACT-public&file=examples/newcomer.mlx)
+| "Newcomer" | [:eyes:](https://viewer.mathworks.com/?viewer=live_code&url=https%3A%2F%2Fwww.mathworks.com%2Fmatlabcentral%2Fmlc-downloads%2Fdownloads%2F6d2fb9fc-2974-4fac-9eb3-83340b9f5095%2Fdffa518e-b542-4416-b1ea-50afb2609369%2Ffiles%2Fexamples%2Fnewcomer.mlx&embed=web) | [:arrow_forward:](https://matlab.mathworks.com/open/github/v1?repo=schnitzer-lab/EXTRACT-public&file=examples/newcomer.mlx)
 
 
 EXTRACT algorithm has two inputs, movie and configurations (a struct), and a single output, a struct that contains the information on the extracted cell signals. In its essence, the whole extract code can be run by a single line:
