@@ -43,4 +43,7 @@ for idx = 1:size(cell_images, 3)
         plot((b(:,2)), (b(:,1)),'Color', c, 'LineWidth', lw) 
         hold off
     end
+    if mod(idx,1000) == 999
+        drawnow;
+    end
 end
