@@ -170,8 +170,8 @@ function config = get_defaults(config)
         config.S_init = []; 
     else
         S_in = config.S_init;
-        dims_S = size(S_in,2)
-        if dims_S = 3
+        dims_S = size(S_in,2);
+        if dims_S == 3
             config.S_init = sparse(reshape(S_in,dims_S(1)*dims_S(2),[]));
         else
             config.S_init = sparse(S_in);
