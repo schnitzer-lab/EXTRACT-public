@@ -10,6 +10,8 @@ function config = get_defaults(config)
     if ~isfield(config, 'use_sparse_arrays'), config.use_sparse_arrays = false; end
     if ~isfield(config, 'remove_duplicate_cells'), config.remove_duplicate_cells = true; end
     if ~isfield(config, 'hyperparameter_tuning_flag'), config.hyperparameter_tuning_flag = false; end
+    if ~isfield(config, 'multi_gpu'), config.multi_gpu = false; end
+    if ~isfield(config, 'verbose'), config.verbose = 2; end
     % Remember to set config.num_partitions_x, config.num_partitions_y to avoid auto partitioning
     % Also set config.num_workers to avoid automatic selection
     % Initalize config.S_init to skip cell finding if desired 
@@ -96,13 +98,11 @@ function config = get_defaults(config)
     if ~isfield(config, 'adaptive_kappa_filter'), config.adaptive_kappa_filter = 0; end
     if ~isfield(config, 'downsample_space_by'), config.downsample_space_by = 1; end
     if ~isfield(config, 'use_default_gpu'), config.use_default_gpu = false; end
-    if ~isfield(config, 'multi_gpu'), config.multi_gpu = false; end
     if ~isfield(config, 'pick_gpu'), config.pick_gpu = []; end
     if ~isfield(config, 'min_radius_after_downsampling'), config.min_radius_after_downsampling = 5; end
     if ~isfield(config, 'min_tau_after_downsampling'), config.min_tau_after_downsampling = 5; end
     if ~isfield(config, 'reestimate_S_if_downsampled'), config.reestimate_S_if_downsampled = false; end
     if ~isfield(config, 'reestimate_T_if_downsampled'), config.reestimate_T_if_downsampled = true; end
-    if ~isfield(config, 'verbose'), config.verbose = 2; end
     if ~isfield(config, 'low_cell_area_flag'), config.low_cell_area_flag = 0; end
     if ~isfield(config, 'crop_circular'), config.crop_circular = false; end
     if ~isfield(config, 'arbitrary_mask'), config.arbitrary_mask = false; end
