@@ -54,6 +54,7 @@ function config = get_defaults(config)
     if ~isfield(thresholds, 'spatial_corrupt_thresh'), thresholds.spatial_corrupt_thresh = 1.5; end
     if ~isfield(thresholds, 'eccent_thresh'), thresholds.eccent_thresh = 6; end
     if ~isfield(thresholds, 'S_dup_corr_thresh'), thresholds.S_dup_corr_thresh = 0.95; end   
+    if ~isfield(thresholds, 'low_ST_index_thresh'), thresholds.low_ST_index_thresh = -1; end
 
     % Final robust regression
     if ~isfield(config, 'trace_quantile'), config.trace_quantile = 0.25; end
@@ -71,7 +72,6 @@ function config = get_defaults(config)
     if ~isfield(thresholds, 'T_dup_corr_thresh'), thresholds.T_dup_corr_thresh = 0.95; end
     if ~isfield(thresholds, 'confidence_thresh'), thresholds.confidence_thresh = 0.8; end
     if ~isfield(thresholds, 'high_ST_index_thresh'), thresholds.high_ST_index_thresh = 0.8; end
-    if ~isfield(thresholds, 'low_ST_index_thresh'), thresholds.low_ST_index_thresh = -1; end
     if ~isfield(thresholds, 'low_ST_corr_thresh'), thresholds.low_ST_corr_thresh = 0; end
     if ~isfield(thresholds, 'temporal_corrupt_thresh'), thresholds.temporal_corrupt_thresh = 0.7; end
 
