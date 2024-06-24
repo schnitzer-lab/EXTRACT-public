@@ -11,13 +11,21 @@ io_time = 0;
 
 ABS_TOL = 1e-6;
 SIGNAL_LOWER_THRESHOLD = 1e-6;
-PARTITION_SIDE_LEN = 250;
+PARTITION_SIDE_LEN = 512;
 
 % Update config with defaults
 config = get_defaults(config);
 
 if ~exist('config', 'var') || ~isfield(config, 'avg_cell_radius') || ~isnumeric(config.avg_cell_radius)
     error('"config.avg_cell_radius" must be specified.');
+end
+
+list_solvers = {'no_constraint','baseline_adjusted',...
+'nonneg','least_squares','nonnegative_least_squares','none'};
+
+if ~any(strcmp(list_solvers,config.trace_output_option))
+    config.trace_output_option = "baseline_adjusted";
+    warning('Chosen solver is not part of the available options. Using baseline_adjusted solver instead.')
 end
 
 %if ~exist('config', 'var') || ~isfield(config, 'trace_output_option')
@@ -167,8 +175,8 @@ else
     config.downsample_space_by = dss;
     h_adjusted = h / dss;
     w_adjusted = w / dss;
-    npx = max(round(w_adjusted / PARTITION_SIDE_LEN), 1);
-    npy = max(round(h_adjusted / PARTITION_SIDE_LEN), 1);
+    npx = max(ceil(w_adjusted / PARTITION_SIDE_LEN), 1);
+    npy = max(ceil(h_adjusted / PARTITION_SIDE_LEN), 1);
 end
 
 
