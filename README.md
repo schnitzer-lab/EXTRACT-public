@@ -11,12 +11,32 @@ The EXTRACT team
 
 EXTRACT is a  <ins>t</ins>ractable and <ins>r</ins>obust  <ins>a</ins>utomated <ins>c</ins>ell extraction  <ins>t</ins>ool for calcium imaging, which *extracts* the activities of cells as time series from both one-photon and two-photon Ca<sup>2+</sup> imaging movies. EXTRACT makes minimal assumptions about the data, which is the main reason behind its high robustness and superior performance. 
 
-<img src="https://user-images.githubusercontent.com/56279691/206535976-80f4cc28-eb4f-4dd6-848a-fde4cd5fe20f.png" width="40%" align="right" alt="Example_movie">
+<img src="https://user-images.githubusercontent.com/56279691/206535976-80f4cc28-eb4f-4dd6-848a-fde4cd5fe20f.png" width="50%" align="right" alt="Example_movie">
 
 
 We show an example output of EXTRACT on a low SNR movie, in the figure on the right donated by Dr. [Peng Yuan](http://itbr.fudan.edu.cn/en/info/1366/2409.htm). Please note that this is the raw output, with no post-processing and/or manual annotation/selection by users. This run is a result of a batch processing of >30 sessions, optimized only once at the beginning of the study, with no extra parameter tweaking particular to this session. EXTRACT needs to be optimized per surgery/imaging modality type (practically once in the life-time of a study). For a trained person (feel free to schedule a tutorial for your lab!), this process usually takes around few minutes. 
 
-Links to accompanying papers: [Inan et al., 2021](https://www.biorxiv.org/content/10.1101/2021.03.24.436279v1.full.pdf) and [Inan et al., 2017](https://papers.nips.cc/paper/2017/file/e449b9317dad920c0dd5ad0a2a2d5e49-Paper.pdf). If you use EXTRACT for your own research, please cite both of these works. 
+## Installation
+
+It is fairly straightforward to install EXTRACT. Simply download all the files from the repository and include them in the MATLAB path. Installation is complete. 
+
+Please note that EXTRACT makes use of various packages and toolboxes:
+
+- Bioinformatics Toolbox
+- Econometrics Toolbox
+- Image Processing Toolbox
+- Parallel Computing Toolbox 
+- Signal Processing Toolbox 
+- Statistics and Machine Learning Toolbox
+- Wavelet Toolbox
+
+## Questions
+
+EXTRACT code is primarily written by Dr. Hakan Inan and Fatih Dinc in collaboration with many researchers in Schnitzerlab. The database is maintained by the current members of Schnitzerlab. If you have any questions or comments, please open an issue or contact via email `extractneurons@gmail.com`.
+
+## Citation
+
+If you use EXTRACT for your own research, please cite the following works. 
 
 
 ```
@@ -47,25 +67,7 @@ Links to accompanying papers: [Inan et al., 2021](https://www.biorxiv.org/conten
 }
 ```
 
-## Installation
-
-It is fairly straightforward to install EXTRACT. Simply download all the files from the repository and include them in the MATLAB path. Installation is complete. 
-
-Please note that EXTRACT makes use of various packages and toolboxes:
-
-- Bioinformatics Toolbox
-- Econometrics Toolbox
-- Image Processing Toolbox
-- Parallel Computing Toolbox 
-- Signal Processing Toolbox 
-- Statistics and Machine Learning Toolbox
-- Wavelet Toolbox
-
-
-## Questions and comments
-
-EXTRACT code is primarily written by Dr. Hakan Inan and Fatih Dinc in collaboration with many researchers in Schnitzerlab. The database is maintained by the current members of Schnitzerlab. If you have any questions or comments, please open an issue or contact via email `extractneurons@gmail.com`.
-
+Links to accompanying papers: [Inan et al., 2021](https://www.biorxiv.org/content/10.1101/2021.03.24.436279v1.full.pdf) and [Inan et al., 2017](https://papers.nips.cc/paper/2017/file/e449b9317dad920c0dd5ad0a2a2d5e49-Paper.pdf).
 
 ## License
 
