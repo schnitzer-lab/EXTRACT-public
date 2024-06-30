@@ -12,12 +12,11 @@ config.downsample_time_by = 6;
 % The movie is small, 
 % one partition should be enough!
 config.cellfind_filter_type = 'butter';
-config.spatial_highpass_cutoff = 8;
-config.num_partitions_x=3;
-config.num_partitions_y=3; 
+config.num_partitions_x=2;
+config.num_partitions_y=2; 
 config.compact_output = 0;
 config.use_gpu = 0;
-config.num_workers = 4;
+config.num_workers = 2;
 config.parallel_cpu = 1;
 config.cellfind_max_steps = 400;
 config.cellfind_kappa_std_ratio = 1;
@@ -53,7 +52,3 @@ S_ex = output.spatial_weights;
 S_ex = reshape(S_ex,512*512,[])>0;
 idx_match = match_sets(S_gt,S_ex,0.3);
 
-%%
-M = h5read('neurofinder0200.h5','/data');
-load('extract_output_nf0200.mat')
-cell_check(output,M);
