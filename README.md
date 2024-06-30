@@ -71,7 +71,7 @@ EXTRACT requires, at least, the following toolboxes. With future releases, there
 
 ## Questions and comments
 
-EXTRACT is mainly written by Hakan Inan in collaboration with many researchers in Schnitzerlab. The database is maintained by the current members of Schnitzerlab. If you have any questions or comments, please open an issue or contact via email `extractneurons@gmail.com`.
+EXTRACT code is primarily written by Dr. Hakan Inan and Fatih Dinc in collaboration with many researchers in Schnitzerlab. The database is maintained by the current members of Schnitzerlab. If you have any questions or comments, please open an issue or contact via email `extractneurons@gmail.com`.
 
 
 ## License
