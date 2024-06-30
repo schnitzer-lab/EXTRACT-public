@@ -1,4 +1,4 @@
-function [amp1,amp2,cors] = calculate_matching_amplitudes_v2(spikes,T_g,T)
+function [amp1,amp2,cors] = calculate_matching_amplitudes(spikes,T_g,T)
 
 
 amp1 = [];

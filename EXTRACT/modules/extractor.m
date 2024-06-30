@@ -20,6 +20,10 @@ if ~exist('config', 'var') || ~isfield(config, 'avg_cell_radius') || ~isnumeric(
     error('"config.avg_cell_radius" must be specified.');
 end
 
+if (config.parallel_cpu || config.multi_gpu) && ~(ischar(M) || iscell(M))
+    error('Please input the movie as either a string or cell array.')
+end
+
 list_solvers = {'no_constraint','baseline_adjusted',...
 'nonneg','least_squares','nonnegative_least_squares','none'};
 
@@ -178,7 +182,6 @@ else
     npx = max(ceil(w_adjusted / PARTITION_SIDE_LEN), 1);
     npy = max(ceil(h_adjusted / PARTITION_SIDE_LEN), 1);
 end
-
 
 % Get a circular mask (for movies with GRIN)
 if config.crop_circular

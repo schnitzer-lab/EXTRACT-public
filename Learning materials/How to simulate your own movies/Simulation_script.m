@@ -1,6 +1,7 @@
 %% Create the movie
 clear
 clc
+
 [opts_2p,opts_back] = get_1p_defaults();
 opts_2p.ns = 100;
 opts_back.ns = 100;
@@ -65,7 +66,7 @@ config.trace_output_option = 'least_squares';
 output_ls = extractor(M,config);
 T_ls = output_ls.temporal_weights';
 
-[~,~,cors_ex] = calculate_matching_amplitudes_v2(spikes_ground(idx_match(1,:)),...
+[~,~,cors_ex] = calculate_matching_amplitudes(spikes_ground(idx_match(1,:)),...
             T_ground(idx_match(1,:),:),T_ls(idx_match(2,:),:));
 
 ampcor = mean(cors_ex(~isnan(cors_ex)));
