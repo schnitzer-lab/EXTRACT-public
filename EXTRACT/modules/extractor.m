@@ -24,6 +24,10 @@ if (config.parallel_cpu || config.multi_gpu) && ~(ischar(M) || iscell(M))
     error('Please input the movie as either a string or cell array.')
 end
 
+if (config.regression_only && isempty(config.S_init))
+    error('If using EXTRACT as a post-processing tool, initialize the cell profiles within config.S_init.')
+end
+
 list_solvers = {'no_constraint','baseline_adjusted',...
 'nonneg','least_squares','nonnegative_least_squares','none'};
 
@@ -477,25 +481,48 @@ dispfun(sprintf('%s: Total of %d cells are found.\n', ...
 if config.remove_duplicate_cells
     dispfun(sprintf('%s: Removing duplicate cells...\n', ...
     datestr(now)), config.verbose == 2);
-
-    overlap_idx = find(fov_occupation_total - 1);
-    if ~isempty(S)
-        idx_trash = find_duplicate_cells(S, T, overlap_idx,config.T_dup_thresh,config.T_corr_thresh,config.S_corr_thresh);
-        S(:, idx_trash) = [];
-        T(:, idx_trash) = [];
-        try
-            cellcheck.is_bad(idx_trash)=[];
-            cellcheck.is_attr_bad(:,idx_trash)=[];
-            cellcheck.metrics(:,idx_trash)=[];
-        catch
-            %warning('cellcheck classification metrics have an issue 2/3.')
+    
+    
+    if config.regression_only
+        S_init = config.S_init;
+        duplicate_flag = 1;
+        cur_threshold = 1;
+        while duplicate_flag == 1
+            cur_threshold = cur_threshold - 0.01;
+            if cur_threshold <0.01
+                duplicate_flag = 0;
+            end
+            idx_match = match_sets(S_init,S,cur_threshold);
+            if(size(idx_match,2) == size(S_init,2) )
+                duplicate_flag = 0;
+            end
         end
-        
-    end
-
-    dispfun(sprintf(...
+        S = S(:,idx_match(2,:));
+        T = T(:,idx_match(2,:));
+        dispfun(sprintf(...
+        '%s: %d cells were retained after removing duplicates (cor_thresh = %.2f). \n', ...
+        datestr(now), size(S, 2),cur_threshold), config.verbose ~=0);
+    else
+        overlap_idx = find(fov_occupation_total - 1);
+        if ~isempty(S)
+            idx_trash = find_duplicate_cells(S, T, overlap_idx,config.T_dup_thresh,config.T_corr_thresh,config.S_corr_thresh);
+            S(:, idx_trash) = [];
+            T(:, idx_trash) = [];
+            try
+                cellcheck.is_bad(idx_trash)=[];
+                cellcheck.is_attr_bad(:,idx_trash)=[];
+                cellcheck.metrics(:,idx_trash)=[];
+            catch
+                %warning('cellcheck classification metrics have an issue 2/3.')
+            end
+            
+        end
+        dispfun(sprintf(...
         '%s: %d cells were retained after removing duplicates.\n', ...
         datestr(now), size(S, 2)), config.verbose ~=0);
+    end
+
+    
 end
 
 % Get total runtime (minus time spent reading from disk)

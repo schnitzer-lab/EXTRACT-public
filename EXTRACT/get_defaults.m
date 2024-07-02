@@ -1,20 +1,21 @@
 function config = get_defaults(config)
 
 
-    % General control parameters 
+    %% General control parameters 
     if ~isfield(config, 'avg_cell_radius'), config.avg_cell_radius = 6; end
     if ~isfield(config, 'downsample_time_by'), config.downsample_time_by = 1; end
+    if ~isfield(config, 'dendrite_aware'), config.dendrite_aware = false; end
+    if ~isfield(config, 'remove_duplicate_cells'), config.remove_duplicate_cells = true; end
     if ~isfield(config, 'use_gpu'), config.use_gpu = true; end
     if ~isfield(config, 'parallel_cpu'), config.parallel_cpu = false; end
-    if ~isfield(config, 'dendrite_aware'), config.dendrite_aware = false; end
+    if ~isfield(config, 'multi_gpu'), config.mduulti_gpu = false; end
     if ~isfield(config, 'use_sparse_arrays'), config.use_sparse_arrays = false; end
-    if ~isfield(config, 'remove_duplicate_cells'), config.remove_duplicate_cells = true; end
+    if ~isfield(config, 'compact_output'), config.compact_output = 0; end
     if ~isfield(config, 'hyperparameter_tuning_flag'), config.hyperparameter_tuning_flag = false; end
-    if ~isfield(config, 'multi_gpu'), config.multi_gpu = false; end
     if ~isfield(config, 'verbose'), config.verbose = 2; end
     % Remember to set config.num_partitions_x, config.num_partitions_y to avoid auto partitioning
     % Also set config.num_workers to avoid automatic selection
-    % Initalize config.S_init to skip cell finding if desired 
+     
 
     % Visualization parameters
     if ~isfield(config, 'visualize_cellfinding'), config.visualize_cellfinding = 0; end
@@ -34,7 +35,7 @@ function config = get_defaults(config)
     if ~isfield(config, 'cellfind_adaptive_kappa'), config.cellfind_adaptive_kappa = 0; end
     if ~isfield(config, 'init_with_gaussian'), config.init_with_gaussian = false; end
     if ~isfield(config, 'avg_yield_threshold'), config.avg_yield_threshold = 0.1; end
-
+    % Initalize config.S_init to skip cell finding if desired
 
     % Cell refinement module parameters
     if ~isfield(config, 'kappa_std_ratio'), config.kappa_std_ratio = 0.7; end
@@ -59,8 +60,10 @@ function config = get_defaults(config)
     % Final robust regression
     if ~isfield(config, 'trace_quantile'), config.trace_quantile = 0.25; end
     if ~isfield(config, 'trace_output_option'), config.trace_output_option = 'baseline_adjusted'; end
-
-
+    if ~isfield(config, 'regression_only'), config.regression_only = 0; end
+    
+    if ~isfield(config, 'T_dup_thresh'), config.T_dup_thresh = 0.9; end
+    if ~isfield(config, 'S_corr_thresh'), config.S_corr_thresh = 0.1; end
 
 
 
@@ -88,6 +91,7 @@ function config = get_defaults(config)
     if ~isfield(config, 'temporal_denoising'), config.temporal_denoising = false; end
     if ~isfield(config, 'remove_background'), config.remove_background = false; end
     if ~isfield(config, 'second_df'), config.second_df = []; end
+    if ~isfield(config, 'T_corr_thresh'), config.T_corr_thresh = 0.8; end
     if ~isfield(config, 'fix_zero_FOV_strips'), config.fix_zero_FOV_strips = false; end
     if ~isfield(config, 'medfilt_outlier_pixels'), config.medfilt_outlier_pixels = false; end
     if ~isfield(config, 'visualize_cellfinding_show_bad_cells'), config.visualize_cellfinding_show_bad_cells = 0; end
@@ -108,7 +112,7 @@ function config = get_defaults(config)
     if ~isfield(config, 'arbitrary_mask'), config.arbitrary_mask = false; end
     if ~isfield(config, 'movie_mask'), config.movie_mask = []; end
     if ~isfield(config, 'smoothing_ratio_x2y'), config.smoothing_ratio_x2y = 1; end
-    if ~isfield(config, 'compact_output'), config.compact_output = 0; end
+    
     if ~isfield(config, 'num_frames'), config.num_frames = []; end
     if ~isfield(config, 'is_pixel_valid'), config.is_pixel_valid = []; end
     if ~isfield(config, 'save_all_found'), config.save_all_found = false; end
@@ -120,9 +124,6 @@ function config = get_defaults(config)
     if ~isfield(config, 'smooth_T'), config.smooth_T = false; end
     if ~isfield(config, 'smooth_S'), config.smooth_S = true; end
     if ~isfield(config, 'avg_event_tau'), config.avg_event_tau = 10; end
-    if ~isfield(config, 'T_dup_thresh'), config.T_dup_thresh = 0.9; end
-    if ~isfield(config, 'T_corr_thresh'), config.T_corr_thresh = 0.8; end
-    if ~isfield(config, 'S_corr_thresh'), config.S_corr_thresh = 0.1; end
     if ~isfield(config, 'pre_mask_on'), config.pre_mask_on = 0; end
     if ~isfield(config, 'pre_mask_radius'), config.pre_mask_radius = 0; end
     if ~isfield(config, 'minimal_checks'), config.minimal_checks = 0; end
@@ -179,10 +180,14 @@ function config = get_defaults(config)
         end
     end
 
+    if config.regression_only
+        config.max_iter = 0;
+        config.remove_duplicates = 1;
+    end
 
     if config.parallel_cpu
         config.use_gpu = 0;
-        config.multi_gpu =0;
+        config.multi_gpu = 0;
     end
 
     if config.multi_gpu
