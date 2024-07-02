@@ -12,7 +12,6 @@ config.use_gpu=0;
 config.max_iter = 10; 
 config.cellfind_min_snr=0;
 config.thresholds.T_min_snr=10;
-
 output=extractor(M,config);
 
 %% Matching to ground truth and plotting the results

@@ -14,8 +14,3 @@ if isfile('Example_1p_movie.mat')
 end
 create_1p_movie(opts_2p,opts_back,'Example_1p_movie');
 
-%%
-M = h5read('Example_1p_movie.h5','/mov');
-M = M(1:60,1:60,:);
-M_proc = spatial_bandpass(M, 7, 5, inf, 0);
-view_movie(M_proc)

@@ -1,20 +1,3 @@
-%% Create the movie
-clear
-clc
-
-[opts_2p] = get_2p_defaults();
-opts_2p.ns = 100;
-opts_2p.n_cell = 100;
-
-if isfile('Example_2p_movie.h5')
-    delete('Example_2p_movie.h5')
-end
-if isfile('Example_2p_movie.mat')
-    delete('Example_2p_movie.mat')
-end
-create_2p_movie(opts_2p,'Example_2p_movie');
-
-
 %% Run EXTRACT
 M = h5read('Example_2p_movie.h5','/mov');
 config = get_defaults([]);
@@ -56,13 +39,12 @@ precision = size(idx_match,2)/size(S_ex,2);
 
 ampcor = mean(cors_ex(~isnan(cors_ex)));
 
-%roc= compute_ROC_curve(spikes_ground(idx_match(1,:)),T_ex(idx_match(2,:),:),1);
-%[auc] = compute_AUC(roc);
-auc = 0;
+roc= compute_ROC_curve(spikes_ground(idx_match(1,:)),T_ex(idx_match(2,:),:),1);
+[auc] = compute_AUC(roc);
+
 fprintf("Prc %.3f. Rcl %.3f. Ampcor %.3f. AUC %.4f. \n", ...
     precision,recall,ampcor,auc);
 
-error('stop')
 %%
 
 config.max_iter = 0;
