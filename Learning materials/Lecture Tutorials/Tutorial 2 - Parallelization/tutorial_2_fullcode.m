@@ -1,54 +1,43 @@
-%% Welcome to the EXTRACT tutorial! Written by Fatih Dinc, 03/02/2021
-clear
-clc
-M = 'neurofinder0200.h5:/data';
-config=[];
-config = get_defaults(config); %calls the defaults
-%config.F_per_pixel = h5read('Fig4_example_final.h5','/F_per_pixel');
-% Essentials, without these EXTRACT will give an error:
-config.avg_cell_radius=6; 
-config.preprocess = 1;
-config.downsample_time_by = 6;
-% The movie is small, 
-% one partition should be enough!
-config.cellfind_filter_type = 'butter';
-config.num_partitions_x=2;
-config.num_partitions_y=2; 
-config.compact_output = 0;
+%% Create the movie
+%clear
+%clc
+if ~isfile('Example_2p_movie.h5')
+    [opts_2p] = get_2p_defaults();
+    opts_2p.ns = 500;
+    rng(1)
+    create_2p_movie(opts_2p,'Example_2p_movie'); 
+end
+%% Run EXTRACT
+M = 'Example_2p_movie.h5:/mov';
+config = get_defaults([]);
 config.use_gpu = 0;
-config.num_workers = 2;
-config.parallel_cpu = 1;
-config.cellfind_max_steps = 400;
-config.cellfind_kappa_std_ratio = 1;
-config.thresholds.T_min_snr = 5;
-config.thresholds.spatial_corrupt_thresh = 5;
-config.max_iter = 10;
-config.kappa_std_ratio = 2;
 config.adaptive_kappa = 2;
-config.max_iter_T = 30;
-config.max_iter_S = 30;
-config.cellfind_max_iter = 3;
-config.thresholds.size_upper_limit = 2.5; 
-config.thresholds.size_lower_limit = .3; 
-config.thresholds.S_dup_corr_thresh = 0.5;
-config.thresholds.T_dup_corr_thresh = 0.5;
-
+config.spatial_highpass_cutoff = inf;
+config.parallel_cpu = 1;
+config.num_workers = 4;
+config.downsample_time_by = 4;
+config.num_partitions_x = 4;
+config.num_partitions_y = 4;
+config.thresholds.S_dup_corr_thresh = 0.8;
+%config.thresholds.T_dup_corr_thresh = 0.99;
+config.thresholds.spatial_corrupt_thresh = 0.1;
+config.thresholds.eccent_thresh = 3;
+config.max_iter = 10;
+config.thresholds.size_upper_limit = 3;
+config.thresholds.size_lower_limit = .1;
+config.visualize_cellfinding = 0;
+config.cellfind_min_snr = 0;
+config.thresholds.T_min_snr = 7;
+config.verbose = 2;
 config.trace_output_option = 'no_constraint';
-config.avg_yield_threshold = 0.05;
-output=extractor(M,config);
-save('extract_output_nf0200.mat','output','-v7.3')
-%%
+output = extractor(M,config);
 
-load('nf0200_gt.mat')
-load('extract_output_nf0200.mat')
-max_im = output.info.summary_image;
-clim = quantile(max_im(:),[0.1,0.95]);
-imshow(max_im,[clim(1) clim(2)])
-plot_cells_overlay(masks,[1,0,0])
-plot_cells_overlay(output.spatial_weights,[0,1,0])
+%% Evaluate outputs
+a = load('Example_2p_movie.mat');
 
-S_gt = reshape(masks,512*512,[]);
-S_ex = output.spatial_weights;
-S_ex = reshape(S_ex,512*512,[])>0;
-idx_match = match_sets(S_gt,S_ex,0.3);
+[recall,precision,ampcor,auc] = get_simulation_results(a,output);
+
+fprintf("Prc %.3f. Rcl %.3f. Ampcor %.3f. AUC %.4f. \n", ...
+    precision,recall,ampcor,auc);
+
 

@@ -1,34 +1,22 @@
-%% Create the movie
-clear
-clc
-
-[opts_2p] = get_2p_defaults();
-opts_2p.ns = 100;
-opts_2p.n_cell = 100;
-
-if isfile('Example_2p_movie.h5')
-    delete('Example_2p_movie.h5')
-end
-if isfile('Example_2p_movie.mat')
-    delete('Example_2p_movie.mat')
-end
-create_2p_movie(opts_2p,'Example_2p_movie');
-
-
 %% Run EXTRACT
-M = h5read('Example_2p_movie.h5','/mov');
+M = 'Example_2p_movie.h5:/mov';
 config = get_defaults([]);
 config.use_gpu = 0;
 config.adaptive_kappa = 2;
+config.spatial_highpass_cutoff = inf;
+%config.parallel_cpu = 1;
+%config.num_workers = 4;
 config.downsample_time_by = 4;
-config.num_partitions_x = 1;
-config.num_partitions_y = 1;
-%config.thresholds.S_dup_corr_thresh = 0.8;
-%config.thresholds.T_dup_corr_thresh = 0.9;
+config.num_partitions_x = 2;
+config.num_partitions_y = 2;
+config.thresholds.S_dup_corr_thresh = 0.8;
+config.thresholds.T_dup_corr_thresh = 0.99;
 config.max_iter = 10;
-config.thresholds.size_upper_limit = 2.5;
+config.thresholds.size_upper_limit = 2;
+config.thresholds.size_lower_limit = .3;
 config.visualize_cellfinding = 0;
 config.cellfind_min_snr = 2;
+config.thresholds.T_min_snr = 7;
 config.verbose = 2;
 config.trace_output_option = 'no_constraint';
 output = extractor(M,config);
@@ -47,7 +35,7 @@ S_ex = output.spatial_weights;
 S_ex = reshape(S_ex,ns*ns,[]);
 T_ex = output.temporal_weights';
 
-idx_match = match_sets(S_ground,S_ex,0.8);
+idx_match = match_sets(S_ground,S_ex,0.5);
 recall = size(idx_match,2)/size(S_ground,2);
 precision = size(idx_match,2)/size(S_ex,2);
 
