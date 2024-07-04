@@ -68,6 +68,7 @@ config.thresholds.eccent_thresh = 3;
 config.thresholds.size_upper_limit = 3;
 config.cellfind_adaptive_kappa = 1;
 config.adaptive_kappa = 2;
+config.trace_output_option = 'no_constraint';
 config.F_per_pixel = h5read('Example_1p_movie_final.h5','/F_per_pixel');
 output = extractor(M,config);
 
@@ -88,7 +89,8 @@ T_ex = T_ex ./ max(T_ex,[],2);
 T_ground = T_ground ./ max(T_ground,[],2);
 color_extract = [0 0.4470 0.7410];
 color_gt      = [144 103 167]./255;
-plot_stacked_traces_double(T_ground(idx_match(2,1:10),1:1000), ...
- T_ex(idx_match(1,1:10),1:1000),1,{color_gt,color_extract},[],[],{5,3});
+plot_stacked_traces_double(T_ground(idx_match(2,1:11),1:1030), ...
+ T_ex(idx_match(1,1:11),1:1030),1,{color_gt,color_extract},[],[],{5,3});
 exportgraphics(gcf,'FigC.eps','ContentType','vector')
+
 
