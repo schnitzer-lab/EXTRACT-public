@@ -1,31 +1,29 @@
 function config = get_defaults(config)
 
 
-    %% General control parameters 
+    % General control parameters 
     if ~isfield(config, 'avg_cell_radius'), config.avg_cell_radius = 6; end
     if ~isfield(config, 'downsample_time_by'), config.downsample_time_by = 1; end
     if ~isfield(config, 'dendrite_aware'), config.dendrite_aware = false; end
     if ~isfield(config, 'remove_duplicate_cells'), config.remove_duplicate_cells = true; end
+    if ~isfield(config, 'T_dup_thresh'), config.T_dup_thresh = 0.9; end
+    if ~isfield(config, 'S_corr_thresh'), config.S_corr_thresh = 0.1; end
     if ~isfield(config, 'use_gpu'), config.use_gpu = true; end
     if ~isfield(config, 'parallel_cpu'), config.parallel_cpu = false; end
-    if ~isfield(config, 'multi_gpu'), config.mduulti_gpu = false; end
+    if ~isfield(config, 'multi_gpu'), config.multi_gpu = false; end
+    % Also set config.num_workers to avoid automatic selection
     if ~isfield(config, 'use_sparse_arrays'), config.use_sparse_arrays = false; end
     if ~isfield(config, 'compact_output'), config.compact_output = 0; end
     if ~isfield(config, 'hyperparameter_tuning_flag'), config.hyperparameter_tuning_flag = false; end
     if ~isfield(config, 'verbose'), config.verbose = 2; end
     % Remember to set config.num_partitions_x, config.num_partitions_y to avoid auto partitioning
-    % Also set config.num_workers to avoid automatic selection
-     
-
-    % Visualization parameters
-    if ~isfield(config, 'visualize_cellfinding'), config.visualize_cellfinding = 0; end
-    if ~isfield(config, 'show_progress'), config.show_progress = false; end    
+    
 
     % Preprocessing module parameters
     if ~isfield(config, 'preprocess'), config.preprocess = true; end
     if ~isfield(config, 'skip_dff'), config.skip_dff = false; end
-    if ~isfield(config, 'skip_highpass'), config.skip_highpass = false; end
     if ~isfield(config, 'spatial_highpass_cutoff'), config.spatial_highpass_cutoff = 5; end
+    % Remember to set F_per_pixel if preprocess=false
 
     % Cell finding module parameters
     if ~isfield(config, 'spatial_lowpass_cutoff'), config.spatial_lowpass_cutoff = 2; end
@@ -35,13 +33,15 @@ function config = get_defaults(config)
     if ~isfield(config, 'cellfind_adaptive_kappa'), config.cellfind_adaptive_kappa = 0; end
     if ~isfield(config, 'init_with_gaussian'), config.init_with_gaussian = false; end
     if ~isfield(config, 'avg_yield_threshold'), config.avg_yield_threshold = 0.1; end
+    if ~isfield(config, 'visualize_cellfinding'), config.visualize_cellfinding = 0; end    
     % Initalize config.S_init to skip cell finding if desired
 
     % Cell refinement module parameters
     if ~isfield(config, 'kappa_std_ratio'), config.kappa_std_ratio = 0.7; end
     if ~isfield(config, 'adaptive_kappa'), config.adaptive_kappa = 1; end
     if ~isfield(config, 'max_iter'), config.max_iter = 6; end
-
+    if ~isfield(config, 'l1_penalty_factor'), config.l1_penalty_factor = 0; end
+    
 
     if ~isfield(config, 'thresholds')
         thresholds = [];
@@ -54,31 +54,31 @@ function config = get_defaults(config)
     if ~isfield(thresholds, 'size_upper_limit'), thresholds.size_upper_limit = 10; end  % to be multiplied with avg_cell_area
     if ~isfield(thresholds, 'spatial_corrupt_thresh'), thresholds.spatial_corrupt_thresh = 1.5; end
     if ~isfield(thresholds, 'eccent_thresh'), thresholds.eccent_thresh = 6; end
+    if ~isfield(thresholds, 'T_dup_corr_thresh'), thresholds.T_dup_corr_thresh = 0.95; end
     if ~isfield(thresholds, 'S_dup_corr_thresh'), thresholds.S_dup_corr_thresh = 0.8; end   
     if ~isfield(thresholds, 'low_ST_index_thresh'), thresholds.low_ST_index_thresh = -1; end
 
     % Final robust regression
-    if ~isfield(config, 'trace_quantile'), config.trace_quantile = 0.25; end
-    if ~isfield(config, 'trace_output_option'), config.trace_output_option = 'baseline_adjusted'; end
     if ~isfield(config, 'regression_only'), config.regression_only = 0; end
+    if ~isfield(config, 'trace_output_option'), config.trace_output_option = 'baseline_adjusted'; end
+    if ~isfield(config, 'trace_quantile'), config.trace_quantile = 0.25; end
     
-    if ~isfield(config, 'T_dup_thresh'), config.T_dup_thresh = 0.9; end
-    if ~isfield(config, 'S_corr_thresh'), config.S_corr_thresh = 0.1; end
-
-
-
+    
+    % Speed relevant hyperparameters
+    if ~isfield(config, 'cellfind_max_iter'), config.cellfind_max_iter = 10; end
+    if ~isfield(config, 'max_iter_S'), config.max_iter_S = 100; end
+    if ~isfield(config, 'max_iter_T'), config.max_iter_T = 100; end
+    if ~isfield(config, 'max_iter_T_final'), config.max_iter_T_final = 100; end
 
 
     %% The parameters below are mainly used by the developers, not immediately relevant for users
 
     % Additional thresholds (not particularly/immediately relevant)
-    if ~isfield(thresholds, 'T_dup_corr_thresh'), thresholds.T_dup_corr_thresh = 0.95; end
+    
     if ~isfield(thresholds, 'confidence_thresh'), thresholds.confidence_thresh = 0.8; end
     if ~isfield(thresholds, 'high_ST_index_thresh'), thresholds.high_ST_index_thresh = 0.8; end
     if ~isfield(thresholds, 'low_ST_corr_thresh'), thresholds.low_ST_corr_thresh = 0; end
     if ~isfield(thresholds, 'temporal_corrupt_thresh'), thresholds.temporal_corrupt_thresh = 0.7; end
-
-
 
     % Additional parameters (will not change for 99.9% of time, no urgent need to know about them)
     if ~isfield(config, 'T_init'), config.T_init = []; end
@@ -119,7 +119,7 @@ function config = get_defaults(config)
     if ~isfield(config, 'cellfind_numpix_threshold'), config.cellfind_numpix_threshold = 9; end  % 3x3 region
     if ~isfield(config, 'high2low_brightness_ratio'), config.high2low_brightness_ratio = inf; end
     if ~isfield(config, 'plot_loss'), config.plot_loss = false; end
-    if ~isfield(config, 'l1_penalty_factor'), config.l1_penalty_factor = 0; end
+
     if ~isfield(config, 'T_lower_snr_threshold'), config.T_lower_snr_threshold = 10; end
     if ~isfield(config, 'smooth_T'), config.smooth_T = false; end
     if ~isfield(config, 'smooth_S'), config.smooth_S = true; end
@@ -130,17 +130,15 @@ function config = get_defaults(config)
     if ~isfield(config, 'cellfind_check_min_magnitude'), config.cellfind_check_min_magnitude = true; end
     if ~isfield(config, 'frr_check_every_step'), config.frr_check_every_step = false; end
     if ~isfield(config, 'frr_edge_case_flag'), config.frr_edge_case_flag = 0; end
-
+    if ~isfield(config, 'show_progress'), config.show_progress = false; end 
     % Optimizer parameters (will not change for 99.9% of time, no urgent need to know about them)
-    if ~isfield(config, 'cellfind_max_iter'), config.cellfind_max_iter = 10; end
-    if ~isfield(config, 'max_iter_S'), config.max_iter_S = 100; end
-    if ~isfield(config, 'max_iter_T'), config.max_iter_T = 100; end
-    if ~isfield(config, 'max_iter_T_final'), config.max_iter_T_final = 100; end
+
+    
     if ~isfield(config, 'TOL_sub'), config.TOL_sub = 1e-6; end
     if ~isfield(config, 'TOL_main'), config.TOL_main = 1e-2; end
     if ~isfield(config, 'kappa_iter_nums'), config.kappa_iter_nums = []; end
     if ~isfield(config, 'skip_parpool_calculations'), config.skip_parpool_calculations = false; end
-
+       
 
     % Do not change anything below, these are no longer hyper parameter definitions!
 
@@ -153,10 +151,6 @@ function config = get_defaults(config)
 
     if config.hyperparameter_tuning_flag
         config.trace_output_option = 'None';
-    end
-
-    if config.skip_highpass
-        config.spatial_highpass_cutoff=inf;
     end
 
     if config.minimal_checks
@@ -182,12 +176,11 @@ function config = get_defaults(config)
 
     if config.regression_only
         config.max_iter = 0;
-        config.remove_duplicates = 1;
+        config.remove_duplicate_cells = 1;
     end
 
     if config.parallel_cpu
         config.use_gpu = 0;
-        config.multi_gpu = 0;
     end
 
     if config.multi_gpu
