@@ -19,7 +19,7 @@ if nargin < 3 || isempty(plot_init_locations)
 end
 
 if nargin < 2 || isempty(include_bad_cells)
-    include_bad_cells = 10;
+    include_bad_cells = 0;
 end
 
 max_im = output.info.summary_image;
