@@ -150,7 +150,7 @@ function config = get_defaults(config)
     end
 
     if config.hyperparameter_tuning_flag
-        config.trace_output_option = 'None';
+        config.trace_output_option = 'none';
     end
 
     if config.minimal_checks

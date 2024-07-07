@@ -68,7 +68,6 @@ config.thresholds.eccent_thresh = 3;
 config.thresholds.size_upper_limit = 3;
 config.cellfind_adaptive_kappa = 1;
 config.adaptive_kappa = 2;
-config.trace_output_option = 'no_constraint';
 config.F_per_pixel = h5read('Example_1p_movie_final.h5','/F_per_pixel');
 output = extractor(M,config);
 
@@ -83,14 +82,48 @@ S_ground = a.mov_2p.S;
 T_ground = a.mov_2p.T;
 [h,w,k]=size(full(output.spatial_weights));
 S_ex=reshape(full(output.spatial_weights),h*w,k);
-idx_match = match_sets(S_ex, S_ground,0.8); 
+idx_match = match_sets(S_ground,S_ex,0.5); 
 T_ex = output.temporal_weights';
 T_ex = T_ex ./ max(T_ex,[],2);
 T_ground = T_ground ./ max(T_ground,[],2);
 color_extract = [0 0.4470 0.7410];
 color_gt      = [144 103 167]./255;
-plot_stacked_traces_double(T_ground(idx_match(2,1:11),1:1030), ...
- T_ex(idx_match(1,1:11),1:1030),1,{color_gt,color_extract},[],[],{5,3});
+plot_stacked_traces_double(T_ground(idx_match(1,1:11),1:1030), ...
+ T_ex(idx_match(2,1:11),1:1030),1,{color_gt,color_extract},[],[],{5,3});
 exportgraphics(gcf,'FigC.eps','ContentType','vector')
 
+
+%% Run EXTRACT with stronger filtering
+
+M = h5read('Example_1p_movie.h5','/mov');
+config = get_defaults([]);
+config.spatial_highpass_cutoff = 2;
+config.use_gpu = 0;
+config.cellfind_max_steps = 120;
+config.thresholds.eccent_thresh = 3;
+config.thresholds.size_upper_limit = 3;
+config.cellfind_adaptive_kappa = 1;
+config.adaptive_kappa = 2;
+output = extractor(M,config);
+
+a = load('Example_1p_movie.mat');
+
+[recall,precision,ampcor,auc] = get_simulation_results(a,output);
+
+fprintf("Prc %.3f. Rcl %.3f. Ampcor %.3f. AUC %.4f. \n", ...
+    precision,recall,ampcor,auc);
+
+S_ground = a.mov_2p.S;
+T_ground = a.mov_2p.T;
+[h,w,k]=size(full(output.spatial_weights));
+S_ex=reshape(full(output.spatial_weights),h*w,k);
+idx_match = match_sets(S_ground,S_ex,0.5); 
+T_ex = output.temporal_weights';
+T_ex = T_ex ./ max(T_ex,[],2);
+T_ground = T_ground ./ max(T_ground,[],2);
+color_extract = [0 0.4470 0.7410];
+color_gt      = [144 103 167]./255;
+plot_stacked_traces_double(T_ground(idx_match(1,1:11),1:1030), ...
+ T_ex(idx_match(2,1:11),1:1030),1,{color_gt,color_extract},[],[],{5,3});
+exportgraphics(gcf,'FigD.eps','ContentType','vector')
 
