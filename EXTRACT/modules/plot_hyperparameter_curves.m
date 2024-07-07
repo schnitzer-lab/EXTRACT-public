@@ -76,14 +76,14 @@ function [] = plot_hyperparameter_curves(output,num)
 
     subplot(2,4,7)
     metric      = metrics(fmap('T_dup_val'), :);
-    edges = [0.1:0.1:1];
+    edges = [0:0.1:1];
     histogram(metric, edges);
     xlabel('T dup corr thresh');
     ylabel('Number of cells')
 
      subplot(2,4,8)
     metric      = metrics(fmap('S_max_corr'), :);
-    edges = [0.1:0.1:1];
+    edges = [0:0.1:1];
     histogram(metric, edges);
     xlabel('S dup corr thresh');
     ylabel('Number of cells')
