@@ -74,7 +74,6 @@ else
 end
 
 max_image = max(M, [], 3);
-clims_visualize = quantile(max_image(:), [config.visualize_cellfinding_min config.visualize_cellfinding_max]);
 
 
 
@@ -197,6 +196,9 @@ else
     M = reshape(M, fov_size(1), fov_size(2), n);
     summary_image = max(M, [], 3);
 end
+
+clims_visualize = quantile(summary_image(:), [config.visualize_cellfinding_min config.visualize_cellfinding_max]);
+
 
 % Update avg_radius given init images (given top 10% brightest cells)
 num_selected = ceil(size(S, 2)*0.1);
@@ -472,12 +474,13 @@ for iter = 1:config.max_iter
             subplot(121)
             clf
             
-            imshow(max_image,clims_visualize)
+            imshow(summary_image,clims_visualize)
             
             plot_cells_overlay(reshape(gather(S),fov_size(1),fov_size(2),size(S,2)),[0,1,0],[])
             title(['Cell refinement step: ' num2str(iter) ' # Cells: ' num2str(size(T,1)) ' # Removed: 0'  ])
             drawnow;
         end
+
 
         continue
 
@@ -520,15 +523,17 @@ for iter = 1:config.max_iter
             script_log = [script_log, str];
             dispfun(str, config.verbose ==2);
         end
+
         if config.visualize_cellfinding
             
             subplot(121)
             clf
-            imshow(max_image,clims_visualize)
+            imshow(summary_image,clims_visualize)
             plot_cells_overlay(reshape(gather(S),fov_size(1),fov_size(2),size(S,2)),[0,1,0],[])
             title(['Cell refinement step: ' num2str(iter) ' # Cells: ' num2str(size(T,1)) ' # Removed: ' num2str(sum(is_bad)) ])
             drawnow;
         end
+
     end
     if config.smooth_S, S = S_smooth; end
 
@@ -564,8 +569,8 @@ if dst > 1  && config.reestimate_T_if_downsampled
 end
 
 switch config.trace_output_option
-    case 'raw'
-        str = sprintf('\t \t \t Providing raw traces... \n');
+    case 'no_constraint'
+        str = sprintf('\t \t \t Providing traces with robust regression and no non-negativity constraint... \n');
         script_log = [script_log, str];
         dispfun(str, config.verbose ==2);
         
@@ -750,7 +755,7 @@ if dst > 1
             % Respect the final regression algorithm choice
             T = Tt';
             switch config.trace_output_option
-                case 'raw'
+                case 'no_constraint'
                     %str = sprintf('\t \t \t Providing raw traces. \n');
                     %script_log = [script_log, str];
                     %dispfun(str, config.verbose ==2);

@@ -1,6 +1,8 @@
 *.m~
 *.h5
 *.hdf5
+*.mat
+*.eps
 .*
 *.mat
 *.eps
