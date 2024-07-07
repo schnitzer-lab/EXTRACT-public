@@ -1023,29 +1023,8 @@ function cell_check(output, M)
         remove_zero_edge_pixels(M_out);
         y_current = y_current(nz_top+1:end-nz_bottom);
         x_current = x_current(nz_left+1:end-nz_right);
-        % Preprocess
-        if output.config.preprocess
-            % Get new config
-            this_config = output.config;
-            % Make movie mask size consistent if it exists
-            if ~isempty(this_config.movie_mask)
-                this_config.movie_mask = ...
-                    this_config.movie_mask(y_current, x_current);
-            end
-            % Do manual dff (using config)
-            if isfield(output.info, 'F_per_pixel')
-                F_per_pixel = output.info.F_per_pixel(y_current, x_current);
-                M_out = bsxfun(@minus, M_out, F_per_pixel);
-                M_out = bsxfun(@rdivide, M_out, F_per_pixel);
-            end
-            % Turn off dff
-            this_config.skip_dff = true;
-            M_out = preprocess_movie(M_out, this_config);
-            switch output.config.cellfind_filter_type % sdv guess
-                case 'gaus'
-                    M = imgaussfilt3(M,config_this.filter_sigma);
-            end
-        end
+        
+
     end
 
     function [output, output_handle] = parse_output(output)

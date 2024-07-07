@@ -17,11 +17,14 @@ function [x, is_bad] = remove_redundant(...
     metrics(fmap('S_area_2'), :) = get_cell_areas(S);
     metrics(fmap('S_smooth_area_2'), :) = get_cell_areas(S_smooth);
     S_norm = zscore(S_smooth, 1, 1) / sqrt(size(S_smooth, 1));
-    metrics(fmap('S_max_corr'), :) = max(S_norm' * S_norm, [], 1);
+    S_cor_max = S_norm' * S_norm;
+    S_cor_max = S_cor_max - diag(diag(S_cor_max));
+    metrics(fmap('S_max_corr'), :) = max(S_cor_max, [], 1);
     metrics(fmap('S_corruption'), :) = spat_corruption(S, fov_size,[],sparse_arrays);
     [circularities, eccentricities] = get_circularity_metrics(S, fov_size);
     metrics(fmap('S_circularity'), :) = circularities;
     metrics(fmap('S_eccent'), :) = eccentricities;
+    metrics(fmap('T_dup_val'), :) = get_T_dup_vals(T'*corr(S_smooth));
     % Spatio-temporal metrics:
     idx_ST_123 = [fmap('ST1_index_1'), fmap('ST1_index_2'),...
         fmap('ST1_index_3'), fmap('ST1_index_4'), fmap('ST1_index_5'), ...
@@ -185,6 +188,17 @@ function [x, is_bad] = remove_redundant(...
         else
             merge.idx_merged = [];
         end
+    end
+
+    function [dup_vals] = get_T_dup_vals(X)
+        tiny = 1e-6;
+        XpX = full(X'*X);
+        mean_X = full(mean(X, 1));
+        XpX_norm = XpX - size(X, 1)*(mean_X'*mean_X);
+        norms_X = sqrt(diag(XpX_norm)') + tiny;
+        C = XpX_norm ./ (norms_X'*norms_X);
+        C = C- diag(diag(C));
+        dup_vals = max(C,[],2);
     end
     
 end

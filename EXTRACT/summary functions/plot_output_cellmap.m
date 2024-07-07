@@ -19,7 +19,7 @@ if nargin < 3 || isempty(plot_init_locations)
 end
 
 if nargin < 2 || isempty(include_bad_cells)
-    include_bad_cells = 10;
+    include_bad_cells = 0;
 end
 
 max_im = output.info.summary_image;
@@ -34,7 +34,7 @@ num_partitions = length(output.info.summary);
 if include_bad_cells > 0
     num_bad_cells = 0;
     for i_part = 1:num_partitions
-        fprintf('Plotting bad cells for partition %d (of %d)...\n', i_part, num_partitions);
+        %fprintf('Plotting bad cells for partition %d (of %d)...\n', i_part, num_partitions);
         classification = output.info.summary(i_part).classification;
         if isempty(classification)
             continue;
@@ -55,11 +55,11 @@ if include_bad_cells > 0
         plot_cells_overlay(ims_bad(:, :, idx_bad), 'r', []);
         num_bad_cells = num_bad_cells + length(idx_bad);
     end
-    fprintf('Plotting good cells...\n');
+    %fprintf('Plotting good cells...\n');
     plot_cells_overlay(output.spatial_weights, 'g', []);
     title_str = sprintf(' \n# eliminated cells: %d', num_bad_cells);
 else
-    plot_cells_overlay(output.spatial_weights, [0, 0.7, 0.1], 1.5);
+    plot_cells_overlay(output.spatial_weights, [0, 0.7, 0.1], 1.5,0.1);
 end
 title_str = [sprintf('# output cells: %d    ', size(output.spatial_weights, 3)),...
     title_str];

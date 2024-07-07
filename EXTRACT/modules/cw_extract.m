@@ -100,7 +100,7 @@ if config.visualize_cellfinding
     drawnow;
     subplot(224)
     histogram(mov_snr_all)
-    xlabel('cellfind min snr')
+    xlabel('Cellfind min snr')
     ylabel('Number of cells')
     drawnow;
     
@@ -168,7 +168,7 @@ for i = 1:max_steps
     if (config.visualize_cellfinding && i>1 && ~is_bad)
         
             subplot(121)
-            plot_cells_overlay(reshape(gather(s),h,w),[0,1,0],[])
+            plot_cells_overlay(reshape(gather(s),h,w),[0,1,0],[],0.2)
             drawnow;
         
     end
@@ -286,7 +286,7 @@ for i = 1:max_steps
 
                 
                 subplot(121)
-                plot_cells_overlay(reshape(gather(s),h,w),[1,0,0],[])
+                plot_cells_overlay(reshape(gather(s),h,w),[1,0,0],[],0.2)
                 title(['Cell finding in process. ' num2str(i) ' iterations ' num2str(num_good_cells) ' found.'])
                 drawnow;
             end
@@ -305,16 +305,18 @@ for i = 1:max_steps
             mov_snr_all = [mov_snr_all, gather(max_t/noise_std - bias_func(config.cellfind_kappa_std_ratio))];
 
             subplot(121)
-            plot_cells_overlay(reshape(gather(s),h,w),[1,0,0],[])
+            plot_cells_overlay(reshape(gather(s),h,w),[1,0,0],[],0.2)
             title(['Cell finding in process. ' num2str(i) ' iterations ' num2str(num_good_cells) ' found.'])
             drawnow;
             subplot(222)
             histogram(trace_snr_all,ceil(i/10))
             xlabel('Trace snr')
+            ylabel('Number of cells')
             drawnow;
             subplot(224)
             histogram(mov_snr_all,ceil(i/10))
-            xlabel('cellfind min snr')
+            xlabel('Cellfind min snr')
+            ylabel('Number of cells')
             drawnow;
     
         end
@@ -328,7 +330,7 @@ for i = 1:max_steps
         if (config.visualize_cellfinding && i>1 && ~is_bad)
         
             subplot(121)
-            plot_cells_overlay(reshape(gather(s),h,w),[0,1,0],[])
+            plot_cells_overlay(reshape(gather(s),h,w),[0,1,0],[],0.2)
             drawnow;
         
         end
