@@ -12,7 +12,7 @@ EXTRACT is a  <ins>t</ins>ractable and <ins>r</ins>obust  <ins>a</ins>utomated <
 
 We show an example output of EXTRACT on a low SNR movie, in the figure on the right donated by Dr. [Peng Yuan](http://itbr.fudan.edu.cn/en/info/1366/2409.htm). Please note that this is the raw output, with no post-processing and/or manual annotation/selection by users. This run is a result of a batch processing of >30 sessions, optimized only once at the beginning of the study, with no extra parameter tweaking particular to this session. EXTRACT needs to be optimized per surgery/imaging modality type (practically once in the life-time of a study). For a trained person (feel free to schedule a tutorial for your lab!), this process usually takes around few minutes. 
 
-Link for a [video tutorial](https://drive.google.com/file/d/1mkml5pv0R2Or0DFP5hVPcqydUuaVJtss/view?usp=sharing)
+Link for an [introduction video](https://drive.google.com/file/d/1mkml5pv0R2Or0DFP5hVPcqydUuaVJtss/view?usp=sharing)
 
 ## Installation
 
