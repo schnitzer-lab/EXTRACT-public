@@ -13,11 +13,12 @@ EXTRACT is a  <ins>t</ins>ractable and <ins>r</ins>obust  <ins>a</ins>utomated <
 We show an example output of EXTRACT on a low SNR movie, in the figure on the right donated by Dr. [Peng Yuan](http://itbr.fudan.edu.cn/en/info/1366/2409.htm). Please note that this is the raw output, with no post-processing and/or manual annotation/selection by users. This run is a result of a batch processing of >30 sessions, optimized only once at the beginning of the study, with no extra parameter tweaking particular to this session. EXTRACT needs to be optimized per surgery/imaging modality type (practically once in the life-time of a study). For a trained person (feel free to schedule a tutorial for your lab!), this process usually takes around few minutes. 
 
 You can watch our instructional video:
+<!---
+this seems not to work on GitHub but it does work in standard Markdown readers
 <video src="https://wds-matlab-community-toolboxes.s3.amazonaws.com/EXTRACT/EXTRACT_overview.mp4" width="640" height="480" controls></video>
+-->
 
 https://github.com/user-attachments/assets/af43ebfb-81ee-4a56-af19-74e28e496aca
-
-
 
 ## Installation
 
