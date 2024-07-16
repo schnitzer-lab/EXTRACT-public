@@ -15,6 +15,10 @@ We show an example output of EXTRACT on a low SNR movie, in the figure on the ri
 You can watch our instructional video:
 <video src="https://wds-matlab-community-toolboxes.s3.amazonaws.com/EXTRACT/EXTRACT_overview.mp4" width="640" height="480" controls></video>
 
+https://github.com/user-attachments/assets/af43ebfb-81ee-4a56-af19-74e28e496aca
+
+
+
 ## Installation
 
 It is fairly straightforward to install EXTRACT. Simply download all the files from the repository and include them in the MATLAB path. Installation is complete. 
