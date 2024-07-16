@@ -35,12 +35,12 @@ Browse the tutorial examples to quickly gain expertise with EXTRACT. You can vie
 
 | Tutorial | View | Run |
 | -------- | ---- | --- |
-| 1 - Starting Code | [:eyes:]() | [:arrow_forward:](https://matlab.mathworks.com/open/github/v1?repo=schnitzer-lab/EXTRACT-public&file=Lecture%20Tutorials/Tutorial%201%20-%20Cell%20refinement/tutorial_1.mlx) | 
-| 2 - Parallelization | [:eyes:]() | [:arrow_forward:](https://matlab.mathworks.com/open/github/v1?repo=schnitzer-lab/EXTRACT-public&file=Lecture%20Tutorials/Tutorial%202%20-%20Cell%20refinement/tutorial_2.mlx) | 
-| 3 - Preprocessing | [:eyes:]() | [:arrow_forward:](https://matlab.mathworks.com/open/github/v1?repo=schnitzer-lab/EXTRACT-public&file=Lecture%20Tutorials/Tutorial%203%20-%20Cell%20refinement/tutorial_3.mlx) | 
+| 1 - Starting Code | [:eyes:]() | [:arrow_forward:](https://matlab.mathworks.com/open/github/v1?repo=schnitzer-lab/EXTRACT-public&file=Lecture%20Tutorials/Tutorial%201%20-%20Starting%20code/tutorial_1.mlx) | 
+| 2 - Parallelization | [:eyes:]() | [:arrow_forward:](https://matlab.mathworks.com/open/github/v1?repo=schnitzer-lab/EXTRACT-public&file=Lecture%20Tutorials/Tutorial%202%20-%20Parallelization/tutorial_2.mlx) | 
+| 3 - Preprocessing | [:eyes:]() | [:arrow_forward:](https://matlab.mathworks.com/open/github/v1?repo=schnitzer-lab/EXTRACT-public&file=Lecture%20Tutorials/Tutorial%203%20-%20Preprocessing/tutorial_3.mlx) | 
 | 4 - Cellfinding | [:eyes:]() | (*) | 
 | 5 - Cell refinement | [:eyes:]() | (*) | 
-| 6 - Final robust regression | [:eyes:]() | [:arrow_forward:](https://matlab.mathworks.com/open/github/v1?repo=schnitzer-lab/EXTRACT-public&file=Lecture%20Tutorials/Tutorial%206%20-%20Cell%20refinement/tutorial_6.mlx) | 
+| 6 - Final robust regression | [:eyes:]() | [:arrow_forward:](https://matlab.mathworks.com/open/github/v1?repo=schnitzer-lab/EXTRACT-public&file=Lecture%20Tutorials/Tutorial%206%20-%20Final%20robust%20regression/tutorial_6.mlx) | 
 
 (*) Tutorials 4 and 5 will download a 2.93 GB file that is too large for free Matlab Online.
 
