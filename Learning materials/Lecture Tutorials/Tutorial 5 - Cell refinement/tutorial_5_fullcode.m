@@ -1,4 +1,8 @@
 %% Hyperparameter tuning flag
+if ~exist('jones.h5','file'),
+    disp(['Downloading 2.93 GB data file jones.h5'])
+    websave('jones.h5','https://wds-matlab-community-toolboxes.s3.amazonaws.com/EXTRACT/jones.h5');
+end;
 M = 'jones.h5:/data';
 config = get_defaults([]);
 config.downsample_time_by = 4;

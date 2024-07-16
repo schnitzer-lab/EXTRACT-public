@@ -1,4 +1,8 @@
 %% Watch the processed movie first
+if ~exist('jones.h5','file')
+    disp(['Downloading 2.93 GB data file jones.h5'])
+    websave('jones.h5','https://wds-matlab-community-toolboxes.s3.amazonaws.com/EXTRACT/jones.h5');
+end
 M = h5read('jones.h5','/data');
 config = get_defaults([]);
 M_proc = preprocess_movie(M,config);

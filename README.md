@@ -12,7 +12,8 @@ EXTRACT is a  <ins>t</ins>ractable and <ins>r</ins>obust  <ins>a</ins>utomated <
 
 We show an example output of EXTRACT on a low SNR movie, in the figure on the right donated by Dr. [Peng Yuan](http://itbr.fudan.edu.cn/en/info/1366/2409.htm). Please note that this is the raw output, with no post-processing and/or manual annotation/selection by users. This run is a result of a batch processing of >30 sessions, optimized only once at the beginning of the study, with no extra parameter tweaking particular to this session. EXTRACT needs to be optimized per surgery/imaging modality type (practically once in the life-time of a study). For a trained person (feel free to schedule a tutorial for your lab!), this process usually takes around few minutes. 
 
-Link for an [introduction video](https://drive.google.com/file/d/1mkml5pv0R2Or0DFP5hVPcqydUuaVJtss/view?usp=sharing)
+You can watch our instructional video:
+<video src="https://wds-matlab-community-toolboxes.s3.amazonaws.com/EXTRACT/EXTRACT_overview.mp4" width="640" height="480" controls></video>
 
 ## Installation
 
@@ -29,6 +30,19 @@ Please note that EXTRACT makes use of various packages and toolboxes:
 - Wavelet Toolbox
 
 ## Getting Started
+
+Browse the tutorial examples to quickly gain expertise with EXTRACT. You can view the tutorials :eyes: or run:arrow_forward: most of the tutorials on [MATLAB Online](https://www.mathworks.com/products/matlab-online.html). Or work any of the tutorials on your own computer.
+
+| Tutorial | View | Run |
+| -------- | ---- | --- |
+| 1 - Starting Code | [:eyes:]() | [:arrow_forward:](https://matlab.mathworks.com/open/github/v1?repo=schnitzer-lab/EXTRACT-public&file=Lecture%20Tutorials/Tutorial%201%20-%20Cell%20refinement/tutorial_1.mlx) | 
+| 2 - Parallelization | [:eyes:]() | [:arrow_forward:](https://matlab.mathworks.com/open/github/v1?repo=schnitzer-lab/EXTRACT-public&file=Lecture%20Tutorials/Tutorial%202%20-%20Cell%20refinement/tutorial_2.mlx) | 
+| 3 - Preprocessing | [:eyes:]() | [:arrow_forward:](https://matlab.mathworks.com/open/github/v1?repo=schnitzer-lab/EXTRACT-public&file=Lecture%20Tutorials/Tutorial%203%20-%20Cell%20refinement/tutorial_3.mlx) | 
+| 4 - Cellfinding | [:eyes:]() | (*) | 
+| 5 - Cell refinement | [:eyes:]() | (*) | 
+| 6 - Final robust regression | [:eyes:]() | [:arrow_forward:](https://matlab.mathworks.com/open/github/v1?repo=schnitzer-lab/EXTRACT-public&file=Lecture%20Tutorials/Tutorial%206%20-%20Cell%20refinement/tutorial_6.mlx) | 
+
+(*) Tutorials 4 and 5 will download a 2.93 GB file that is too large for free Matlab Online.
 
 ### The user manual
 
