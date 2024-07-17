@@ -47,13 +47,13 @@ Please see the user manual inside the "Learning materials" folder. The user manu
 
 ### Instructional video
 
-You can watch our 10-minute video about EXTRACT:
+You can watch our 10-minute video about EXTRACT: <a href="https://wds-matlab-community-toolboxes.s3.amazonaws.com/EXTRACT/EXTRACT_overview.mp4" target="_blank"><img src="https://github.com/user-attachments/assets/7dca6215-e99d-4f49-aaa5-250f08dc967b" width="40%" align="right" alt="Instructional video"></a>
+
 <!---
 this seems not to work on GitHub but it does work in standard Markdown readers
 <video src="https://wds-matlab-community-toolboxes.s3.amazonaws.com/EXTRACT/EXTRACT_overview.mp4" width="640" height="480" controls></video>
 -->
 
-<a href="https://wds-matlab-community-toolboxes.s3.amazonaws.com/EXTRACT/EXTRACT_overview.mp4" target="_blank"><img src="https://github.com/user-attachments/assets/7dca6215-e99d-4f49-aaa5-250f08dc967b" width="40%" align="right" alt="Instructional video"></a>
 
 <!---
 This is a GitHub link to the whole video, which is the only way to get them to show in GitHub READMEs. GitHub seems to hide traditional video players.
