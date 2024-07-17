@@ -18,7 +18,12 @@ this seems not to work on GitHub but it does work in standard Markdown readers
 <video src="https://wds-matlab-community-toolboxes.s3.amazonaws.com/EXTRACT/EXTRACT_overview.mp4" width="640" height="480" controls></video>
 -->
 
+<a href="https://wds-matlab-community-toolboxes.s3.amazonaws.com/EXTRACT/EXTRACT_overview.mp4"><img src="https://github.com/user-attachments/assets/7dca6215-e99d-4f49-aaa5-250f08dc967b" width="40%" align="right" alt="Instructional video"></a>
+
+<!---
+This is a GitHub link to the whole video, which is the only way to get them to show in GitHub READMEs. GitHub seems to hide traditional video players.
 https://github.com/user-attachments/assets/af43ebfb-81ee-4a56-af19-74e28e496aca
+-->
 
 ## Installation
 
