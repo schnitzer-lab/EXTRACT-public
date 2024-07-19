@@ -57,7 +57,7 @@ Thank you for your interest in EXTRACT, a cell extraction routine with native GP
 
 EXTRACT code is primarily written by Dr. Hakan Inan and Fatih Dinc in collaboration with many researchers in Schnitzerlab. The database is maintained by the current members of Schnitzerlab. If you have any questions or comments, please open an issue or contact via email `extractneurons@gmail.com`.
 
-## Papers and citations
+## Citations
 
 EXTRACT is described in two accompanying papers: [Inan et al., 2021](https://www.biorxiv.org/content/10.1101/2021.03.24.436279v1.full.pdf) and [Inan et al., 2017](https://papers.nips.cc/paper/2017/file/e449b9317dad920c0dd5ad0a2a2d5e49-Paper.pdf). Please [cite](CITATION.md) us if you use EXTRACT in your own work.
 

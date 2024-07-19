@@ -1,7 +1,7 @@
 %% Create the movie
 clear
 clc
-EXTRACT_setup;
+setupEXTRACT;
 Example_2p_movie_file = fullfile(whichEXTRACT(),...
     "Learning materials","Sample data","Example_2p_movie.h5");
 
@@ -12,7 +12,7 @@ if ~isfile(Example_2p_movie_file)
     create_2p_movie(opts_2p,Example_2p_movie_file); 
 end
 %% Run EXTRACT
-M = 'Example_2p_movie.h5:/mov';
+M = [Example_2p_movie_file ':/mov'];
 config = get_defaults([]);
 config.adaptive_kappa = 2;
 config.spatial_highpass_cutoff = inf;
@@ -38,7 +38,9 @@ config.num_workers = 4;
 output = extractor(M,config);
 
 %% Evaluate outputs
-a = load('Example_2p_movie.mat');
+Example_2p_movie_mat = char(fullfile(whichEXTRACT(),...
+    "Learning materials","Sample data","Example_2p_movie.mat"));
+a = load(Example_2p_movie_mat);
 
 [recall,precision,ampcor,auc] = get_simulation_results(a,output);
 

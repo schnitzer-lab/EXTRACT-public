@@ -1,9 +1,14 @@
 %% Hyperparameter tuning flag
-if ~exist('jones.h5','file'),
+setupEXTRACT;
+
+jones_file = char(fullfile(whichEXTRACT(),"Learning materials",...
+    "Sample data","jones.h5")); 
+
+if ~exist(jones_file,'file'),
     disp(['Downloading 2.93 GB data file jones.h5'])
-    websave('jones.h5','https://wds-matlab-community-toolboxes.s3.amazonaws.com/EXTRACT/jones.h5');
+    websave(jones_file,'https://wds-matlab-community-toolboxes.s3.amazonaws.com/EXTRACT/jones.h5');
 end;
-M = 'jones.h5:/data';
+M = [jones_file ':/data'];
 config = get_defaults([]);
 config.downsample_time_by = 4;
 config.spatial_lowpass_cutoff = 1;
@@ -18,7 +23,7 @@ plot_hyperparameter_curves(output)
 
 %% Final extraction
 
-M = 'jones.h5:/data';
+M = [jones_file ':/data'];
 config = get_defaults([]);
 config.downsample_time_by = 4;
 config.spatial_lowpass_cutoff = 1;
