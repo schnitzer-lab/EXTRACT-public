@@ -30,8 +30,8 @@ preferred-citation:
   issue: 1
   volume: 1
   year: 2021
-other-citation:
-  type: article
+preferred-citation:
+  type: conference-paper 
   authors:
   - family-names: "Lisa"
     given-names: "Mona"
@@ -48,4 +48,3 @@ other-citation:
   issue: 1
   volume: 1
   year: 2022
-
