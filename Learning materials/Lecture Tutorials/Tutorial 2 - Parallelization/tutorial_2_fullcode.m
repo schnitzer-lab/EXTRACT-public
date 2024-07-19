@@ -1,11 +1,15 @@
 %% Create the movie
 clear
 clc
-if ~isfile('Example_2p_movie.h5')
+EXTRACT_setup;
+Example_2p_movie_file = fullfile(whichEXTRACT(),...
+    "Learning materials","Sample data","Example_2p_movie.h5");
+
+if ~isfile(Example_2p_movie_file)
     [opts_2p] = get_2p_defaults();
     opts_2p.ns = 500;
     rng(1)
-    create_2p_movie(opts_2p,'Example_2p_movie'); 
+    create_2p_movie(opts_2p,Example_2p_movie_file); 
 end
 %% Run EXTRACT
 M = 'Example_2p_movie.h5:/mov';

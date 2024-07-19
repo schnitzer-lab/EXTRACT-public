@@ -1,7 +1,9 @@
 %% Welcome to the EXTRACT tutorial! Written by Fatih Dinc, 06/23/2024
 clear;
 clc
-load('example.mat'); 
+EXTRACT_setup;
+load(fullfile(whichEXTRACT(),"Learning materials",...
+    "Sample data","example.mat")); 
 config=[];
 config = get_defaults(config); 
 config.avg_cell_radius=7;
