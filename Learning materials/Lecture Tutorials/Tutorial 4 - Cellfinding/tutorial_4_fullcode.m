@@ -1,13 +1,18 @@
 %% Watch the processed movie first
 setupEXTRACT;
 
-jones_file = char(fullfile(whichEXTRACT(),"Learning materials",...
-    "Sample data","jones.h5")); 
+if ~ismatlabonline()
+    jones_file = char(fullfile(whichEXTRACT(),"Learning materials",...
+        "Sample data","jones.h5")); 
 
-if ~exist(jones_file,'file')
-    disp(['Downloading 2.93 GB data file jones.h5'])
-    websave(jones_file,'https://wds-matlab-community-toolboxes.s3.amazonaws.com/EXTRACT/jones.h5');
-end
+    if ~exist(jones_file,'file')
+        disp(['Downloading 2.93 GB data file jones.h5'])
+        websave(jones_file,'https://wds-matlab-community-toolboxes.s3.amazonaws.com/EXTRACT/jones.h5');
+    end;
+else,
+    jones_file = 's3://wds-matlab-community-toolboxes/EXTRACT/jones_small.h5';
+end;
+
 M = h5read(jones_file,'/data');
 config = get_defaults([]);
 M_proc = preprocess_movie(M,config);
