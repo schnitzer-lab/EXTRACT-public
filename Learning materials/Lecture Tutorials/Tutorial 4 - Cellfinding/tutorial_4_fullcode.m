@@ -10,7 +10,12 @@ if ~ismatlabonline()
         websave(jones_file,'https://wds-matlab-community-toolboxes.s3.amazonaws.com/EXTRACT/jones.h5');
     end;
 else,
-    jones_file = 's3://wds-matlab-community-toolboxes/EXTRACT/jones_small.h5';
+    jones_file = char(fullfile(whichEXTRACT(),"Learning materials",...
+        "Sample data","jones_small.h5")); 
+    if ~exist(jones_file,'file')
+        disp(['Downloading 750 MB data file jones_small.h5'])
+        websave(jones_file,'https://wds-matlab-community-toolboxes.s3.amazonaws.com/EXTRACT/jones_small.h5');
+    end;
 end;
 
 M = h5read(jones_file,'/data');
