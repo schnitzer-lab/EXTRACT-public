@@ -1,6 +1,7 @@
 %% Create the movie
 clear
 clc
+EXTRACT_setup;
 if ~isfile('Example_1p_movie.h5')
     [opts_2p,opts_back] = get_1p_defaults();
     opts_2p.ns = 100;

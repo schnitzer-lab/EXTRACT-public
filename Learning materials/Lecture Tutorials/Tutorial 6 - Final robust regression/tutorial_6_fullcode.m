@@ -1,4 +1,7 @@
-load('example.mat'); 
+setupEXTRACT;
+
+load(fullfile(whichEXTRACT(),"Learning materials",...
+    "Sample data","example.mat")); 
 M = M-1; % ground truth movie with F = 0;
 S = S_ground(:,1:15);
 

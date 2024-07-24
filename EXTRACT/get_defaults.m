@@ -177,6 +177,7 @@ function config = get_defaults(config)
     if config.regression_only
         config.max_iter = 0;
         config.remove_duplicate_cells = 1;
+        config.downsample_time_by = 1;
     end
 
     if config.parallel_cpu
