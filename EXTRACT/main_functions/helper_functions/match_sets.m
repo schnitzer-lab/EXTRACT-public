@@ -6,6 +6,14 @@ if isempty(X1) || isempty(X2)
     return;
 end
 
+if ndims(X1) ==3
+    X1 = reshape(X1,size(X1,1)*size(X1,2),[]);
+end
+
+if ndims(X2) ==3
+    X2 = reshape(X2,size(X2,1)*size(X2,2),[]);
+end
+
 if ~exist('corr_thresh','var')
     corr_thresh = 0.5;
 end
