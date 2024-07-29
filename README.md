@@ -37,7 +37,7 @@ Please see the user manual inside the "Learning materials" folder. The user manu
 
 ### Instructional video
 
-You can watch our 10-minute video about EXTRACT: <a href="https://wds-matlab-community-toolboxes.s3.amazonaws.com/EXTRACT/EXTRACT_overview.mp4" target="_blank"><img src="https://github.com/user-attachments/assets/7dca6215-e99d-4f49-aaa5-250f08dc967b" width="40%" align="right" alt="Instructional video"></a>
+You can watch our 10-minute video about EXTRACT: <a href="https://www.youtube.com/watch?v=qmCSJWcClNo" target="_blank"><img src="https://github.com/user-attachments/assets/7dca6215-e99d-4f49-aaa5-250f08dc967b" width="40%" align="right" alt="Instructional video"></a>
 
 <!---
 this seems not to work on GitHub but it does work in standard Markdown readers
