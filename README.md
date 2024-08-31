@@ -61,6 +61,6 @@ EXTRACT code is primarily written by Dr. Hakan Inan and Fatih Dinc in collaborat
 
 ## Citations
 
-EXTRACT is described in two accompanying papers: [Dinc & Inan et al., 2024](https://www.biorxiv.org/content/10.1101/2021.03.24.436279v3.full.pdf) and [Inan et al., 2017](https://papers.nips.cc/paper/2017/file/e449b9317dad920c0dd5ad0a2a2d5e49-Paper.pdf). Please [cite](CITATION.md) us if you use EXTRACT in your own work.
+EXTRACT is described in two accompanying papers: [Dinc & Inan et al., 2024](https://www.biorxiv.org/content/10.1101/2021.03.24.436279v3.full.pdf) and [Inan et al., 2017](https://papers.nips.cc/paper/2017/file/e449b9317dad920c0dd5ad0a2a2d5e49-Paper.pdf). Please cite these papers if you use EXTRACT in your own work.
 
 
