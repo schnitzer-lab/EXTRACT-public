@@ -4,5 +4,5 @@ function root_folder = setup()
     addpath(root_folder);
     addpath(genpath(fullfile(root_folder, "External algorithms")));
     addpath(genpath(fullfile(root_folder, "EXTRACT")));
-    addpath(genpath(fullfile(root_folder, "Learning materials")));
+    addpath(genpath(fullfile(root_folder, "Learning-materials")));
 end
