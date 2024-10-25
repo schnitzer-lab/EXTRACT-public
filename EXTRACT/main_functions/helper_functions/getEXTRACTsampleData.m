@@ -13,14 +13,14 @@ function filename = getEXTRACTsampleData(datasetname)
 switch(datasetname),
     case 'jones.h5',
         if ~ismatlabonline()
-            filename = char(fullfile(whichEXTRACT(),"Learning materials",...
+            filename = char(fullfile(whichEXTRACT(),"Learning-materials",...
                 "Sample data","jones.h5")); 
             if ~exist(filename,'file')
                 disp(['Downloading 2.93 GB data file jones.h5'])
                 websave(filename,'https://wds-matlab-community-toolboxes.s3.amazonaws.com/EXTRACT/jones.h5');
             end;
         else,
-            filename = char(fullfile(whichEXTRACT(),"Learning materials",...
+            filename = char(fullfile(whichEXTRACT(),"Learning-materials",...
                 "Sample data","jones_small.h5")); 
             if ~exist(filename,'file')
                 disp(['Downloading 750 MB data file jones_small.h5'])
