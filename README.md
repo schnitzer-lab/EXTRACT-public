@@ -15,9 +15,9 @@ Use the [Add-on Explorer](https://www.mathworks.com/products/matlab/add-on-explo
 
 ## Getting Started
 
-Browse the tutorial examples to quickly gain expertise with EXTRACT. You can view the tutorials or run most of the tutorials on [MATLAB Online](https://www.mathworks.com/products/matlab-online.html). Or work any of the tutorials on your own computer.
+Browse the tutorial examples to quickly gain expertise with EXTRACT. You can view the tutorials :eyes: or run:arrow_forward: most of the tutorials on [MATLAB Online](https://www.mathworks.com/products/matlab-online.html). Or work any of the tutorials on your own computer.
 
-| Tutorial | View 👀 | Run ▶️ |
+| Tutorial | View | Run |
 | -------- | ---- | --- |
 | 1 - Starting Code | [![File Exchange](https://www.mathworks.com/matlabcentral/images/matlab-file-exchange.svg)](https://viewer.mathworks.com/?viewer=live_code&url=https%3A%2F%2Fwww.mathworks.com%2Fmatlabcentral%2Fmlc-downloads%2Fdownloads%2F6d2fb9fc-2974-4fac-9eb3-83340b9f5095%2Fae967b44-8a32-449b-ac35-7559e44fe5ba%2Ffiles%2FLearning%20materials%2FLecture%20Tutorials%2FTutorial%201%20-%20Starting%20code%2Ftutorial_1.mlx&embed=web) | [![Open in MATLAB Online](https://www.mathworks.com/images/responsive/global/open-in-matlab-online.svg)](https://matlab.mathworks.com/open/github/v1?repo=schnitzer-lab/EXTRACT-public&file=Learning%20Materials/Lecture%20Tutorials/Tutorial%201%20-%20Starting%20code/tutorial_1.mlx) | 
 | 2 - Parallelization | [![File Exchange](https://www.mathworks.com/matlabcentral/images/matlab-file-exchange.svg)](https://viewer.mathworks.com/?viewer=live_code&url=https%3A%2F%2Fwww.mathworks.com%2Fmatlabcentral%2Fmlc-downloads%2Fdownloads%2F6d2fb9fc-2974-4fac-9eb3-83340b9f5095%2Fae967b44-8a32-449b-ac35-7559e44fe5ba%2Ffiles%2FLearning%20materials%2FLecture%20Tutorials%2FTutorial%202%20-%20Parallelization%2Ftutorial_2.mlx&embed=web) | N/A* | 
@@ -28,6 +28,8 @@ Browse the tutorial examples to quickly gain expertise with EXTRACT. You can vie
 Links for the sample movies: [Google Drive](https://drive.google.com/drive/folders/1xhuw0g-eNycsIF8yzLgdFRUuSoiXU23W?usp=share_link)
 <sup>*Use local machine; the synthetic data exceeds MATLAB Online's default maximum array size preference</sup>
 <sup>**MATLAB Online uses a smaller version of the sample data, giving somewhat different results than shown</sup>
+
+Links for the sample movies: [Google Drive](https://drive.google.com/drive/folders/1xhuw0g-eNycsIF8yzLgdFRUuSoiXU23W?usp=share_link)
 
 ### The user manual
 
