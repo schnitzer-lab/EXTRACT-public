@@ -29,6 +29,8 @@ show_each_cell = 0;
 % M = reshape(M, h, w, n);
 
 
+ind = reshape((max(M,[],3) > 1e-6),1,[]);
+
 % Reduce noise in movie with a spatial filter
 switch config.cellfind_filter_type
     case 'butter'
@@ -65,7 +67,7 @@ noise_per_pixel = estimate_noise_std(Mt, 1, use_gpu);
 if ~isempty(config.movie_mask)
     noise_per_pixel = noise_per_pixel(config.movie_mask(:));
 end
-noise_std = median(noise_per_pixel);
+noise_std = median(noise_per_pixel(ind));
 
 
 % Get a stack of 2 ims (max im + im of max idx) -- used to get seed pixels
