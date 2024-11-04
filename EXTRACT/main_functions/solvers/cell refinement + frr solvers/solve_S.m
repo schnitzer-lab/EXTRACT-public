@@ -57,8 +57,16 @@ function [S_out, l, np_x, np_y, T_corr_in, T_corr_out, S_surround] = solve_S(...
                 mask_sub = mask(idx_space, idx_comp);
                 T_sub = T(idx_comp, :);
                 Mt_sub = Mt(:, idx_space);
+                T_bin = T_sub ./ max(T_sub,[],2);
+                T_bin = (T_bin > 0);
+
+                ind  = find(sum(T_bin,1)>-1);
+
+                T_subsub = T_sub(:,ind);
+                Mt_subsub = Mt_sub(ind,:);
+
                 % Solve regression
-                [S_out_sub, l{end+1}] = est_func(S_in_sub, T_sub, Mt_sub, ...
+                [S_out_sub, l{end+1}] = est_func(S_in_sub, T_subsub, Mt_subsub, ...
                     mask_sub, lambda(idx_comp), kappa, max_iter, TOL, ...
                     compute_loss, use_gpu, 1);
                 S_out(idx_space, idx_comp) = S_out_sub;
