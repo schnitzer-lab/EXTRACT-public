@@ -230,9 +230,13 @@ else
         noise_per_pixel = noise_per_pixel(config.movie_mask(:));
     end
 end
-ind = (noise_per_pixel > 1e-12);
-noise_std = median(noise_per_pixel(ind));
 
+try
+    ind = (noise_per_pixel > 1e-12);
+    noise_std = median(noise_per_pixel(ind));
+catch
+    noise_std = 1e-6;
+end
 
 avg_cell_area = pi * avg_radius ^ 2;
 % Update thresholds with data collected

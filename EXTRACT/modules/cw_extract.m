@@ -67,7 +67,11 @@ noise_per_pixel = estimate_noise_std(Mt, 1, use_gpu);
 if ~isempty(config.movie_mask)
     noise_per_pixel = noise_per_pixel(config.movie_mask(:));
 end
-noise_std = median(noise_per_pixel(ind));
+try
+    noise_std = median(noise_per_pixel(ind));
+catch
+    noise_std = 1e-6;
+end
 
 
 % Get a stack of 2 ims (max im + im of max idx) -- used to get seed pixels
