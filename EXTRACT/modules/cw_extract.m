@@ -66,6 +66,7 @@ noise_per_pixel = estimate_noise_std(Mt, 1, use_gpu);
 % Apply movie mask to noise if it exists
 if ~isempty(config.movie_mask)
     noise_per_pixel = noise_per_pixel(config.movie_mask(:));
+    ind = ind(config.movie_mask(:));
 end
 try
     noise_std = median(noise_per_pixel(ind));
