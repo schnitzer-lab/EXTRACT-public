@@ -15,7 +15,7 @@ Use the [Add-on Explorer](https://www.mathworks.com/products/matlab/add-on-explo
 
 ## Getting Started
 
-Browse the tutorial examples to quickly gain expertise with EXTRACT. You can view all and run most most of the tutorials . Or work any of the tutorials on your own computer.
+Browse the tutorial examples to quickly gain expertise with EXTRACT. You can view all and run most  of the tutorials. Or work any of the tutorials on your own computer.
 
 | Tutorial | View :eyes:| Run ▶️ |
 | -------- | ---- | --- |
